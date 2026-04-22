@@ -10,12 +10,15 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 export async function GET() {
-  const key = process.env.STRIPE_SECRET_KEY;
-  return NextResponse.json({
-    keyExists: !!key,
-    keyLength: key?.length ?? 0,
-    keyPrefix: key?.substring(0, 7) ?? "absent",
-  });
+  try {
+    const res = await fetch("https://api.stripe.com/v1/payment_methods?limit=1", {
+      headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` },
+    });
+    const data = await res.json();
+    return NextResponse.json({ status: res.status, ok: res.ok, stripeError: data.error ?? null });
+  } catch (err) {
+    return NextResponse.json({ fetchError: err instanceof Error ? err.message : "unknown" });
+  }
 }
 
 export async function POST(req: Request) {
