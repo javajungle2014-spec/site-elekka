@@ -1,7 +1,13 @@
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  maxNetworkRetries: 0,
+  timeout: 8000,
+});
 
 export async function POST(req: Request) {
   try {
