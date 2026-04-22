@@ -1,25 +1,7 @@
-import Stripe from "stripe";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  maxNetworkRetries: 0,
-  timeout: 8000,
-});
-
-export async function GET() {
-  try {
-    const res = await fetch("https://api.stripe.com/v1/payment_methods?limit=1", {
-      headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` },
-    });
-    const data = await res.json();
-    return NextResponse.json({ status: res.status, ok: res.ok, stripeError: data.error ?? null });
-  } catch (err) {
-    return NextResponse.json({ fetchError: err instanceof Error ? err.message : "unknown" });
-  }
-}
 
 export async function POST(req: Request) {
   try {
@@ -29,41 +11,49 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Panier vide" }, { status: 400 });
     }
 
-    const lineItems = items.map((item: {
-      name: string; colourLabel: string; size: string; priceEUR: number; quantity: number;
-    }) => ({
-      price_data: {
-        currency: "eur",
-        product_data: {
-          name: item.name,
-          description: `${item.colourLabel} · Taille ${item.size}`,
-        },
-        unit_amount: Math.round(item.priceEUR * 100),
-      },
-      quantity: item.quantity,
-    }));
-
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://elekka-sellier.fr";
+    const secretKey = process.env.STRIPE_SECRET_KEY!;
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      line_items: lineItems,
-      mode: "payment",
-      customer_email: address.email,
-      success_url: `${siteUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${siteUrl}/checkout`,
-      metadata: {
-        userId: userId ?? "",
-        items: JSON.stringify(items),
-        shippingAddress: JSON.stringify(address),
-        customerEmail: address.email,
-      },
+    const params = new URLSearchParams();
+    params.append("mode", "payment");
+    params.append("customer_email", address.email);
+    params.append("success_url", `${siteUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`);
+    params.append("cancel_url", `${siteUrl}/checkout`);
+    params.append("metadata[userId]", userId ?? "");
+    params.append("metadata[customerEmail]", address.email);
+    params.append("metadata[items]", JSON.stringify(items));
+    params.append("metadata[shippingAddress]", JSON.stringify(address));
+
+    items.forEach((item: {
+      name: string; colourLabel: string; size: string; priceEUR: number; quantity: number;
+    }, i: number) => {
+      params.append(`line_items[${i}][price_data][currency]`, "eur");
+      params.append(`line_items[${i}][price_data][product_data][name]`, item.name);
+      params.append(`line_items[${i}][price_data][product_data][description]`, `${item.colourLabel} · Taille ${item.size}`);
+      params.append(`line_items[${i}][price_data][unit_amount]`, String(Math.round(item.priceEUR * 100)));
+      params.append(`line_items[${i}][quantity]`, String(item.quantity));
     });
 
-    return NextResponse.json({ url: session.url });
+    const res = await fetch("https://api.stripe.com/v1/checkout/sessions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${secretKey}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: params.toString(),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.url) {
+      console.error("Stripe error:", data.error);
+      return NextResponse.json({ error: data.error?.message ?? "Erreur Stripe" }, { status: 500 });
+    }
+
+    return NextResponse.json({ url: data.url });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Erreur inconnue";
-    console.error("Stripe checkout error:", message);
+    console.error("Checkout error:", message);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
