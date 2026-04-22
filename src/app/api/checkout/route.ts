@@ -9,6 +9,15 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   timeout: 8000,
 });
 
+export async function GET() {
+  const key = process.env.STRIPE_SECRET_KEY;
+  return NextResponse.json({
+    keyExists: !!key,
+    keyLength: key?.length ?? 0,
+    keyPrefix: key?.substring(0, 7) ?? "absent",
+  });
+}
+
 export async function POST(req: Request) {
   try {
     const { items, address, userId } = await req.json();
