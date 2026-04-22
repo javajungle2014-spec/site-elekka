@@ -47,6 +47,7 @@ export default function CheckoutPage() {
   const [errors, setErrors] = useState<Errors>({});
   const [loading, setLoading] = useState(false);
   const [prefilled, setPrefilled] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   // Panier vide → retour boutique
   useEffect(() => {
@@ -100,6 +101,7 @@ export default function CheckoutPage() {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
+    setCheckoutError(null);
     try {
       const supabase = createClient();
       const { data } = await supabase.auth.getUser();
@@ -108,10 +110,15 @@ export default function CheckoutPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items, address, userId: data.user?.id ?? null }),
       });
-      const { url, error } = await res.json();
-      if (error || !url) { setLoading(false); return; }
-      window.location.href = url;
+      const json = await res.json();
+      if (!res.ok || json.error || !json.url) {
+        setCheckoutError("Une erreur est survenue. Veuillez réessayer ou nous contacter.");
+        setLoading(false);
+        return;
+      }
+      window.location.href = json.url;
     } catch {
+      setCheckoutError("Impossible de contacter le serveur. Vérifiez votre connexion.");
       setLoading(false);
     }
   }
@@ -178,6 +185,9 @@ export default function CheckoutPage() {
 
               {/* CTA */}
               <div className="space-y-4 pt-2">
+                {checkoutError && (
+                  <p className="text-sm text-red-400 text-center">{checkoutError}</p>
+                )}
                 <button
                   type="submit"
                   disabled={loading}
