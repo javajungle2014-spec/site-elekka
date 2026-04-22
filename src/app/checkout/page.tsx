@@ -110,15 +110,22 @@ export default function CheckoutPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items, address, userId: data.user?.id ?? null }),
       });
-      const json = await res.json();
+      let json: { url?: string; error?: string };
+      try {
+        json = await res.json();
+      } catch {
+        setCheckoutError(`Erreur serveur (${res.status}). Contactez-nous si le problème persiste.`);
+        setLoading(false);
+        return;
+      }
       if (!res.ok || json.error || !json.url) {
-        setCheckoutError("Une erreur est survenue. Veuillez réessayer ou nous contacter.");
+        setCheckoutError(json.error || "Une erreur est survenue. Veuillez réessayer.");
         setLoading(false);
         return;
       }
       window.location.href = json.url;
-    } catch {
-      setCheckoutError("Impossible de contacter le serveur. Vérifiez votre connexion.");
+    } catch (err) {
+      setCheckoutError(err instanceof Error ? err.message : "Erreur inattendue.");
       setLoading(false);
     }
   }
