@@ -14,24 +14,28 @@ export async function POST(req: Request) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://elekka-sellier.fr";
     const secretKey = process.env.STRIPE_SECRET_KEY!;
 
-    const params = new URLSearchParams();
-    params.append("mode", "payment");
-    params.append("customer_email", address.email);
-    params.append("success_url", `${siteUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`);
-    params.append("cancel_url", `${siteUrl}/checkout`);
-    params.append("metadata[userId]", userId ?? "");
-    params.append("metadata[customerEmail]", address.email);
-    params.append("metadata[items]", JSON.stringify(items));
-    params.append("metadata[shippingAddress]", JSON.stringify(address));
+    const successUrl = `${siteUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`;
+    const cancelUrl = `${siteUrl}/checkout`;
+
+    const parts: string[] = [
+      `mode=payment`,
+      `customer_email=${encodeURIComponent(address.email)}`,
+      `success_url=${encodeURIComponent(successUrl).replace(/%7B/g, "{").replace(/%7D/g, "}")}`,
+      `cancel_url=${encodeURIComponent(cancelUrl)}`,
+      `metadata[userId]=${encodeURIComponent(userId ?? "")}`,
+      `metadata[customerEmail]=${encodeURIComponent(address.email)}`,
+      `metadata[items]=${encodeURIComponent(JSON.stringify(items))}`,
+      `metadata[shippingAddress]=${encodeURIComponent(JSON.stringify(address))}`,
+    ];
 
     items.forEach((item: {
       name: string; colourLabel: string; size: string; priceEUR: number; quantity: number;
     }, i: number) => {
-      params.append(`line_items[${i}][price_data][currency]`, "eur");
-      params.append(`line_items[${i}][price_data][product_data][name]`, item.name);
-      params.append(`line_items[${i}][price_data][product_data][description]`, `${item.colourLabel} · Taille ${item.size}`);
-      params.append(`line_items[${i}][price_data][unit_amount]`, String(Math.round(item.priceEUR * 100)));
-      params.append(`line_items[${i}][quantity]`, String(item.quantity));
+      parts.push(`line_items[${i}][price_data][currency]=eur`);
+      parts.push(`line_items[${i}][price_data][product_data][name]=${encodeURIComponent(item.name)}`);
+      parts.push(`line_items[${i}][price_data][product_data][description]=${encodeURIComponent(`${item.colourLabel} · Taille ${item.size}`)}`);
+      parts.push(`line_items[${i}][price_data][unit_amount]=${Math.round(item.priceEUR * 100)}`);
+      parts.push(`line_items[${i}][quantity]=${item.quantity}`);
     });
 
     const res = await fetch("https://api.stripe.com/v1/checkout/sessions", {
@@ -40,7 +44,7 @@ export async function POST(req: Request) {
         Authorization: `Bearer ${secretKey}`,
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: params.toString(),
+      body: parts.join("&"),
     });
 
     const data = await res.json();
