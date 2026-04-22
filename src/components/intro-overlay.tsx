@@ -31,6 +31,7 @@ export function IntroOverlay() {
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        style={{ opacity: 0 }}
       >
         <Image
           src="/brand/ek-monogram.png"
@@ -38,7 +39,8 @@ export function IntroOverlay() {
           width={56}
           height={56}
           priority
-          className="invert [mix-blend-mode:screen] w-auto mx-auto" style={{ height: "120px", marginBottom: "-12px" }}
+          placeholder="empty"
+          className="w-auto mx-auto" style={{ height: "120px", marginBottom: "-12px", mixBlendMode: "screen", filter: "invert(1)" }}
         />
       </motion.div>
 
@@ -46,6 +48,7 @@ export function IntroOverlay() {
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+        style={{ opacity: 0 }}
       >
         <Image
           src="/brand/elekka-wordmark.jpg"
@@ -53,7 +56,8 @@ export function IntroOverlay() {
           width={320}
           height={87}
           priority
-          className="invert [mix-blend-mode:screen] h-20 w-auto"
+          placeholder="empty"
+          className="h-20 w-auto" style={{ mixBlendMode: "screen", filter: "invert(1)" }}
         />
       </motion.div>
 
