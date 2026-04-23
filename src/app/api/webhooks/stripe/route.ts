@@ -62,7 +62,7 @@ export async function POST(req: Request) {
     // Email de confirmation au client
     if (customerEmail) {
       await resend.emails.send({
-        from: "Elekka <onboarding@resend.dev>",
+        from: "Elekka <contact@elekka-sellier.fr>",
         to: customerEmail,
         subject: "Votre commande Elekka est confirmée",
         html: confirmationEmail({ items, address, totalEUR }),
@@ -71,7 +71,7 @@ export async function POST(req: Request) {
 
     // Notification interne
     await resend.emails.send({
-      from: "Elekka Boutique <onboarding@resend.dev>",
+      from: "Elekka Boutique <contact@elekka-sellier.fr>",
       to: "elekka.sellier@gmail.com",
       replyTo: customerEmail ?? undefined,
       subject: `Nouvelle commande — ${address.firstName} ${address.lastName} — ${totalEUR.toFixed(0)} €`,
