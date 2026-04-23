@@ -63,6 +63,7 @@ export async function POST(req: Request) {
     if (customerEmail) {
       await resend.emails.send({
         from: "Elekka <contact@elekka-sellier.fr>",
+        replyTo: "elekka.sellier@gmail.com",
         to: customerEmail,
         subject: "Votre commande Elekka est confirmée",
         html: confirmationEmail({ items, address, totalEUR }),
