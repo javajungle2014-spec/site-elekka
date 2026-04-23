@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight, Lock } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, Lock, Tag } from "@phosphor-icons/react";
+import { PayPalButton } from "@/components/paypal-button";
 import { useCart } from "@/lib/cart-store";
 import { formatPrice } from "@/lib/products";
 import { createClient } from "@/lib/supabase";
@@ -14,6 +15,14 @@ type Address = {
   line1: string; line2: string; city: string; postalCode: string; country: string;
 };
 type Errors = Partial<Record<keyof Address, string>>;
+
+type PromoState = {
+  code: string;
+  status: "idle" | "loading" | "valid" | "invalid";
+  discountEUR: number;
+  label: string;
+  error: string;
+};
 
 function Field({
   label, value, onChange, type = "text", error, autoComplete, placeholder,
@@ -48,13 +57,16 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [prefilled, setPrefilled] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [promo, setPromo] = useState<PromoState>({
+    code: "", status: "idle", discountEUR: 0, label: "", error: "",
+  });
 
-  // Panier vide → retour boutique
+  const discountedTotal = Math.max(0, totalPrice - promo.discountEUR);
+
   useEffect(() => {
     if (items.length === 0) router.replace("/boutique");
   }, [items, router]);
 
-  // Pré-remplissage depuis le compte
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getUser().then(async ({ data }) => {
@@ -97,7 +109,37 @@ export default function CheckoutPage() {
     return Object.keys(next).length === 0;
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function applyPromo() {
+    if (!promo.code.trim()) return;
+    setPromo((p) => ({ ...p, status: "loading", error: "" }));
+    try {
+      const res = await fetch("/api/promo/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: promo.code, totalEUR: totalPrice }),
+      });
+      const json = await res.json();
+      if (json.valid) {
+        setPromo((p) => ({
+          ...p, status: "valid",
+          discountEUR: json.discountEUR,
+          label: json.label,
+          code: json.code,
+          error: "",
+        }));
+      } else {
+        setPromo((p) => ({ ...p, status: "invalid", discountEUR: 0, label: "", error: json.error ?? "Code invalide" }));
+      }
+    } catch {
+      setPromo((p) => ({ ...p, status: "invalid", error: "Erreur de connexion" }));
+    }
+  }
+
+  function removePromo() {
+    setPromo({ code: "", status: "idle", discountEUR: 0, label: "", error: "" });
+  }
+
+  async function handleStripeSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
@@ -108,12 +150,14 @@ export default function CheckoutPage() {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items, address, userId: data.user?.id ?? null }),
+        body: JSON.stringify({
+          items, address, userId: data.user?.id ?? null,
+          promoCode: promo.status === "valid" ? promo.code : null,
+          discountEUR: promo.discountEUR,
+        }),
       });
       let json: { url?: string; error?: string };
-      try {
-        json = await res.json();
-      } catch {
+      try { json = await res.json(); } catch {
         setCheckoutError(`Erreur serveur (${res.status}). Contactez-nous si le problème persiste.`);
         setLoading(false);
         return;
@@ -148,7 +192,7 @@ export default function CheckoutPage() {
           Finaliser la commande
         </h1>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleStripeSubmit}>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
 
             {/* ── Formulaire ── */}
@@ -195,6 +239,7 @@ export default function CheckoutPage() {
                 {checkoutError && (
                   <p className="text-sm text-red-400 text-center">{checkoutError}</p>
                 )}
+
                 <button
                   type="submit"
                   disabled={loading}
@@ -203,6 +248,22 @@ export default function CheckoutPage() {
                   {loading ? "Redirection vers Stripe…" : "Payer par carte"}
                   <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-200" />
                 </button>
+
+                <div className="flex items-center gap-3 py-1">
+                  <div className="flex-1 border-t border-line" />
+                  <span className="text-xs text-muted">ou</span>
+                  <div className="flex-1 border-t border-line" />
+                </div>
+
+                <PayPalButton
+                  items={items}
+                  address={address}
+                  promoCode={promo.status === "valid" ? promo.code : null}
+                  discountEUR={promo.discountEUR}
+                  onValidate={() => { const ok = validate(); if (ok) setCheckoutError(null); return ok; }}
+                  onError={(msg) => setCheckoutError(msg)}
+                />
+
                 <p className="text-xs text-muted text-center">
                   En validant, vous acceptez nos conditions générales de vente.
                 </p>
@@ -233,20 +294,70 @@ export default function CheckoutPage() {
                   ))}
                 </ul>
 
-                <div className="pt-3 border-t border-line space-y-2">
+                {/* Code promo */}
+                <div className="border-t border-line pt-4">
+                  {promo.status === "valid" ? (
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Tag size={13} className="text-green-600" />
+                        <span className="text-sm font-medium text-green-600">{promo.code}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="font-mono text-sm text-green-600">{promo.label}</span>
+                        <button
+                          type="button"
+                          onClick={removePromo}
+                          className="text-xs text-muted hover:text-ink transition-colors"
+                        >
+                          Retirer
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={promo.code}
+                        onChange={(e) => setPromo((p) => ({ ...p, code: e.target.value.toUpperCase(), status: "idle", error: "" }))}
+                        onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), applyPromo())}
+                        placeholder="Code promo"
+                        className="flex-1 bg-transparent border-b border-line py-2 text-sm focus:outline-none focus:border-ink transition-colors placeholder:text-muted-soft"
+                      />
+                      <button
+                        type="button"
+                        onClick={applyPromo}
+                        disabled={promo.status === "loading" || !promo.code.trim()}
+                        className="text-xs text-ink underline underline-offset-4 hover:text-muted transition-colors disabled:opacity-40"
+                      >
+                        {promo.status === "loading" ? "…" : "Appliquer"}
+                      </button>
+                    </div>
+                  )}
+                  {promo.status === "invalid" && (
+                    <p className="text-xs text-red-400 mt-2">{promo.error}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted">Livraison</span>
-                    <span className="text-muted text-xs">À confirmer</span>
+                    <span className="text-green-600 text-xs font-medium">Offerte</span>
                   </div>
-                  <div className="flex items-center justify-between font-mono font-semibold text-base">
+                  {promo.status === "valid" && (
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted">Sous-total</span>
+                      <span className="font-mono text-sm text-muted line-through">{formatPrice(totalPrice)}</span>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between font-mono font-semibold text-base border-t border-line pt-2">
                     <span>Total</span>
-                    <span>{formatPrice(totalPrice)}</span>
+                    <span>{formatPrice(discountedTotal)}</span>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2 text-xs text-muted border-t border-line pt-4">
                   <Lock size={12} className="shrink-0" />
-                  Paiement 100% sécurisé par Stripe
+                  Paiement 100% sécurisé — Stripe & PayPal
                 </div>
               </div>
             </div>

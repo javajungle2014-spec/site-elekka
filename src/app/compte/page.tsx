@@ -131,6 +131,11 @@ function RegisterForm({ onSwitch, onSuccess }: { onSwitch: () => void; onSuccess
         firstName, lastName, phone,
         addressLine1: "", addressLine2: "", city: "", postalCode: "", country: "France",
       });
+      await fetch("/api/welcome", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, firstName }),
+      });
     }
     setLoading(false);
     onSuccess();

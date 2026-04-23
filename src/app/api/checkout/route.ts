@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Test: ouvrir /api/checkout dans le navigateur
 export async function GET() {
   const body = [
     "mode=payment",
@@ -34,7 +33,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const { items, address, userId } = await req.json();
+    const { items, address, userId, promoCode, discountEUR = 0 } = await req.json();
 
     if (!items?.length) {
       return NextResponse.json({ error: "Panier vide" }, { status: 400 });
@@ -42,6 +41,12 @@ export async function POST(req: Request) {
 
     const siteUrl = "https://elekka-sellier.fr";
     const secretKey = process.env.STRIPE_SECRET_KEY!;
+
+    const originalTotal = items.reduce(
+      (sum: number, item: { priceEUR: number; quantity: number }) => sum + item.priceEUR * item.quantity,
+      0
+    );
+    const discountedTotal = Math.max(0, originalTotal - discountEUR);
 
     const parts: string[] = [
       "mode=payment",
@@ -52,17 +57,28 @@ export async function POST(req: Request) {
       `metadata[customerEmail]=${encodeURIComponent(address.email)}`,
       `metadata[items]=${encodeURIComponent(JSON.stringify(items))}`,
       `metadata[shippingAddress]=${encodeURIComponent(JSON.stringify(address))}`,
+      `metadata[promoCode]=${encodeURIComponent(promoCode ?? "")}`,
+      `metadata[discountEUR]=${discountEUR}`,
     ];
 
-    items.forEach((item: {
-      name: string; colourLabel: string; size: string; priceEUR: number; quantity: number;
-    }, i: number) => {
-      parts.push(`line_items[${i}][price_data][currency]=eur`);
-      parts.push(`line_items[${i}][price_data][product_data][name]=${encodeURIComponent(item.name)}`);
-      parts.push(`line_items[${i}][price_data][product_data][description]=${encodeURIComponent(`${item.colourLabel} - Taille ${item.size}`)}`);
-      parts.push(`line_items[${i}][price_data][unit_amount]=${Math.round(item.priceEUR * 100)}`);
-      parts.push(`line_items[${i}][quantity]=${item.quantity}`);
-    });
+    if (discountEUR > 0) {
+      // Commande avec réduction : un seul article au total remisé
+      const promoLabel = promoCode ? ` (code ${promoCode})` : "";
+      parts.push(`line_items[0][price_data][currency]=eur`);
+      parts.push(`line_items[0][price_data][product_data][name]=${encodeURIComponent(`Commande Elekka${promoLabel}`)}`);
+      parts.push(`line_items[0][price_data][unit_amount]=${Math.round(discountedTotal * 100)}`);
+      parts.push(`line_items[0][quantity]=1`);
+    } else {
+      items.forEach((item: {
+        name: string; colourLabel: string; size: string; priceEUR: number; quantity: number;
+      }, i: number) => {
+        parts.push(`line_items[${i}][price_data][currency]=eur`);
+        parts.push(`line_items[${i}][price_data][product_data][name]=${encodeURIComponent(item.name)}`);
+        parts.push(`line_items[${i}][price_data][product_data][description]=${encodeURIComponent(`${item.colourLabel} - Taille ${item.size}`)}`);
+        parts.push(`line_items[${i}][price_data][unit_amount]=${Math.round(item.priceEUR * 100)}`);
+        parts.push(`line_items[${i}][quantity]=${item.quantity}`);
+      });
+    }
 
     const res = await fetch("https://api.stripe.com/v1/checkout/sessions", {
       method: "POST",
