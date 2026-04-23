@@ -26,15 +26,12 @@ export async function createOrderAndGetNumber({
   address: OrderAddress;
   totalEUR: number;
 }): Promise<string> {
-  if (!userId) {
-    return `ELK-${80 + Math.floor(Math.random() * 9)}`;
-  }
-
   const supabase = supabaseAdmin();
+
   const { data } = await supabase
     .from("orders")
     .insert({
-      user_id: userId,
+      user_id: userId ?? null,
       status: "en_preparation",
       total_eur: totalEUR,
       shipping_address: address,
@@ -46,7 +43,13 @@ export async function createOrderAndGetNumber({
     .select("id")
     .single();
 
-  return data ? `ELK-${data.id + 79}` : `ELK-${80 + Math.floor(Math.random() * 9)}`;
+  const orderNumber = data ? `ELK-${data.id + 79}` : `ELK-${80 + Math.floor(Math.random() * 9)}`;
+
+  if (data) {
+    await supabase.from("orders").update({ order_number: orderNumber }).eq("id", data.id);
+  }
+
+  return orderNumber;
 }
 
 export async function incrementPromoUsage(code: string) {

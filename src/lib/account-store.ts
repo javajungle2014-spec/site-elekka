@@ -23,6 +23,7 @@ export type OrderStatus = "en_preparation" | "expediee" | "livree" | "annulee";
 
 export type Order = {
   id: string;
+  orderNumber: string;
   createdAt: string;
   status: OrderStatus;
   totalEUR: number;
@@ -63,6 +64,7 @@ export async function fetchOrders(userId: string): Promise<Order[]> {
   if (error) return [];
   return (data ?? []).map((row) => ({
     id: row.id,
+    orderNumber: row.order_number ?? `ELK-${row.id + 79}`,
     createdAt: row.created_at,
     status: row.status as OrderStatus,
     totalEUR: Number(row.total_eur),

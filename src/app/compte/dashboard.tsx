@@ -164,7 +164,7 @@ function OverviewTab({
             <div className="flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-3 mb-1">
-                  <span className="text-sm font-semibold">{formatOrderId(orders[0].id)}</span>
+                  <span className="text-sm font-semibold font-mono">{orders[0].orderNumber}</span>
                   <StatusBadge status={orders[0].status} />
                 </div>
                 <p className="text-xs text-muted">
@@ -261,7 +261,7 @@ function OrderRow({ order }: { order: Order }) {
       >
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 mb-1.5">
-            <span className="text-sm font-semibold font-mono">{formatOrderId(order.id)}</span>
+            <span className="text-sm font-semibold font-mono">{order.orderNumber}</span>
             <StatusBadge status={order.status} />
           </div>
           <p className="text-xs text-muted">
@@ -337,24 +337,96 @@ function OrderRow({ order }: { order: Order }) {
   );
 }
 
-function OrdersTab({ orders }: { orders: Order[] }) {
-  if (orders.length === 0) {
-    return (
-      <EmptyState
-        icon={Package}
-        message="Vous n'avez pas encore passé de commande."
-        cta={{ label: "Découvrir la collection", href: "/boutique" }}
-      />
-    );
+function ClaimOrderForm({ userId, onClaimed }: { userId: string; onClaimed: () => void }) {
+  const [orderNumber, setOrderNumber] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [error, setError] = useState("");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus("loading");
+    setError("");
+    const res = await fetch("/api/claim-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ orderNumber: orderNumber.toUpperCase(), postalCode, userId }),
+    });
+    const json = await res.json();
+    if (json.success) {
+      setStatus("success");
+      setOrderNumber("");
+      setPostalCode("");
+      onClaimed();
+    } else {
+      setStatus("error");
+      setError(json.error ?? "Erreur inconnue");
+    }
   }
+
+  return (
+    <div className="border border-line p-5 mt-8">
+      <p className="kicker text-muted mb-4">Ajouter une commande passée sans compte</p>
+      {status === "success" ? (
+        <p className="flex items-center gap-2 text-sm text-ink">
+          <Check size={14} /> Commande ajoutée à votre compte.
+        </p>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs text-muted">Numéro de commande</label>
+              <input
+                value={orderNumber}
+                onChange={(e) => { setOrderNumber(e.target.value.toUpperCase()); setStatus("idle"); }}
+                placeholder="ELK-80"
+                className="bg-transparent border-b border-line py-2.5 text-sm focus:outline-none focus:border-ink transition-colors placeholder:text-muted-soft font-mono"
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs text-muted">Code postal de livraison</label>
+              <input
+                value={postalCode}
+                onChange={(e) => { setPostalCode(e.target.value); setStatus("idle"); }}
+                placeholder="75008"
+                className="bg-transparent border-b border-line py-2.5 text-sm focus:outline-none focus:border-ink transition-colors placeholder:text-muted-soft"
+              />
+            </div>
+          </div>
+          {status === "error" && <p className="text-xs text-red-400">{error}</p>}
+          <button
+            type="submit"
+            disabled={status === "loading" || !orderNumber.trim() || !postalCode.trim()}
+            className="press text-sm bg-ink text-on-ink px-5 py-2.5 hover:bg-ink-soft transition-colors disabled:opacity-40"
+          >
+            {status === "loading" ? "Vérification…" : "Ajouter"}
+          </button>
+        </form>
+      )}
+    </div>
+  );
+}
+
+function OrdersTab({ orders, userId, onOrderClaimed }: { orders: Order[]; userId: string; onOrderClaimed: () => void }) {
   return (
     <div>
-      <SectionTitle>{orders.length} commande{orders.length > 1 ? "s" : ""}</SectionTitle>
-      <div>
-        {orders.map((order) => (
-          <OrderRow key={order.id} order={order} />
-        ))}
-      </div>
+      {orders.length === 0 ? (
+        <EmptyState
+          icon={Package}
+          message="Vous n'avez pas encore passé de commande."
+          cta={{ label: "Découvrir la collection", href: "/boutique" }}
+        />
+      ) : (
+        <>
+          <SectionTitle>{orders.length} commande{orders.length > 1 ? "s" : ""}</SectionTitle>
+          <div>
+            {orders.map((order) => (
+              <OrderRow key={order.id} order={order} />
+            ))}
+          </div>
+        </>
+      )}
+      <ClaimOrderForm userId={userId} onClaimed={onOrderClaimed} />
     </div>
   );
 }
@@ -807,7 +879,10 @@ export function Dashboard({ userId, email, firstName }: DashboardProps) {
           />
         );
       case "orders":
-        return <OrdersTab orders={orders} />;
+        return <OrdersTab orders={orders} userId={userId} onOrderClaimed={async () => {
+          const [o] = await Promise.all([fetchOrders(userId)]);
+          setOrders(o);
+        }} />;
       case "favorites":
         return <FavoritesTab />;
       case "promotions":
