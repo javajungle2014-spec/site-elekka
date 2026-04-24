@@ -107,8 +107,8 @@ export function ContactSection() {
             <ul className="mt-10 space-y-5">
               <li className="flex items-center gap-4">
                 <EnvelopeSimple size={18} className="text-ink" />
-                <a href="mailto:contact@elekka.fr" className="text-sm text-ink underline underline-offset-4 decoration-line hover:decoration-ink">
-                  contact@elekka.fr
+                <a href="mailto:elekka.sellier@gmail.com" className="text-sm text-ink underline underline-offset-4 decoration-line hover:decoration-ink">
+                  elekka.sellier@gmail.com
                 </a>
               </li>
               <li className="flex items-center gap-4">
