@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Package, CaretLeft, Truck, Check, SignOut } from "@phosphor-icons/react";
+import { Package, CaretLeft, Truck, Check, SignOut, ChartBar } from "@phosphor-icons/react";
 import { formatPrice } from "@/lib/products";
 
 type OrderStatus = "en_preparation" | "expediee" | "livree" | "annulee";
@@ -278,12 +278,121 @@ function OrderDetail({
   );
 }
 
+// ── Statistiques ─────────────────────────────────────────────────────────────
+
+type Stats = {
+  totalRevenue: number; totalOrders: number;
+  monthRevenue: number; monthOrders: number;
+  byStatus: { en_preparation: number; expediee: number; livree: number };
+  months: { label: string; revenue: number; count: number }[];
+  topItems: { name: string; count: number }[];
+};
+
+function StatsView({ password, onBack }: { password: string; onBack: () => void }) {
+  const [stats, setStats] = useState<Stats | null>(null);
+
+  useEffect(() => {
+    fetch("/api/admin/stats", { headers: { Authorization: `Bearer ${password}` } })
+      .then((r) => r.json())
+      .then(setStats);
+  }, [password]);
+
+  if (!stats) return <div className="min-h-screen bg-paper flex items-center justify-center text-sm text-muted">Chargement…</div>;
+
+  const maxRevenue = Math.max(...stats.months.map((m) => m.revenue), 1);
+
+  return (
+    <div className="min-h-screen bg-paper">
+      <div className="max-w-[900px] mx-auto px-5 md:px-10 py-10 space-y-10">
+
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs tracking-widest uppercase text-muted mb-1">Elekka</p>
+            <h1 className="text-3xl font-bold">Statistiques</h1>
+          </div>
+          <button type="button" onClick={onBack} className="flex items-center gap-2 text-sm text-muted hover:text-ink transition-colors">
+            <CaretLeft size={14} /> Commandes
+          </button>
+        </div>
+
+        {/* KPIs */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {[
+            { label: "CA total", value: `${stats.totalRevenue.toFixed(0)} €` },
+            { label: "CA ce mois", value: `${stats.monthRevenue.toFixed(0)} €` },
+            { label: "Commandes total", value: String(stats.totalOrders) },
+            { label: "Commandes ce mois", value: String(stats.monthOrders) },
+          ].map(({ label, value }) => (
+            <div key={label} className="border border-line p-5">
+              <p className="text-2xl font-bold font-mono">{value}</p>
+              <p className="text-xs text-muted mt-1">{label}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Graphique 6 mois */}
+        <div className="border border-line p-6">
+          <p className="text-xs tracking-widest uppercase text-muted mb-6">Chiffre d'affaires — 6 derniers mois</p>
+          <div className="flex items-end gap-3 h-40">
+            {stats.months.map((m) => (
+              <div key={m.label} className="flex-1 flex flex-col items-center gap-2">
+                <span className="text-xs text-muted font-mono">{m.revenue > 0 ? `${m.revenue.toFixed(0)} €` : ""}</span>
+                <div
+                  className="w-full bg-ink transition-all"
+                  style={{ height: `${Math.max((m.revenue / maxRevenue) * 100, m.revenue > 0 ? 4 : 0)}%` }}
+                />
+                <span className="text-[10px] text-muted">{m.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Statuts + Top articles */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="border border-line p-6">
+            <p className="text-xs tracking-widest uppercase text-muted mb-4">Par statut</p>
+            <div className="space-y-3">
+              {[
+                { label: "En préparation", count: stats.byStatus.en_preparation, color: "bg-amber-400" },
+                { label: "Expédiées", count: stats.byStatus.expediee, color: "bg-blue-400" },
+                { label: "Livrées", count: stats.byStatus.livree, color: "bg-green-400" },
+              ].map(({ label, count, color }) => (
+                <div key={label} className="flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-2 h-2 rounded-full ${color}`} />
+                    <span className="text-muted">{label}</span>
+                  </div>
+                  <span className="font-mono font-semibold">{count}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="border border-line p-6">
+            <p className="text-xs tracking-widest uppercase text-muted mb-4">Articles les plus commandés</p>
+            <div className="space-y-3">
+              {stats.topItems.length === 0 && <p className="text-sm text-muted">Aucune donnée</p>}
+              {stats.topItems.map((item) => (
+                <div key={item.name} className="flex items-center justify-between text-sm">
+                  <span className="text-muted truncate">{item.name}</span>
+                  <span className="font-mono font-semibold shrink-0 ml-2">{item.count} vendus</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
 // ── Liste des commandes ───────────────────────────────────────────────────────
 
 function OrdersList({
-  orders, password, onSelect, onLogout,
+  orders, password, onSelect, onLogout, onStats,
 }: {
-  orders: Order[]; password: string; onSelect: (o: Order) => void; onLogout: () => void;
+  orders: Order[]; password: string; onSelect: (o: Order) => void; onLogout: () => void; onStats: () => void;
 }) {
   const counts = {
     en_preparation: orders.filter((o) => o.status === "en_preparation").length,
@@ -300,13 +409,22 @@ function OrdersList({
             <p className="text-xs tracking-widest uppercase text-muted mb-1">Elekka</p>
             <h1 className="text-3xl font-bold">Commandes</h1>
           </div>
-          <button
-            type="button"
-            onClick={onLogout}
-            className="flex items-center gap-2 text-sm text-muted hover:text-ink transition-colors"
-          >
-            <SignOut size={14} /> Déconnexion
-          </button>
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={onStats}
+              className="flex items-center gap-2 text-sm text-muted hover:text-ink transition-colors"
+            >
+              <ChartBar size={14} /> Statistiques
+            </button>
+            <button
+              type="button"
+              onClick={onLogout}
+              className="flex items-center gap-2 text-sm text-muted hover:text-ink transition-colors"
+            >
+              <SignOut size={14} /> Déconnexion
+            </button>
+          </div>
         </div>
 
         {/* Stats */}
@@ -376,6 +494,7 @@ export default function AdminPage() {
   const [password, setPassword] = useState<string | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [selected, setSelected] = useState<Order | null>(null);
+  const [showStats, setShowStats] = useState(false);
   const [authError, setAuthError] = useState(false);
 
   const loadOrders = useCallback(async (pwd: string) => {
@@ -442,12 +561,17 @@ export default function AdminPage() {
     );
   }
 
+  if (showStats) {
+    return <StatsView password={password} onBack={() => setShowStats(false)} />;
+  }
+
   return (
     <OrdersList
       orders={orders}
       password={password}
       onSelect={setSelected}
       onLogout={handleLogout}
+      onStats={() => setShowStats(true)}
     />
   );
 }
