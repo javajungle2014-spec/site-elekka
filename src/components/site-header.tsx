@@ -160,9 +160,14 @@ export function SiteHeader() {
             {open ? <X size={22} weight="regular" /> : <List size={22} weight="regular" />}
           </button>
 
-          <Link href="/" aria-label="Elekka — Accueil" className="press">
-            <Wordmark tone="ink" priority className="h-5 w-auto" />
-          </Link>
+          <div
+            className="relative flex items-center justify-center w-[160px] h-16 bg-white overflow-hidden"
+            style={{ clipPath: "polygon(0 0, 100% 0, calc(100% - 16px) 100%, 16px 100%)" }}
+          >
+            <Link href="/" aria-label="Elekka — Accueil" className="relative z-10 press">
+              <Wordmark tone="ink" priority className="h-11 w-auto" />
+            </Link>
+          </div>
 
           <button type="button" aria-label="Mon panier" className="p-2 -mr-2 text-ink press">
             <ShoppingBag size={22} weight="regular" />
