@@ -211,11 +211,17 @@ function OrderDetail({
                 <Truck size={14} className="text-muted shrink-0" />
                 <input
                   value={tracking}
-                  onChange={(e) => setTracking(e.target.value)}
+                  onChange={(e) => {
+                    setTracking(e.target.value);
+                    if (e.target.value.trim()) setStatus("expediee");
+                  }}
                   placeholder="Ex: 6Q06537706441"
                   className="flex-1 bg-transparent border-b border-line py-2.5 text-sm focus:outline-none focus:border-ink transition-colors placeholder:text-muted-soft font-mono"
                 />
               </div>
+              {tracking.trim() && (
+                <p className="text-xs text-blue-600">Le statut passera automatiquement à "Expédiée"</p>
+              )}
             </div>
           </div>
 
