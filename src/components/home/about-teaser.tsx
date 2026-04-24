@@ -4,7 +4,7 @@ import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 
 export function AboutTeaser() {
   return (
-    <section className="mt-24 md:mt-36">
+    <section className="mt-8 md:mt-10">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-center">
           <div className="md:col-span-5 relative aspect-[4/5] overflow-hidden bg-paper-2">
