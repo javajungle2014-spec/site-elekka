@@ -67,6 +67,9 @@ export function ProductDetailClient({ product }: { product: Product }) {
           <p className="mt-4 font-mono text-2xl md:text-3xl text-ink tabular-nums">
             {formatPrice(product.priceEUR)}
           </p>
+          <div className="mt-3 inline-flex items-center gap-2 bg-ink text-on-ink px-3 py-1.5 text-xs font-medium tracking-wide">
+            Livraison offerte
+          </div>
 
           {/* Description */}
           <p className="mt-6 text-sm md:text-base text-muted leading-relaxed border-l-2 border-line pl-4">

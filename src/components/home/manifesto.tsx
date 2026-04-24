@@ -30,6 +30,10 @@ export function Manifesto() {
                 Ce sont le cuir, la technologie et le savoir-faire de l'artisan qui font la différence.
               </span>
             </p>
+            <div className="mt-10 flex items-baseline gap-3">
+              <span className="font-mono text-4xl font-bold text-on-ink">54</span>
+              <span className="text-sm text-on-ink-muted">cavaliers nous font déjà confiance.</span>
+            </div>
           </div>
           <div className="md:col-span-5 flex flex-col divide-y divide-line-ink">
             {pillars.map((p) => (

@@ -103,6 +103,10 @@ export function CartDrawer() {
             {/* Footer */}
             {items.length > 0 && (
               <div className="px-6 py-5 border-t border-line space-y-3">
+                <div className="flex items-center justify-between text-xs text-green-600 font-medium">
+                  <span>Livraison offerte</span>
+                  <span>0,00 €</span>
+                </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted">Total</span>
                   <span className="font-mono font-semibold text-base">{formatPrice(totalPrice)}</span>
