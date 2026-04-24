@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { List, X, Heart, User, ShoppingBag } from "@phosphor-icons/react";
+import { List, X, Heart, User, ShoppingBag, CaretDown } from "@phosphor-icons/react";
 import { Wordmark } from "./wordmark";
 import { LimelightNav } from "./ui/limelight-nav";
 import { useCart } from "@/lib/cart-store";
@@ -12,9 +12,14 @@ import { useFavorites } from "@/lib/favorites-store";
 const nav = [
   { href: "/", label: "Accueil" },
   { href: "/boutique", label: "Boutique" },
-  { href: "/ressources", label: "Ressources" },
-  { href: "/a-propos", label: "À propos" },
   { href: "/#contact", label: "Contact" },
+];
+
+const ressourcesLinks = [
+  { href: "/a-propos", label: "Notre histoire" },
+  { href: "/ressources/faq", label: "FAQ" },
+  { href: "/ressources/conseils", label: "Conseils" },
+  { href: "/ressources/blog", label: "Blog" },
 ];
 
 const icons = [
@@ -22,6 +27,54 @@ const icons = [
   { label: "Mon compte", Icon: User },
   { label: "Mon panier", Icon: ShoppingBag },
 ];
+
+function RessourcesDropdown({ pathname }: { pathname: string }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const isActive = pathname.startsWith("/ressources") || pathname.startsWith("/a-propos");
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className={`flex items-center gap-1 px-4 py-2 text-sm tracking-wide transition-colors duration-200 ${
+          isActive ? "text-ink" : "text-muted hover:text-ink"
+        }`}
+      >
+        Ressources
+        <CaretDown size={11} className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+      </button>
+
+      {open && (
+        <div className="absolute top-full left-0 mt-2 w-44 bg-paper border border-line shadow-lg z-50">
+          {ressourcesLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setOpen(false)}
+              className={`block px-4 py-3 text-sm transition-colors border-b border-line last:border-0 ${
+                pathname === link.href || pathname.startsWith(link.href + "/")
+                  ? "text-ink font-medium"
+                  : "text-muted hover:text-ink hover:bg-paper-2"
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -66,15 +119,19 @@ export function SiteHeader() {
         {/* Desktop — 3 colonnes : nav | logo centré | icônes */}
         <div className="hidden lg:grid grid-cols-3 items-center h-20">
 
-          {/* Gauche : navigation avec effet limelight */}
-          <LimelightNav
-            items={nav.map((item) => ({ id: item.href, label: item.label, href: item.href }))}
-            activeIndex={nav.findIndex((item) =>
-              item.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(item.href.split("#")[0]) && item.href !== "/"
-            )}
-          />
+          {/* Gauche : navigation + dropdown Ressources */}
+          <div className="flex items-center">
+            <LimelightNav
+              items={nav.map((item) => ({ id: item.href, label: item.label, href: item.href }))}
+              activeIndex={nav.findIndex((item) =>
+                item.href === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(item.href.split("#")[0]) && item.href !== "/"
+              )}
+            />
+            {/* Dropdown Ressources */}
+            <RessourcesDropdown pathname={pathname} />
+          </div>
 
           {/* Centre : wordmark dans badge trapèze (style VEXO) */}
           <div className="flex justify-center">
@@ -198,6 +255,22 @@ export function SiteHeader() {
               <span aria-hidden className="text-muted">→</span>
             </Link>
           ))}
+          {/* Ressources */}
+          <div className="px-5 py-4">
+            <p className="text-xs tracking-widest uppercase text-muted mb-3">Ressources</p>
+            <div className="flex flex-col gap-3">
+              {ressourcesLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className="text-base text-muted hover:text-ink transition-colors press"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
         </nav>
         <div className="flex items-center gap-8 px-5 py-6 border-t border-line">
           <button type="button" aria-label="Mes favoris" className="flex items-center gap-2 text-sm text-muted press">
