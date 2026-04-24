@@ -107,6 +107,9 @@ export function CartDrawer() {
                   <span>Livraison offerte</span>
                   <span>0,00 €</span>
                 </div>
+                <div className="text-xs text-muted border border-line px-3 py-2 text-center leading-relaxed">
+                  🎁 Pour tout filet acheté — une paire de rênes offerte
+                </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted">Total</span>
                   <span className="font-mono font-semibold text-base">{formatPrice(totalPrice)}</span>
