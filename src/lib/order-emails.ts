@@ -49,6 +49,23 @@ export async function createOrderAndGetNumber({
     await supabase.from("orders").update({ order_number: orderNumber }).eq("id", data.id);
   }
 
+  // Déduire le stock automatiquement
+  for (const item of items) {
+    const { data: model } = await supabase
+      .from("stock_models")
+      .select("id")
+      .eq("slug", item.slug)
+      .single();
+    if (model) {
+      await supabase.rpc("deduct_stock", {
+        p_model_id: model.id,
+        p_colour: item.colourLabel,
+        p_size: item.size,
+        p_qty: item.quantity,
+      });
+    }
+  }
+
   return orderNumber;
 }
 

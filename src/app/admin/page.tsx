@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Package, CaretLeft, Truck, Check, SignOut, ChartBar, DownloadSimple } from "@phosphor-icons/react";
+import { Package, CaretLeft, Truck, Check, SignOut, ChartBar, DownloadSimple, Warehouse, Plus, Minus } from "@phosphor-icons/react";
 import { formatPrice } from "@/lib/products";
 
 type OrderStatus = "en_preparation" | "expediee" | "livree" | "annulee";
@@ -387,6 +387,252 @@ function StatsView({ password, onBack }: { password: string; onBack: () => void 
   );
 }
 
+// ── Gestion des stocks ────────────────────────────────────────────────────────
+
+type StockVariant = { id: number; colour: string; size: string; quantity: number };
+type StockModel = { id: number; name: string; slug: string | null; stock_variants: StockVariant[] };
+type StockCategory = { id: number; name: string; stock_models: StockModel[] };
+
+function QuantityControl({ variant, password, onUpdate }: {
+  variant: StockVariant; password: string; onUpdate: (id: number, qty: number) => void;
+}) {
+  const [qty, setQty] = useState(variant.quantity);
+  const [saving, setSaving] = useState(false);
+
+  async function save(newQty: number) {
+    if (newQty < 0) return;
+    setSaving(true);
+    await fetch("/api/admin/stock", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${password}` },
+      body: JSON.stringify({ action: "update-variant", variantId: variant.id, quantity: newQty }),
+    });
+    setQty(newQty);
+    onUpdate(variant.id, newQty);
+    setSaving(false);
+  }
+
+  const color = qty === 0 ? "text-red-500" : qty <= 3 ? "text-amber-500" : "text-green-600";
+
+  return (
+    <div className="flex items-center gap-2">
+      <button type="button" onClick={() => save(qty - 1)} disabled={qty === 0 || saving}
+        className="w-7 h-7 border border-line flex items-center justify-center text-muted hover:text-ink hover:border-ink transition-colors disabled:opacity-30">
+        <Minus size={12} />
+      </button>
+      <span className={`font-mono text-sm font-semibold w-8 text-center ${color}`}>{qty}</span>
+      <button type="button" onClick={() => save(qty + 1)} disabled={saving}
+        className="w-7 h-7 border border-line flex items-center justify-center text-muted hover:text-ink hover:border-ink transition-colors">
+        <Plus size={12} />
+      </button>
+    </div>
+  );
+}
+
+function StockView({ password, onBack }: { password: string; onBack: () => void }) {
+  const [categories, setCategories] = useState<StockCategory[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [newCatName, setNewCatName] = useState("");
+  const [addingCat, setAddingCat] = useState(false);
+  const [addingModel, setAddingModel] = useState<number | null>(null);
+  const [newModelName, setNewModelName] = useState("");
+  const [newModelSlug, setNewModelSlug] = useState("");
+  const [addingVariant, setAddingVariant] = useState<number | null>(null);
+  const [newVariantColour, setNewVariantColour] = useState("");
+  const [newVariantSize, setNewVariantSize] = useState("");
+  const [newVariantQty, setNewVariantQty] = useState("0");
+
+  useEffect(() => {
+    fetch("/api/admin/stock", { headers: { Authorization: `Bearer ${password}` } })
+      .then((r) => r.json())
+      .then((d) => { setCategories(d.categories ?? []); setLoading(false); });
+  }, [password]);
+
+  async function addCategory() {
+    if (!newCatName.trim()) return;
+    const res = await fetch("/api/admin/stock", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${password}` },
+      body: JSON.stringify({ action: "add-category", name: newCatName.trim() }),
+    });
+    const json = await res.json();
+    if (json.success) {
+      setCategories((prev) => [...prev, { ...json.data, stock_models: [] }]);
+      setNewCatName(""); setAddingCat(false);
+    }
+  }
+
+  async function addModel(categoryId: number) {
+    if (!newModelName.trim()) return;
+    const res = await fetch("/api/admin/stock", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${password}` },
+      body: JSON.stringify({ action: "add-model", categoryId, name: newModelName.trim(), slug: newModelSlug.trim() || null }),
+    });
+    const json = await res.json();
+    if (json.success) {
+      setCategories((prev) => prev.map((c) => c.id === categoryId
+        ? { ...c, stock_models: [...c.stock_models, { ...json.data, stock_variants: [] }] }
+        : c
+      ));
+      setNewModelName(""); setNewModelSlug(""); setAddingModel(null);
+    }
+  }
+
+  async function addVariant(modelId: number, categoryId: number) {
+    if (!newVariantColour.trim() || !newVariantSize.trim()) return;
+    const res = await fetch("/api/admin/stock", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${password}` },
+      body: JSON.stringify({ action: "add-variant", modelId, colour: newVariantColour.trim(), size: newVariantSize.trim(), quantity: parseInt(newVariantQty) || 0 }),
+    });
+    const json = await res.json();
+    if (json.success) {
+      setCategories((prev) => prev.map((c) => c.id === categoryId ? {
+        ...c, stock_models: c.stock_models.map((m) => m.id === modelId
+          ? { ...m, stock_variants: [...m.stock_variants, json.data] } : m)
+      } : c));
+      setNewVariantColour(""); setNewVariantSize(""); setNewVariantQty("0"); setAddingVariant(null);
+    }
+  }
+
+  function updateVariantQty(categoryId: number, modelId: number, variantId: number, qty: number) {
+    setCategories((prev) => prev.map((c) => c.id === categoryId ? {
+      ...c, stock_models: c.stock_models.map((m) => m.id === modelId ? {
+        ...m, stock_variants: m.stock_variants.map((v) => v.id === variantId ? { ...v, quantity: qty } : v)
+      } : m)
+    } : c));
+  }
+
+  if (loading) return <div className="min-h-screen bg-paper flex items-center justify-center text-sm text-muted">Chargement…</div>;
+
+  return (
+    <div className="min-h-screen bg-paper">
+      <div className="max-w-[900px] mx-auto px-5 md:px-10 py-10 space-y-10">
+
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs tracking-widest uppercase text-muted mb-1">Elekka</p>
+            <h1 className="text-3xl font-bold">Stock</h1>
+          </div>
+          <button type="button" onClick={onBack} className="flex items-center gap-2 text-sm text-muted hover:text-ink transition-colors">
+            <CaretLeft size={14} /> Commandes
+          </button>
+        </div>
+
+        {/* Légende */}
+        <div className="flex items-center gap-6 text-xs text-muted">
+          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-green-500" />En stock</span>
+          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-500" />Stock faible (≤3)</span>
+          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-500" />Rupture</span>
+        </div>
+
+        {/* Catégories */}
+        {categories.map((cat) => (
+          <div key={cat.id} className="border border-line">
+            <div className="bg-paper-2 px-5 py-3 border-b border-line">
+              <p className="text-sm font-semibold tracking-wide">{cat.name}</p>
+            </div>
+
+            <div className="divide-y divide-line">
+              {cat.stock_models.map((model) => (
+                <div key={model.id} className="p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-sm font-medium">{model.name}</p>
+                    <button type="button" onClick={() => { setAddingVariant(model.id); setAddingModel(null); }}
+                      className="text-xs text-muted hover:text-ink underline underline-offset-4 transition-colors">
+                      + Variante
+                    </button>
+                  </div>
+
+                  {model.stock_variants.length === 0 && (
+                    <p className="text-xs text-muted-soft italic">Aucune variante</p>
+                  )}
+
+                  <div className="space-y-2">
+                    {model.stock_variants.map((v) => (
+                      <div key={v.id} className="flex items-center justify-between gap-4">
+                        <span className="text-sm text-muted">{v.colour} · {v.size}</span>
+                        <QuantityControl variant={v} password={password}
+                          onUpdate={(id, qty) => updateVariantQty(cat.id, model.id, id, qty)} />
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Formulaire ajout variante */}
+                  {addingVariant === model.id && (
+                    <div className="mt-4 pt-4 border-t border-line grid grid-cols-3 gap-2">
+                      <input value={newVariantColour} onChange={(e) => setNewVariantColour(e.target.value)}
+                        placeholder="Couleur" className="bg-transparent border-b border-line py-1.5 text-sm focus:outline-none focus:border-ink" />
+                      <input value={newVariantSize} onChange={(e) => setNewVariantSize(e.target.value)}
+                        placeholder="Taille" className="bg-transparent border-b border-line py-1.5 text-sm focus:outline-none focus:border-ink" />
+                      <input value={newVariantQty} onChange={(e) => setNewVariantQty(e.target.value)}
+                        type="number" min="0" placeholder="Qté" className="bg-transparent border-b border-line py-1.5 text-sm focus:outline-none focus:border-ink font-mono" />
+                      <button type="button" onClick={() => addVariant(model.id, cat.id)}
+                        className="col-span-2 bg-ink text-on-ink py-1.5 text-xs font-medium hover:bg-ink-soft transition-colors">
+                        Ajouter
+                      </button>
+                      <button type="button" onClick={() => setAddingVariant(null)}
+                        className="text-xs text-muted hover:text-ink transition-colors">
+                        Annuler
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Ajouter un modèle */}
+            {addingModel === cat.id ? (
+              <div className="p-5 border-t border-line grid grid-cols-3 gap-2">
+                <input value={newModelName} onChange={(e) => setNewModelName(e.target.value)}
+                  placeholder="Nom du modèle" className="col-span-2 bg-transparent border-b border-line py-1.5 text-sm focus:outline-none focus:border-ink" />
+                <input value={newModelSlug} onChange={(e) => setNewModelSlug(e.target.value)}
+                  placeholder="Slug (optionnel)" className="col-span-3 bg-transparent border-b border-line py-1.5 text-sm focus:outline-none focus:border-ink text-muted" />
+                <button type="button" onClick={() => addModel(cat.id)}
+                  className="col-span-2 bg-ink text-on-ink py-1.5 text-xs font-medium hover:bg-ink-soft transition-colors">
+                  Ajouter
+                </button>
+                <button type="button" onClick={() => setAddingModel(null)}
+                  className="text-xs text-muted hover:text-ink transition-colors">
+                  Annuler
+                </button>
+              </div>
+            ) : (
+              <button type="button" onClick={() => { setAddingModel(cat.id); setAddingVariant(null); }}
+                className="w-full p-3 text-xs text-muted hover:text-ink border-t border-line transition-colors flex items-center justify-center gap-1.5">
+                <Plus size={12} /> Ajouter un modèle
+              </button>
+            )}
+          </div>
+        ))}
+
+        {/* Ajouter une catégorie */}
+        {addingCat ? (
+          <div className="border border-line p-5 flex gap-3">
+            <input value={newCatName} onChange={(e) => setNewCatName(e.target.value)}
+              placeholder="Nom de la catégorie (ex: Rênes)" autoFocus
+              className="flex-1 bg-transparent border-b border-line py-1.5 text-sm focus:outline-none focus:border-ink" />
+            <button type="button" onClick={addCategory}
+              className="bg-ink text-on-ink px-4 py-1.5 text-xs font-medium hover:bg-ink-soft transition-colors">
+              Ajouter
+            </button>
+            <button type="button" onClick={() => setAddingCat(false)}
+              className="text-xs text-muted hover:text-ink transition-colors">
+              Annuler
+            </button>
+          </div>
+        ) : (
+          <button type="button" onClick={() => setAddingCat(true)}
+            className="w-full border border-dashed border-line p-4 text-sm text-muted hover:text-ink hover:border-ink transition-colors flex items-center justify-center gap-2">
+            <Plus size={14} /> Ajouter une catégorie
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── Liste des commandes ───────────────────────────────────────────────────────
 
 function ExportButton({ password }: { password: string }) {
@@ -440,9 +686,9 @@ function ExportButton({ password }: { password: string }) {
 }
 
 function OrdersList({
-  orders, password, onSelect, onLogout, onStats,
+  orders, password, onSelect, onLogout, onStats, onStock,
 }: {
-  orders: Order[]; password: string; onSelect: (o: Order) => void; onLogout: () => void; onStats: () => void;
+  orders: Order[]; password: string; onSelect: (o: Order) => void; onLogout: () => void; onStats: () => void; onStock: () => void;
 }) {
   const counts = {
     en_preparation: orders.filter((o) => o.status === "en_preparation").length,
@@ -467,6 +713,13 @@ function OrdersList({
               className="flex items-center gap-2 text-sm text-muted hover:text-ink transition-colors"
             >
               <ChartBar size={14} /> Statistiques
+            </button>
+            <button
+              type="button"
+              onClick={onStock}
+              className="flex items-center gap-2 text-sm text-muted hover:text-ink transition-colors"
+            >
+              <Warehouse size={14} /> Stock
             </button>
             <button
               type="button"
@@ -546,6 +799,7 @@ export default function AdminPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [selected, setSelected] = useState<Order | null>(null);
   const [showStats, setShowStats] = useState(false);
+  const [showStock, setShowStock] = useState(false);
   const [authError, setAuthError] = useState(false);
 
   const loadOrders = useCallback(async (pwd: string) => {
@@ -616,6 +870,10 @@ export default function AdminPage() {
     return <StatsView password={password} onBack={() => setShowStats(false)} />;
   }
 
+  if (showStock) {
+    return <StockView password={password} onBack={() => setShowStock(false)} />;
+  }
+
   return (
     <OrdersList
       orders={orders}
@@ -623,6 +881,7 @@ export default function AdminPage() {
       onSelect={setSelected}
       onLogout={handleLogout}
       onStats={() => setShowStats(true)}
+      onStock={() => setShowStock(true)}
     />
   );
 }
