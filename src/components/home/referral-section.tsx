@@ -78,7 +78,7 @@ export function ReferralSection() {
             ) : (
               <>
                 <p className="text-sm text-muted leading-relaxed">
-                  Créez un compte pour obtenir votre lien de parrainage personnel et commencer à parrainer vos amis cavaliers.
+                  Créez un compte ou connectez-vous — votre lien de parrainage est disponible dans l'onglet <strong className="text-ink">Parrainage</strong> de votre tableau de bord.
                 </p>
                 <Link
                   href="/compte"

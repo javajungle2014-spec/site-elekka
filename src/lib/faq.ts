@@ -146,7 +146,7 @@ export const faqCategories: FaqCategory[] = [
       },
       {
         q: "Où trouver mon lien de parrainage ?",
-        a: "Connectez-vous à votre compte Elekka, et retrouvez votre lien personnel dans la section 'Aperçu' de votre tableau de bord. Il suffit de le copier et de le partager.",
+        a: "Connectez-vous à votre compte Elekka, et cliquez sur l'onglet 'Parrainage' dans le menu de votre tableau de bord. Votre lien personnel y est affiché avec un bouton pour le copier en un clic.",
       },
       {
         q: "La réduction de -20% s'applique-t-elle automatiquement ?",

@@ -643,6 +643,100 @@ function FavoritesTab() {
   );
 }
 
+// ── Onglet Parrainage ─────────────────────────────────────────────────────────
+
+function ParrainageTab({ userId }: { userId: string }) {
+  const [referralCode, setReferralCode] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProfile(userId).then((p) => {
+      setReferralCode(p.referralCode);
+      setLoading(false);
+    });
+  }, [userId]);
+
+  const link = referralCode ? `https://elekka-sellier.fr/?ref=${referralCode}` : null;
+
+  async function handleCopy() {
+    if (!link) return;
+    await navigator.clipboard.writeText(link);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  if (loading) return <div className="py-20 text-center text-sm text-muted">Chargement…</div>;
+
+  return (
+    <div className="max-w-[560px] space-y-10">
+
+      <div>
+        <p className="kicker text-muted mb-3">Programme de parrainage</p>
+        <h2 className="display text-3xl md:text-4xl">
+          Parrainez un ami.<br />
+          <span className="text-muted">Gagnez tous les deux.</span>
+        </h2>
+      </div>
+
+      {/* Avantages */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="border border-line p-5 space-y-2">
+          <p className="text-xs text-muted tracking-wide uppercase">Votre ami reçoit</p>
+          <p className="font-mono text-3xl font-bold">-20%</p>
+          <p className="text-xs text-muted">sur sa première commande, appliqué automatiquement via votre lien</p>
+        </div>
+        <div className="border border-line p-5 space-y-2">
+          <p className="text-xs text-muted tracking-wide uppercase">Vous recevez</p>
+          <p className="font-mono text-3xl font-bold">-30€</p>
+          <p className="text-xs text-muted">sur votre prochain filet, envoyé par email dès sa commande confirmée</p>
+        </div>
+      </div>
+
+      {/* Lien */}
+      <div className="space-y-3">
+        <p className="text-sm font-medium">Votre lien personnel</p>
+        {link ? (
+          <>
+            <div className="flex items-center gap-2">
+              <span className="flex-1 font-mono text-xs text-muted bg-paper-2 border border-line px-3 py-3 truncate">
+                {link}
+              </span>
+              <button
+                type="button"
+                onClick={handleCopy}
+                className="press flex items-center gap-2 bg-ink text-on-ink px-4 py-3 text-xs font-medium hover:bg-ink-soft transition-colors shrink-0"
+              >
+                {copied ? <Check size={13} /> : <Copy size={13} />}
+                {copied ? "Copié !" : "Copier le lien"}
+              </button>
+            </div>
+            <p className="text-xs text-muted">Partagez-le par message, email ou réseaux sociaux. Sans limite de parrainages.</p>
+          </>
+        ) : (
+          <p className="text-sm text-muted">Votre lien est en cours de génération. Revenez dans quelques instants.</p>
+        )}
+      </div>
+
+      {/* Comment ça marche */}
+      <div className="border-t border-line pt-8 space-y-5">
+        <p className="kicker text-muted">Comment ça marche</p>
+        {[
+          { n: "01", text: "Copiez votre lien et partagez-le à un ami cavalier." },
+          { n: "02", text: "Il arrive sur le site via votre lien — la réduction de -20% s'applique automatiquement à sa commande." },
+          { n: "03", text: "Dès qu'il a commandé, vous recevez un email avec votre code -30€ sur votre prochain filet." },
+        ].map((step) => (
+          <div key={step.n} className="flex items-start gap-4">
+            <span className="font-mono text-xs text-muted-soft shrink-0 mt-0.5">{step.n}</span>
+            <p className="text-sm text-muted leading-relaxed">{step.text}</p>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  );
+}
+
 // ── Onglet Promotions ─────────────────────────────────────────────────────────
 
 function PromotionsTab({ promotions }: { promotions: UserPromotion[] }) {
@@ -998,6 +1092,8 @@ export function Dashboard({ userId, email, firstName }: DashboardProps) {
         }} />;
       case "favorites":
         return <FavoritesTab />;
+      case "parrainage":
+        return <ParrainageTab userId={userId} />;
       case "promotions":
         return <PromotionsTab promotions={promotions} />;
       case "profile":

@@ -126,7 +126,7 @@ export const conseils: Article[] = [
       },
       {
         heading: "Comment obtenir votre lien ?",
-        body: "Connectez-vous à votre compte Elekka et rendez-vous dans la section 'Aperçu' de votre tableau de bord. Votre lien personnel y est affiché, prêt à être copié et partagé.",
+        body: "Connectez-vous à votre compte Elekka et cliquez sur l'onglet 'Parrainage' dans le menu de votre tableau de bord. Votre lien personnel y est affiché avec un bouton pour le copier en un clic.",
       },
     ],
   },
@@ -245,7 +245,7 @@ export const blog: Article[] = [
       },
       {
         heading: "Où trouver votre lien ?",
-        body: "Dans votre espace compte Elekka, section 'Aperçu'. Un clic pour copier, un message pour partager. Il n'y a aucune limite — chaque ami qui commande vous rapporte un nouveau code.",
+        body: "Dans votre espace compte Elekka, cliquez sur l'onglet 'Parrainage' dans le menu de votre tableau de bord. Un clic pour copier, un message pour partager. Aucune limite — chaque ami qui commande vous rapporte un nouveau code.",
       },
     ],
   },
