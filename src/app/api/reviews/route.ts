@@ -11,7 +11,7 @@ export async function GET() {
 
   const { data } = await supabase
     .from("reviews")
-    .select("id, name, location, rating, text, photo_url")
+    .select("id, name, location, rating, text, photo_url, order_date")
     .eq("active", true)
     .order("created_at", { ascending: false });
 

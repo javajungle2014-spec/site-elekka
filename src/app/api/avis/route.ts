@@ -65,6 +65,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Lien invalide ou déjà utilisé" }, { status: 400 });
     }
 
+    // Récupérer la date de commande
+    let orderDate: string | null = null;
+    if (tokenData.order_number) {
+      const { data: orderData } = await supabase
+        .from("orders")
+        .select("created_at")
+        .eq("order_number", tokenData.order_number)
+        .single();
+      if (orderData) orderDate = orderData.created_at;
+    }
+
     // Enregistrer l'avis (en attente de modération)
     await supabase.from("reviews").insert({
       name: name || tokenData.first_name,
@@ -72,6 +83,7 @@ export async function POST(req: Request) {
       text: text.trim(),
       active: false,
       order_number: tokenData.order_number,
+      order_date: orderDate,
       created_at: new Date().toISOString(),
     });
 

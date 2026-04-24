@@ -10,6 +10,7 @@ type Review = {
   rating: number;
   text: string;
   photo_url: string | null;
+  order_date: string | null;
 };
 
 const CARD_WIDTH = 320 + 24; // largeur + margin
@@ -52,7 +53,12 @@ function ReviewCard({ review }: { review: Review }) {
         <Avatar name={review.name} photoUrl={review.photo_url} />
         <div>
           <p className="text-sm font-semibold">{review.name}</p>
-          {review.location && <p className="text-xs text-muted">{review.location}</p>}
+          <p className="text-xs text-muted">
+            {review.location && `${review.location} · `}
+            {review.order_date
+              ? `Commande de ${new Date(review.order_date).toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}`
+              : ""}
+          </p>
         </div>
       </div>
     </div>
