@@ -57,6 +57,9 @@ function LoginForm({ onSwitch, onSuccess }: { onSwitch: () => void; onSuccess: (
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resetMode, setResetMode] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -66,6 +69,51 @@ function LoginForm({ onSwitch, onSuccess }: { onSwitch: () => void; onSuccess: (
     setLoading(false);
     if (error) { setError("Email ou mot de passe incorrect."); return; }
     onSuccess();
+  }
+
+  async function handleReset(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email.trim()) { setError("Entrez votre email."); return; }
+    setResetLoading(true); setError("");
+    const supabase = createClient();
+    const siteUrl = "https://elekka-sellier.fr";
+    await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${siteUrl}/auth/callback?type=recovery`,
+    });
+    setResetLoading(false);
+    setResetSent(true);
+  }
+
+  if (resetMode) {
+    return (
+      <div className="space-y-8">
+        <div>
+          <h2 className="text-xl font-semibold mb-1">Mot de passe oublié</h2>
+          <p className="text-sm text-muted">Entrez votre email, vous recevrez un lien pour créer un nouveau mot de passe.</p>
+        </div>
+        {resetSent ? (
+          <div className="space-y-4">
+            <p className="text-sm text-muted border border-line px-4 py-3">Email envoyé à <strong>{email}</strong>. Vérifiez votre boîte mail.</p>
+            <button type="button" onClick={() => { setResetMode(false); setResetSent(false); }} className="press text-sm text-muted hover:text-ink underline underline-offset-4 transition-colors">
+              Retour à la connexion
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleReset} className="space-y-6">
+            <InputField label="Email" type="email" value={email} onChange={setEmail} placeholder="votre@email.fr" icon={EnvelopeSimple} />
+            {error && <p className="text-xs text-red-500">{error}</p>}
+            <button type="submit" disabled={resetLoading}
+              className="press group w-full flex items-center justify-between bg-ink text-on-ink px-6 py-4 text-sm font-medium hover:bg-ink-soft transition-colors disabled:opacity-50">
+              {resetLoading ? "Envoi…" : "Envoyer le lien"}
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-200" />
+            </button>
+            <button type="button" onClick={() => setResetMode(false)} className="press text-sm text-center w-full text-muted hover:text-ink underline underline-offset-4 transition-colors">
+              Retour à la connexion
+            </button>
+          </form>
+        )}
+      </div>
+    );
   }
 
   return (
@@ -78,7 +126,7 @@ function LoginForm({ onSwitch, onSuccess }: { onSwitch: () => void; onSuccess: (
         <label className="flex items-center gap-2 cursor-pointer hover:text-ink transition-colors">
           <input type="checkbox" className="accent-ink" /> Se souvenir de moi
         </label>
-        <button type="button" className="press hover:text-ink transition-colors underline underline-offset-4">
+        <button type="button" onClick={() => setResetMode(true)} className="press hover:text-ink transition-colors underline underline-offset-4">
           Mot de passe oublié ?
         </button>
       </div>
