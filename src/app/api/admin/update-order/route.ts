@@ -39,8 +39,11 @@ export async function POST(req: Request) {
     }
 
     // Mettre à jour la commande
-    const updates: Record<string, string> = { status };
+    const updates: Record<string, string | null> = { status };
     if (trackingNumber) updates.tracking_number = trackingNumber;
+    if (status === "livree" && order.status !== "livree") {
+      updates.delivered_at = new Date().toISOString();
+    }
 
     await supabase.from("orders").update(updates).eq("id", orderId);
 
