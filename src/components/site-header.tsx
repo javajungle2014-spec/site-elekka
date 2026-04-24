@@ -63,7 +63,7 @@ export function SiteHeader() {
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
 
         {/* Desktop — 3 colonnes : nav | logo centré | icônes */}
-        <div className="hidden md:grid grid-cols-3 items-center h-20">
+        <div className="hidden lg:grid grid-cols-3 items-center h-20">
 
           {/* Gauche : navigation avec effet limelight */}
           <LimelightNav
@@ -149,7 +149,7 @@ export function SiteHeader() {
         </div>
 
         {/* Mobile */}
-        <div className="flex md:hidden items-center justify-between h-16">
+        <div className="flex lg:hidden items-center justify-between h-16">
           <button
             type="button"
             className="p-2 -ml-2 text-ink press"
@@ -171,7 +171,7 @@ export function SiteHeader() {
       </div>
 
       {/* Menu mobile déroulant */}
-      <div className={`md:hidden fixed inset-x-0 top-16 bottom-0 bg-paper border-t border-line transition-[opacity,transform] duration-300 ${open ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"}`}>
+      <div className={`lg:hidden fixed inset-x-0 top-16 bottom-0 bg-paper border-t border-line transition-[opacity,transform] duration-300 ${open ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"}`}>
         <nav className="flex flex-col divide-y divide-line">
           {nav.map((item) => (
             <Link
