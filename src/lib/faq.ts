@@ -138,6 +138,27 @@ export const faqCategories: FaqCategory[] = [
     ],
   },
   {
+    title: "Parrainage",
+    items: [
+      {
+        q: "Comment fonctionne le programme de parrainage ?",
+        a: "Chaque client Elekka dispose d'un lien de parrainage personnel dans son espace compte. Lorsque vous le partagez à un ami et qu'il commande via ce lien, il bénéficie automatiquement de -20% sur sa première commande. Vous recevez ensuite un code de -30€ sur votre prochain filet, envoyé par email dès sa commande validée.",
+      },
+      {
+        q: "Où trouver mon lien de parrainage ?",
+        a: "Connectez-vous à votre compte Elekka, et retrouvez votre lien personnel dans la section 'Aperçu' de votre tableau de bord. Il suffit de le copier et de le partager.",
+      },
+      {
+        q: "La réduction de -20% s'applique-t-elle automatiquement ?",
+        a: "Oui, entièrement automatique. Votre ami n'a aucun code à saisir. Il lui suffit d'arriver sur le site via votre lien et la réduction apparaît directement dans le récapitulatif de sa commande.",
+      },
+      {
+        q: "Peut-on parrainer plusieurs amis ?",
+        a: "Oui, il n'y a aucune limite. Chaque ami qui commande via votre lien vous génère un nouveau code de -30€.",
+      },
+    ],
+  },
+  {
     title: "Service client",
     items: [
       {

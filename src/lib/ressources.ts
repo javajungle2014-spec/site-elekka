@@ -105,6 +105,32 @@ export const conseils: Article[] = [
     ],
   },
   {
+    slug: "programme-parrainage",
+    title: "Parrainez un ami et gagnez tous les deux",
+    description: "Comment fonctionne le programme de parrainage Elekka — et comment obtenir votre lien personnel pour faire profiter vos amis cavaliers.",
+    date: "2026-04-20",
+    readTime: "2 min",
+    category: "Bons plans",
+    keywords: ["parrainage équestre", "réduction filet cheval", "code parrainage Elekka", "bons plans équitation"],
+    content: [
+      {
+        body: "Chez Elekka, nous croyons que la meilleure publicité vient des cavaliers eux-mêmes. C'est pourquoi nous avons mis en place un programme de parrainage simple et avantageux pour vous et vos amis.",
+      },
+      {
+        heading: "Comment ça marche ?",
+        body: "Chaque client Elekka dispose d'un lien de parrainage unique, accessible depuis son tableau de bord. Partagez-le à un ami cavalier. S'il commande via ce lien, il bénéficie automatiquement de -20% sur sa première commande — sans code à saisir.",
+      },
+      {
+        heading: "Et vous dans tout ça ?",
+        body: "Dès que votre filleul a validé sa commande, vous recevez par email un code de -30€ sur votre prochain filet Elekka. Pas de limite : chaque ami qui commande via votre lien génère une nouvelle récompense.",
+      },
+      {
+        heading: "Comment obtenir votre lien ?",
+        body: "Connectez-vous à votre compte Elekka et rendez-vous dans la section 'Aperçu' de votre tableau de bord. Votre lien personnel y est affiché, prêt à être copié et partagé.",
+      },
+    ],
+  },
+  {
     slug: "mesurer-tete-cheval-taille-filet",
     title: "Full ou Cob : comment mesurer la tête de son cheval",
     description: "Guide pratique pour mesurer correctement la tête de son cheval et choisir la bonne taille de filet entre Full et Cob.",
@@ -194,6 +220,32 @@ export const blog: Article[] = [
       {
         heading: "Lequel choisir ?",
         body: "Si votre cheval est sensible au niveau de la nuque ou du chanfrein, ou si vous cherchez à améliorer sa décontraction, le Signature ou le Fusion s'imposent. Si vous cherchez un filet classique, polyvalent et durable, l'Essentiel est le bon choix. En cas de doute, écrivez-nous — nous vous aidons à décider.",
+      },
+    ],
+  },
+  {
+    slug: "parrainez-vos-amis",
+    title: "Parrainez vos amis — et gagnez -30€ sur votre prochain filet",
+    description: "Elekka lance son programme de parrainage. Partagez votre lien, votre ami profite de -20%, vous gagnez -30€. Simple, automatique, sans limite.",
+    date: "2026-04-18",
+    readTime: "2 min",
+    category: "Nouveauté",
+    keywords: ["parrainage Elekka", "code parrainage filet cheval", "réduction équitation", "programme fidélité équestre"],
+    content: [
+      {
+        body: "Nous lançons aujourd'hui le programme de parrainage Elekka. Une façon simple de récompenser ceux qui parlent de nous autour d'eux.",
+      },
+      {
+        heading: "Le principe en deux phrases",
+        body: "Vous partagez votre lien personnel à un ami cavalier. Il commande via ce lien → il bénéficie de -20% sur sa première commande, vous recevez -30€ sur votre prochain filet.",
+      },
+      {
+        heading: "Tout est automatique",
+        body: "Votre ami n'a aucun code à saisir. La réduction s'applique seule dès qu'il arrive sur le site via votre lien. Vous recevez votre récompense par email dès sa commande confirmée.",
+      },
+      {
+        heading: "Où trouver votre lien ?",
+        body: "Dans votre espace compte Elekka, section 'Aperçu'. Un clic pour copier, un message pour partager. Il n'y a aucune limite — chaque ami qui commande vous rapporte un nouveau code.",
       },
     ],
   },

@@ -19,7 +19,7 @@ import {
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-type DashTab = "overview" | "orders" | "favorites" | "promotions" | "profile";
+type DashTab = "overview" | "orders" | "favorites" | "parrainage" | "promotions" | "profile";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -34,6 +34,7 @@ const TAB_ITEMS: { id: DashTab; label: string; Icon: React.ElementType }[] = [
   { id: "overview", label: "Aperçu", Icon: House },
   { id: "orders", label: "Commandes", Icon: Package },
   { id: "favorites", label: "Favoris", Icon: Heart },
+  { id: "parrainage", label: "Parrainage", Icon: UsersThree },
   { id: "promotions", label: "Promotions", Icon: Tag },
   { id: "profile", label: "Mon profil", Icon: IdentificationCard },
 ];
