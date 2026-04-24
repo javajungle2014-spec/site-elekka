@@ -20,6 +20,7 @@ export function SiteFooter() {
               <li><Link href="/boutique" className="hover:text-on-ink text-on-ink-muted">Boutique</Link></li>
               <li><Link href="/a-propos" className="hover:text-on-ink text-on-ink-muted">À propos</Link></li>
               <li><Link href="/#contact" className="hover:text-on-ink text-on-ink-muted">Contact</Link></li>
+              <li><Link href="/faq" className="hover:text-on-ink text-on-ink-muted">FAQ</Link></li>
             </ul>
           </div>
           <div className="md:col-span-4">

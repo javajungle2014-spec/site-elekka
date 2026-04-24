@@ -2,12 +2,34 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Check, ShoppingBag, Heart } from "@phosphor-icons/react";
+import { ArrowLeft, Check, ShoppingBag, Heart, Plus, Minus } from "@phosphor-icons/react";
 import { type Product, formatPrice, products } from "@/lib/products";
 import { ProductPlaceholder } from "@/components/product-placeholder";
 import { useCart } from "@/lib/cart-store";
 import { useFavorites } from "@/lib/favorites-store";
 import { AuthModal } from "@/components/auth-modal";
+import { faqProductCategories, type FaqItem } from "@/lib/faq";
+
+function FaqAccordionItem({ item }: { item: FaqItem }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border-b border-line last:border-0">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="press w-full flex items-start justify-between gap-4 py-4 text-left"
+      >
+        <span className="text-sm leading-snug">{item.q}</span>
+        <span className="shrink-0 mt-0.5 text-muted">
+          {open ? <Minus size={13} /> : <Plus size={13} />}
+        </span>
+      </button>
+      {open && (
+        <p className="text-xs text-muted leading-relaxed pb-4 max-w-[52ch]">{item.a}</p>
+      )}
+    </div>
+  );
+}
 
 export function ProductDetailClient({ product }: { product: Product }) {
   const [selectedColour, setSelectedColour] = useState(product.defaultColour);
@@ -185,6 +207,26 @@ export function ProductDetailClient({ product }: { product: Product }) {
             <p>{product.longDescription}</p>
           </div>
 
+        </div>
+      </div>
+
+      {/* FAQ */}
+      <div className="mt-16 md:mt-24 border-t border-line pt-12">
+        <div className="flex items-center justify-between mb-8">
+          <p className="kicker text-muted">Questions fréquentes</p>
+          <Link href="/faq" className="press text-xs text-muted hover:text-ink underline underline-offset-4 transition-colors">
+            Voir toutes les questions
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16">
+          {faqProductCategories.map((cat) => (
+            <div key={cat.title} className="mb-8">
+              <p className="text-xs tracking-widest uppercase text-muted-soft mb-2">{cat.title}</p>
+              {cat.items.map((item) => (
+                <FaqAccordionItem key={item.q} item={item} />
+              ))}
+            </div>
+          ))}
         </div>
       </div>
 
