@@ -1,0 +1,135 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { Star } from "@phosphor-icons/react";
+
+type Review = {
+  id: number;
+  name: string;
+  location: string | null;
+  rating: number;
+  text: string;
+  photo_url: string | null;
+};
+
+function StarRating({ rating }: { rating: number }) {
+  return (
+    <div className="flex items-center gap-0.5">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Star
+          key={i}
+          size={13}
+          weight={i < rating ? "fill" : "regular"}
+          className={i < rating ? "text-ink" : "text-muted-soft"}
+        />
+      ))}
+    </div>
+  );
+}
+
+function Avatar({ name, photoUrl }: { name: string; photoUrl: string | null }) {
+  const initials = name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
+  if (photoUrl) {
+    return (
+      <img
+        src={photoUrl}
+        alt={name}
+        className="w-10 h-10 rounded-full object-cover"
+      />
+    );
+  }
+  return (
+    <div className="w-10 h-10 rounded-full bg-ink text-on-ink flex items-center justify-center text-xs font-semibold shrink-0">
+      {initials}
+    </div>
+  );
+}
+
+function ReviewCard({ review }: { review: Review }) {
+  return (
+    <div className="w-[320px] shrink-0 bg-paper border border-line p-6 flex flex-col gap-4 mx-3">
+      <StarRating rating={review.rating} />
+      <p className="text-sm text-ink leading-relaxed flex-1">"{review.text}"</p>
+      <div className="flex items-center gap-3 border-t border-line pt-4">
+        <Avatar name={review.name} photoUrl={review.photo_url} />
+        <div>
+          <p className="text-sm font-semibold">{review.name}</p>
+          {review.location && (
+            <p className="text-xs text-muted">{review.location}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function ReviewsCarousel() {
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const animRef = useRef<number>(0);
+  const posRef = useRef(0);
+  const pausedRef = useRef(false);
+
+  useEffect(() => {
+    fetch("/api/reviews")
+      .then((r) => r.json())
+      .then((data) => setReviews(data.reviews ?? []));
+  }, []);
+
+  useEffect(() => {
+    if (reviews.length === 0) return;
+    const track = trackRef.current;
+    if (!track) return;
+
+    const speed = 0.5; // px par frame
+
+    function animate() {
+      if (!pausedRef.current && track) {
+        posRef.current += speed;
+        const half = track.scrollWidth / 2;
+        if (posRef.current >= half) posRef.current = 0;
+        track.style.transform = `translateX(-${posRef.current}px)`;
+      }
+      animRef.current = requestAnimationFrame(animate);
+    }
+
+    animRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animRef.current);
+  }, [reviews]);
+
+  if (reviews.length === 0) return null;
+
+  const doubled = [...reviews, ...reviews];
+
+  return (
+    <section className="py-20 md:py-28 overflow-hidden">
+      <div className="mx-auto max-w-[1200px] px-5 md:px-10 mb-12">
+        <p className="kicker text-muted mb-3">Avis clients</p>
+        <h2 className="display text-3xl md:text-4xl">
+          Ils ont fait confiance<br />
+          <span className="text-muted">à Elekka.</span>
+        </h2>
+      </div>
+
+      <div
+        className="relative"
+        onMouseEnter={() => { pausedRef.current = true; }}
+        onMouseLeave={() => { pausedRef.current = false; }}
+      >
+        {/* Dégradés sur les bords */}
+        <div className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none bg-gradient-to-r from-paper to-transparent" />
+        <div className="absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none bg-gradient-to-l from-paper to-transparent" />
+
+        <div
+          ref={trackRef}
+          className="flex will-change-transform"
+          style={{ width: "max-content" }}
+        >
+          {doubled.map((review, i) => (
+            <ReviewCard key={`${review.id}-${i}`} review={review} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
