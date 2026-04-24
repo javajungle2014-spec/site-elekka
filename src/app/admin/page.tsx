@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Package, CaretLeft, Truck, Check, SignOut, ChartBar } from "@phosphor-icons/react";
+import { Package, CaretLeft, Truck, Check, SignOut, ChartBar, DownloadSimple } from "@phosphor-icons/react";
 import { formatPrice } from "@/lib/products";
 
 type OrderStatus = "en_preparation" | "expediee" | "livree" | "annulee";
@@ -389,6 +389,56 @@ function StatsView({ password, onBack }: { password: string; onBack: () => void 
 
 // ── Liste des commandes ───────────────────────────────────────────────────────
 
+function ExportButton({ password }: { password: string }) {
+  const now = new Date();
+  const [month, setMonth] = useState(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`);
+
+  function handleExport() {
+    const url = `/api/admin/export?month=${month}`;
+    const a = document.createElement("a");
+    a.href = url;
+    a.setAttribute("download", `elekka-commandes-${month}.csv`);
+    a.setAttribute("data-auth", password);
+    fetch(url, { headers: { Authorization: `Bearer ${password}` } })
+      .then((res) => res.blob())
+      .then((blob) => {
+        const blobUrl = URL.createObjectURL(blob);
+        a.href = blobUrl;
+        a.click();
+        URL.revokeObjectURL(blobUrl);
+      });
+  }
+
+  // Générer les 12 derniers mois
+  const months = Array.from({ length: 12 }).map((_, i) => {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const label = d.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+    return { value, label };
+  });
+
+  return (
+    <div className="flex items-center gap-2">
+      <select
+        value={month}
+        onChange={(e) => setMonth(e.target.value)}
+        className="text-sm border-b border-line bg-transparent py-1 focus:outline-none text-muted"
+      >
+        {months.map((m) => (
+          <option key={m.value} value={m.value}>{m.label}</option>
+        ))}
+      </select>
+      <button
+        type="button"
+        onClick={handleExport}
+        className="flex items-center gap-1.5 text-sm text-muted hover:text-ink transition-colors"
+      >
+        <DownloadSimple size={14} /> Exporter
+      </button>
+    </div>
+  );
+}
+
 function OrdersList({
   orders, password, onSelect, onLogout, onStats,
 }: {
@@ -409,7 +459,8 @@ function OrdersList({
             <p className="text-xs tracking-widest uppercase text-muted mb-1">Elekka</p>
             <h1 className="text-3xl font-bold">Commandes</h1>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-wrap justify-end">
+            <ExportButton password={password} />
             <button
               type="button"
               onClick={onStats}
