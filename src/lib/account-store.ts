@@ -28,6 +28,7 @@ export type Order = {
   status: OrderStatus;
   totalEUR: number;
   trackingNumber: string | null;
+  carrier: string | null;
   shippingAddress: ShippingAddress;
   items: OrderItem[];
 };
@@ -69,6 +70,7 @@ export async function fetchOrders(userId: string): Promise<Order[]> {
     status: row.status as OrderStatus,
     totalEUR: Number(row.total_eur),
     trackingNumber: row.tracking_number ?? null,
+    carrier: row.carrier ?? null,
     shippingAddress: row.shipping_address as ShippingAddress,
     items: row.items as OrderItem[],
   }));

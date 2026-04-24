@@ -22,9 +22,19 @@ type Order = {
   status: OrderStatus;
   total_eur: number;
   tracking_number: string | null;
+  carrier: string | null;
   shipping_address: Address;
   items: OrderItem[];
 };
+
+const CARRIERS = [
+  { value: "colissimo", label: "La Poste / Colissimo" },
+  { value: "chronopost", label: "Chronopost" },
+  { value: "dpd", label: "DPD" },
+  { value: "mondial-relay", label: "Mondial Relay" },
+  { value: "ups", label: "UPS" },
+  { value: "fedex", label: "FedEx" },
+];
 
 const STATUS_LABELS: Record<OrderStatus, string> = {
   en_preparation: "En préparation",
@@ -97,6 +107,7 @@ function OrderDetail({
 }) {
   const [status, setStatus] = useState<OrderStatus>(order.status);
   const [tracking, setTracking] = useState(order.tracking_number ?? "");
+  const [carrier, setCarrier] = useState(order.carrier ?? "");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -108,7 +119,7 @@ function OrderDetail({
         "Content-Type": "application/json",
         Authorization: `Bearer ${password}`,
       },
-      body: JSON.stringify({ orderId: order.id, status, trackingNumber: tracking }),
+      body: JSON.stringify({ orderId: order.id, status, trackingNumber: tracking, carrier }),
     });
     const json = await res.json();
     if (json.success) {
@@ -201,6 +212,20 @@ function OrderDetail({
               >
                 {(Object.entries(STATUS_LABELS) as [OrderStatus, string][]).map(([key, label]) => (
                   <option key={key} value={key}>{label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-xs text-muted">Transporteur</label>
+              <select
+                value={carrier}
+                onChange={(e) => setCarrier(e.target.value)}
+                className="bg-transparent border-b border-line py-2.5 text-sm focus:outline-none focus:border-ink transition-colors"
+              >
+                <option value="">Sélectionner un transporteur</option>
+                {CARRIERS.map((c) => (
+                  <option key={c.value} value={c.value}>{c.label}</option>
                 ))}
               </select>
             </div>

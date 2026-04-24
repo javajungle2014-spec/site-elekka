@@ -6,7 +6,7 @@ import Link from "next/link";
 import {
   House, Package, Heart, Tag, IdentificationCard,
   SignOut, CaretRight, Copy, Check, Truck, MapPin,
-  ArrowUpRight, ShoppingBag, X,
+  ArrowUpRight, ShoppingBag, X, ArrowSquareOut,
 } from "@phosphor-icons/react";
 import { createClient } from "@/lib/supabase";
 import { useFavorites } from "@/lib/favorites-store";
@@ -299,15 +299,77 @@ function OrderRow({ order }: { order: Order }) {
             </ul>
           </div>
 
-          {/* Suivi */}
+          {/* Timeline statut */}
+          <div>
+            <p className="kicker text-muted mb-4">Suivi de commande</p>
+            <div className="flex items-start gap-0">
+              {[
+                { key: "en_preparation", label: "Conception", sub: "Votre filet est en cours de préparation" },
+                { key: "expediee", label: "Votre coursier galope", sub: "Il traverse les plaines pour vous livrer" },
+                { key: "livree", label: "Arrivé à l'écurie !", sub: "Votre commande a été livrée" },
+              ].map((step, i, arr) => {
+                const statuses: OrderStatus[] = ["en_preparation", "expediee", "livree"];
+                const currentIdx = statuses.indexOf(order.status);
+                const stepIdx = statuses.indexOf(step.key as OrderStatus);
+                const done = currentIdx >= stepIdx;
+                const active = currentIdx === stepIdx;
+                return (
+                  <div key={step.key} className="flex-1 flex flex-col items-center text-center relative">
+                    {/* Ligne de connexion */}
+                    {i < arr.length - 1 && (
+                      <div className={`absolute top-3 left-1/2 w-full h-px ${done && currentIdx > stepIdx ? "bg-ink" : "bg-line"}`} />
+                    )}
+                    {/* Point */}
+                    <div className={`relative z-10 w-6 h-6 rounded-full border-2 flex items-center justify-center mb-2 ${
+                      done ? "bg-ink border-ink" : "bg-paper border-line"
+                    }`}>
+                      {done && <Check size={10} className="text-on-ink" weight="bold" />}
+                    </div>
+                    <p className={`text-xs font-medium leading-tight ${active ? "text-ink" : done ? "text-muted" : "text-muted-soft"}`}>
+                      {step.label}
+                    </p>
+                    {active && (
+                      <p className="text-[10px] text-muted mt-0.5 leading-tight max-w-[80px]">{step.sub}</p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Numéro de suivi + lien transporteur */}
           {order.trackingNumber && (
             <div>
               <p className="kicker text-muted mb-3">Numéro de suivi</p>
-              <div className="flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-2 text-sm flex-wrap">
                 <Truck size={14} className="text-muted shrink-0" />
                 <span className="font-mono">{order.trackingNumber}</span>
                 <CopyButton text={order.trackingNumber} />
               </div>
+              {order.carrier && (() => {
+                const links: Record<string, string> = {
+                  colissimo: `https://www.laposte.fr/outils/suivre-vos-envois?code=${order.trackingNumber}`,
+                  chronopost: `https://www.chronopost.fr/tracking-no-cms/suivi-numero?listeNumerosLT=${order.trackingNumber}`,
+                  dpd: `https://www.dpd.fr/trace/${order.trackingNumber}`,
+                  "mondial-relay": `https://www.mondialrelay.fr/suivi-de-colis/?numero=${order.trackingNumber}`,
+                  ups: `https://www.ups.com/track?tracknum=${order.trackingNumber}`,
+                  fedex: `https://www.fedex.com/fedextrack/?trknbr=${order.trackingNumber}`,
+                };
+                const url = links[order.carrier];
+                if (!url) return null;
+                return (
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="press mt-3 inline-flex items-center gap-2 bg-ink text-on-ink px-4 py-2.5 text-xs font-medium hover:bg-ink-soft transition-colors"
+                  >
+                    <Truck size={13} />
+                    Suivre mon colis
+                    <ArrowSquareOut size={13} />
+                  </a>
+                );
+              })()}
             </div>
           )}
 
