@@ -9,6 +9,68 @@ import { useCart } from "@/lib/cart-store";
 import { useFavorites } from "@/lib/favorites-store";
 import { AuthModal } from "@/components/auth-modal";
 import { faqProductCategories, type FaqItem } from "@/lib/faq";
+import { productDescriptions, sharedTabs } from "@/lib/product-tabs";
+
+type TabKey = "description" | "taille" | "composition" | "entretien";
+
+const TAB_LABELS: Record<TabKey, string> = {
+  description: "Description",
+  taille: "Guide de taille",
+  composition: "Composition",
+  entretien: "Entretien",
+};
+
+function ProductTabs({ slug }: { slug: string }) {
+  const [active, setActive] = useState<TabKey>("description");
+
+  const content: Record<TabKey, string> = {
+    description: productDescriptions[slug] ?? "",
+    taille: sharedTabs.taille,
+    composition: sharedTabs.composition,
+    entretien: sharedTabs.entretien,
+  };
+
+  return (
+    <div>
+      {/* Barre d'onglets */}
+      <div className="flex items-center gap-0 border-b border-line overflow-x-auto">
+        {(Object.keys(TAB_LABELS) as TabKey[]).map((tab) => (
+          <button
+            key={tab}
+            type="button"
+            onClick={() => setActive(tab)}
+            className={`shrink-0 px-5 py-3.5 text-sm transition-colors border-b-2 -mb-px ${
+              active === tab
+                ? "text-ink font-medium border-ink"
+                : "text-muted border-transparent hover:text-ink"
+            }`}
+          >
+            {TAB_LABELS[tab]}
+          </button>
+        ))}
+      </div>
+
+      {/* Contenu */}
+      <div className="py-8">
+        {content[active].split("\n\n").map((para, i) => {
+          if (para.startsWith("**") && para.endsWith("**")) {
+            return <p key={i} className="text-sm font-semibold mt-6 first:mt-0 mb-2">{para.replace(/\*\*/g, "")}</p>;
+          }
+          const parts = para.split(/(\*\*[^*]+\*\*)/g);
+          return (
+            <p key={i} className="text-sm text-muted leading-relaxed mb-3 last:mb-0">
+              {parts.map((part, j) =>
+                part.startsWith("**") && part.endsWith("**")
+                  ? <strong key={j} className="text-ink font-semibold">{part.replace(/\*\*/g, "")}</strong>
+                  : part
+              )}
+            </p>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 function FaqAccordionItem({ item }: { item: FaqItem }) {
   const [open, setOpen] = useState(false);
@@ -208,6 +270,11 @@ export function ProductDetailClient({ product }: { product: Product }) {
           </div>
 
         </div>
+      </div>
+
+      {/* Onglets produit */}
+      <div className="mt-16 md:mt-24 border-t border-line pt-12">
+        <ProductTabs slug={product.slug} />
       </div>
 
       {/* FAQ */}
