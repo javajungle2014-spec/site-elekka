@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Star } from "@phosphor-icons/react";
+import { Star, ArrowLeft, ArrowRight } from "@phosphor-icons/react";
 
 type Review = {
   id: number;
@@ -11,6 +11,8 @@ type Review = {
   text: string;
   photo_url: string | null;
 };
+
+const CARD_WIDTH = 320 + 24; // largeur + margin
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -31,11 +33,7 @@ function Avatar({ name, photoUrl }: { name: string; photoUrl: string | null }) {
   const initials = name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
   if (photoUrl) {
     return (
-      <img
-        src={photoUrl}
-        alt={name}
-        className="w-10 h-10 rounded-full object-cover"
-      />
+      <img src={photoUrl} alt={name} className="w-10 h-10 rounded-full object-cover shrink-0" />
     );
   }
   return (
@@ -54,9 +52,7 @@ function ReviewCard({ review }: { review: Review }) {
         <Avatar name={review.name} photoUrl={review.photo_url} />
         <div>
           <p className="text-sm font-semibold">{review.name}</p>
-          {review.location && (
-            <p className="text-xs text-muted">{review.location}</p>
-          )}
+          {review.location && <p className="text-xs text-muted">{review.location}</p>}
         </div>
       </div>
     </div>
@@ -81,11 +77,9 @@ export function ReviewsCarousel() {
     const track = trackRef.current;
     if (!track) return;
 
-    const speed = 0.5; // px par frame
-
     function animate() {
       if (!pausedRef.current && track) {
-        posRef.current += speed;
+        posRef.current += 0.5;
         const half = track.scrollWidth / 2;
         if (posRef.current >= half) posRef.current = 0;
         track.style.transform = `translateX(-${posRef.current}px)`;
@@ -97,18 +91,53 @@ export function ReviewsCarousel() {
     return () => cancelAnimationFrame(animRef.current);
   }, [reviews]);
 
+  function slide(direction: "prev" | "next") {
+    pausedRef.current = true;
+    posRef.current += direction === "next" ? CARD_WIDTH : -CARD_WIDTH;
+    if (posRef.current < 0) posRef.current = 0;
+    const track = trackRef.current;
+    if (track) {
+      const half = track.scrollWidth / 2;
+      if (posRef.current >= half) posRef.current = 0;
+      track.style.transform = `translateX(-${posRef.current}px)`;
+    }
+    setTimeout(() => { pausedRef.current = false; }, 2000);
+  }
+
   if (reviews.length === 0) return null;
 
   const doubled = [...reviews, ...reviews];
 
   return (
-    <section className="py-20 md:py-28 overflow-hidden">
-      <div className="mx-auto max-w-[1200px] px-5 md:px-10 mb-12">
-        <p className="kicker text-muted mb-3">Avis clients</p>
-        <h2 className="display text-3xl md:text-4xl">
-          Ils ont fait confiance<br />
-          <span className="text-muted">à Elekka.</span>
-        </h2>
+    <section className="pt-12 pb-12 md:pt-16 md:pb-14 overflow-hidden">
+      <div className="mx-auto max-w-[1200px] px-5 md:px-10 mb-10 flex items-end justify-between">
+        <div>
+          <p className="kicker text-muted mb-3">Avis clients</p>
+          <h2 className="display text-3xl md:text-4xl">
+            Ils ont fait confiance<br />
+            <span className="text-muted">à Elekka.</span>
+          </h2>
+        </div>
+
+        {/* Flèches */}
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={() => slide("prev")}
+            className="press w-10 h-10 border border-line flex items-center justify-center text-muted hover:text-ink hover:border-ink transition-colors"
+            aria-label="Précédent"
+          >
+            <ArrowLeft size={16} />
+          </button>
+          <button
+            type="button"
+            onClick={() => slide("next")}
+            className="press w-10 h-10 border border-line flex items-center justify-center text-muted hover:text-ink hover:border-ink transition-colors"
+            aria-label="Suivant"
+          >
+            <ArrowRight size={16} />
+          </button>
+        </div>
       </div>
 
       <div
@@ -116,7 +145,6 @@ export function ReviewsCarousel() {
         onMouseEnter={() => { pausedRef.current = true; }}
         onMouseLeave={() => { pausedRef.current = false; }}
       >
-        {/* Dégradés sur les bords */}
         <div className="absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none bg-gradient-to-r from-paper to-transparent" />
         <div className="absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none bg-gradient-to-l from-paper to-transparent" />
 
