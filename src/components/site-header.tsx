@@ -82,7 +82,7 @@ export function SiteHeader() {
               style={{ clipPath: "polygon(0 0, 100% 0, calc(100% - 22px) 100%, 22px 100%)" }}
             >
               <Link href="/" aria-label="Elekka — Accueil" className="relative z-10 press">
-                <Wordmark tone="ink" priority className="h-12 w-auto" />
+                <Wordmark tone="ink" priority className="h-14 w-auto" />
               </Link>
             </div>
           </div>
