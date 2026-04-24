@@ -6,7 +6,7 @@ import Link from "next/link";
 import {
   House, Package, Heart, Tag, IdentificationCard,
   SignOut, CaretRight, Copy, Check, Truck, MapPin,
-  ArrowUpRight, ShoppingBag, X, ArrowSquareOut,
+  ArrowUpRight, ShoppingBag, X, ArrowSquareOut, UsersThree,
 } from "@phosphor-icons/react";
 import { createClient } from "@/lib/supabase";
 import { useFavorites } from "@/lib/favorites-store";
@@ -113,14 +113,59 @@ function EmptyState({ icon: Icon, message, cta }: { icon: React.ElementType; mes
 
 // ── Onglet Aperçu ─────────────────────────────────────────────────────────────
 
+function ReferralBlock({ userId }: { userId: string }) {
+  const [referralCode, setReferralCode] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    fetchProfile(userId).then((p) => setReferralCode(p.referralCode));
+  }, [userId]);
+
+  if (!referralCode) return null;
+
+  const link = `https://elekka-sellier.fr/?ref=${referralCode}`;
+
+  async function handleCopy() {
+    await navigator.clipboard.writeText(link);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  return (
+    <div>
+      <SectionTitle>Parrainer un ami</SectionTitle>
+      <div className="border border-line p-5 space-y-4">
+        <div className="flex items-start gap-3">
+          <UsersThree size={18} className="text-muted shrink-0 mt-0.5" />
+          <p className="text-sm text-muted leading-relaxed">
+            Partagez votre lien — votre ami bénéficie de <strong className="text-ink">-20%</strong> sur sa première commande, et vous recevez <strong className="text-ink">-30€</strong> sur votre prochain filet dès qu'il a commandé.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="flex-1 font-mono text-xs text-muted bg-paper-2 border border-line px-3 py-2 truncate">{link}</span>
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="press flex items-center gap-1.5 bg-ink text-on-ink px-3 py-2 text-xs font-medium hover:bg-ink-soft transition-colors shrink-0"
+          >
+            {copied ? <Check size={12} /> : <Copy size={12} />}
+            {copied ? "Copié !" : "Copier"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function OverviewTab({
-  firstName, orders, slugs, promotions, onTabChange,
+  firstName, orders, slugs, promotions, onTabChange, userId,
 }: {
   firstName: string;
   orders: Order[];
   slugs: string[];
   promotions: UserPromotion[];
   onTabChange: (tab: DashTab) => void;
+  userId: string;
 }) {
   const activePromos = promotions.filter(isPromoActive);
 
@@ -211,6 +256,9 @@ function OverviewTab({
           </div>
         </div>
       )}
+
+      {/* Parrainage */}
+      <ReferralBlock userId={userId} />
 
       {/* Promo active */}
       {activePromos.length > 0 && (
@@ -704,6 +752,7 @@ function ProfileTab({ userId, email, authFirstName }: { userId: string; email: s
   const [profile, setProfile] = useState<Profile>({
     firstName: "", lastName: "", phone: "",
     addressLine1: "", addressLine2: "", city: "", postalCode: "", country: "France",
+    referralCode: null,
   });
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
@@ -938,6 +987,7 @@ export function Dashboard({ userId, email, firstName }: DashboardProps) {
             slugs={slugs}
             promotions={promotions}
             onTabChange={setActiveTab}
+            userId={userId}
           />
         );
       case "orders":

@@ -60,12 +60,34 @@ export default function CheckoutPage() {
   const [promo, setPromo] = useState<PromoState>({
     code: "", status: "idle", discountEUR: 0, label: "", error: "",
   });
+  const [referral, setReferral] = useState<{ code: string; discountPercent: number; label: string } | null>(null);
 
-  const discountedTotal = Math.max(0, totalPrice - promo.discountEUR);
+  const referralDiscount = referral ? Math.round(totalPrice * referral.discountPercent / 100 * 100) / 100 : 0;
+  const discountedTotal = Math.max(0, totalPrice - promo.discountEUR - referralDiscount);
 
   useEffect(() => {
     if (items.length === 0) router.replace("/boutique");
   }, [items, router]);
+
+  // Détecter code de parrainage
+  useEffect(() => {
+    const code = localStorage.getItem("referral_code");
+    if (!code) return;
+    const supabase = createClient();
+    supabase.auth.getUser().then(async ({ data }) => {
+      const res = await fetch("/api/referral/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ referralCode: code, currentUserId: data.user?.id ?? null }),
+      });
+      const json = await res.json();
+      if (json.valid) {
+        setReferral({ code, discountPercent: json.discountPercent, label: json.label });
+      } else {
+        localStorage.removeItem("referral_code");
+      }
+    });
+  }, []);
 
   useEffect(() => {
     const supabase = createClient();
@@ -153,7 +175,8 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           items, address, userId: data.user?.id ?? null,
           promoCode: promo.status === "valid" ? promo.code : null,
-          discountEUR: promo.discountEUR,
+          discountEUR: promo.discountEUR + referralDiscount,
+          referralCode: referral?.code ?? null,
         }),
       });
       let json: { url?: string; error?: string };
@@ -293,6 +316,17 @@ export default function CheckoutPage() {
                     </li>
                   ))}
                 </ul>
+
+                {/* Parrainage */}
+                {referral && (
+                  <div className="border-t border-line pt-4 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Tag size={13} className="text-green-600" />
+                      <span className="text-sm font-medium text-green-600">Parrainage</span>
+                    </div>
+                    <span className="font-mono text-sm text-green-600">{referral.label}</span>
+                  </div>
+                )}
 
                 {/* Code promo */}
                 <div className="border-t border-line pt-4">

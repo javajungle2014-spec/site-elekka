@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { IntroOverlay } from "@/components/intro-overlay";
 import { AnnouncementBar } from "@/components/announcement-bar";
+import { RefTracker } from "@/components/ref-tracker";
 import { CartProvider } from "@/lib/cart-store";
 import { FavoritesProvider } from "@/lib/favorites-store";
 import { CartDrawer } from "@/components/cart-drawer";
@@ -52,6 +53,7 @@ export default function RootLayout({
         <CartProvider>
           <FavoritesProvider>
             <IntroOverlay />
+            <RefTracker />
             <AnnouncementBar />
             <SiteHeader />
             <main className="flex-1">{children}</main>

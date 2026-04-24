@@ -42,6 +42,7 @@ export type Profile = {
   city: string;
   postalCode: string;
   country: string;
+  referralCode: string | null;
 };
 
 export type UserPromotion = {
@@ -92,6 +93,7 @@ export async function fetchProfile(userId: string): Promise<Profile> {
     city: data?.city ?? "",
     postalCode: data?.postal_code ?? "",
     country: data?.country ?? "France",
+    referralCode: data?.referral_code ?? null,
   };
 }
 

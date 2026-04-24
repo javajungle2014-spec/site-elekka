@@ -19,12 +19,13 @@ function supabaseAdmin() {
 }
 
 export async function createOrderAndGetNumber({
-  userId, items, address, totalEUR,
+  userId, items, address, totalEUR, referralCode,
 }: {
   userId: string | null;
   items: OrderItem[];
   address: OrderAddress;
   totalEUR: number;
+  referralCode?: string | null;
 }): Promise<string> {
   const supabase = supabaseAdmin();
 
@@ -47,6 +48,17 @@ export async function createOrderAndGetNumber({
 
   if (data) {
     await supabase.from("orders").update({ order_number: orderNumber }).eq("id", data.id);
+  }
+
+  // Récompenser le parrain si applicable
+  if (referralCode && data) {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace("http://localhost:3000", "https://elekka-sellier.fr") ?? "https://elekka-sellier.fr";
+    fetch(`${siteUrl}/api/referral/reward`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ referralCode, orderId: data.id }),
+    }).catch(() => {});
+    // Supprimer le code de parrainage utilisé côté client se fait dans le checkout
   }
 
   // Déduire le stock automatiquement

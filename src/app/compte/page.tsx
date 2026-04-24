@@ -177,12 +177,12 @@ function RegisterForm({ onSwitch, onSuccess }: { onSwitch: () => void; onSuccess
     if (data.user) {
       await upsertProfile(data.user.id, {
         firstName, lastName, phone,
-        addressLine1: "", addressLine2: "", city: "", postalCode: "", country: "France",
+        addressLine1: "", addressLine2: "", city: "", postalCode: "", country: "France", referralCode: null,
       });
       await fetch("/api/welcome", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, firstName }),
+        body: JSON.stringify({ email, firstName, userId: data.user.id }),
       });
     }
     setLoading(false);
