@@ -149,34 +149,44 @@ export function SiteHeader() {
         </div>
 
         {/* Mobile */}
-        <div className="flex lg:hidden items-center justify-between h-16">
+        <div className="flex lg:hidden items-center justify-between h-20">
           <button
             type="button"
-            className="p-2 -ml-2 text-ink press"
+            className="p-2 -ml-2 press"
+            style={{ color: scrolled ? undefined : "white" }}
             aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
           >
-            {open ? <X size={22} weight="regular" /> : <List size={22} weight="regular" />}
+            {open ? <X size={24} weight="regular" /> : <List size={24} weight="regular" />}
           </button>
 
           <div
-            className="relative flex items-center justify-center w-[160px] h-16 bg-white overflow-hidden"
-            style={{ clipPath: "polygon(0 0, 100% 0, calc(100% - 16px) 100%, 16px 100%)" }}
+            className="relative flex items-center justify-center w-[200px] h-20 bg-white overflow-hidden"
+            style={{ clipPath: "polygon(0 0, 100% 0, calc(100% - 20px) 100%, 20px 100%)" }}
           >
             <Link href="/" aria-label="Elekka — Accueil" className="relative z-10 press">
-              <Wordmark tone="ink" priority className="h-11 w-auto" />
+              <Wordmark tone="ink" priority className="h-14 w-auto" />
             </Link>
           </div>
 
-          <button type="button" aria-label="Mon panier" className="p-2 -mr-2 text-ink press">
-            <ShoppingBag size={22} weight="regular" />
+          <button
+            type="button"
+            aria-label="Mon panier"
+            onClick={openCart}
+            className="relative p-2 -mr-2 press"
+            style={{ color: scrolled ? undefined : "white" }}
+          >
+            <ShoppingBag size={24} weight="regular" />
+            {totalItems > 0 && (
+              <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-ink text-on-ink text-[9px] font-bold rounded-full flex items-center justify-center">{totalItems}</span>
+            )}
           </button>
         </div>
       </div>
 
       {/* Menu mobile déroulant */}
-      <div className={`lg:hidden fixed inset-x-0 top-16 bottom-0 bg-paper border-t border-line transition-[opacity,transform] duration-300 ${open ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"}`}>
+      <div className={`lg:hidden fixed inset-x-0 top-20 bottom-0 bg-paper border-t border-line transition-[opacity,transform] duration-300 ${open ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"}`}>
         <nav className="flex flex-col divide-y divide-line">
           {nav.map((item) => (
             <Link
