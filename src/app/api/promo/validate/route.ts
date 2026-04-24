@@ -13,7 +13,7 @@ function supabaseAdmin() {
 
 export async function POST(req: Request) {
   try {
-    const { code, totalEUR } = await req.json();
+    const { code, totalEUR, items } = await req.json();
 
     if (!code?.trim()) {
       return NextResponse.json({ valid: false, error: "Code manquant" }, { status: 400 });
@@ -34,6 +34,16 @@ export async function POST(req: Request) {
     // Vérifier la limite d'utilisation
     if (data.max_uses !== null && data.used_count >= data.max_uses) {
       return NextResponse.json({ valid: false, error: "Ce code a déjà été utilisé" });
+    }
+
+    // Vérifier la restriction produit
+    if (data.product_restriction === "filets") {
+      const hasFilet = (items ?? []).some((item: { slug: string }) =>
+        ["essentiel", "signature", "fusion"].includes(item.slug)
+      );
+      if (!hasFilet) {
+        return NextResponse.json({ valid: false, error: "Ce code est valable uniquement sur les filets Elekka" });
+      }
     }
 
     let discountEUR = 0;
