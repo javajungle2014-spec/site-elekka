@@ -104,12 +104,15 @@ function FaqAccordionItem({ item }: { item: FaqItem }) {
   );
 }
 
+/* ─── Sous-composants fiche produit ──────────────────────────────────── */
+
 function Gallery({ name }: { name: string }) {
   const [active, setActive] = useState(0);
   const views = ["Profil", "Détail couture", "Bouclerie", "Verso"];
 
   return (
     <div>
+      {/* Image principale */}
       <div className="relative aspect-[4/5] overflow-hidden bg-paper-2">
         <ProductPlaceholder label={name} />
         <div className="absolute top-5 left-5 right-5 flex items-center justify-between pointer-events-none">
@@ -128,6 +131,7 @@ function Gallery({ name }: { name: string }) {
           <MagnifyingGlass size={13} />
         </button>
       </div>
+      {/* Miniatures */}
       <div className="grid grid-cols-4 gap-2 mt-2">
         {views.map((v, i) => (
           <button
@@ -153,15 +157,23 @@ function PerksRow() {
       <div className="flex items-center gap-3 px-4 py-3 flex-1">
         <Truck size={18} weight="regular" className="text-ink shrink-0" />
         <div className="min-w-0">
-          <p className="text-[11px] font-semibold tracking-wide text-ink leading-tight">Livraison offerte</p>
-          <p className="text-[10px] text-muted leading-tight mt-0.5">Expédié sous 48 h</p>
+          <p className="text-[11px] font-semibold tracking-wide text-ink leading-tight">
+            Livraison offerte
+          </p>
+          <p className="text-[10px] text-muted leading-tight mt-0.5">
+            Expédié sous 48 h
+          </p>
         </div>
       </div>
       <div className="flex items-center gap-3 px-4 py-3 flex-1">
         <Gift size={18} weight="regular" className="text-ink shrink-0" />
         <div className="min-w-0">
-          <p className="text-[11px] font-semibold tracking-wide text-ink leading-tight">Rênes offertes</p>
-          <p className="text-[10px] text-muted leading-tight mt-0.5">Avec chaque filet</p>
+          <p className="text-[11px] font-semibold tracking-wide text-ink leading-tight">
+            Rênes offertes
+          </p>
+          <p className="text-[10px] text-muted leading-tight mt-0.5">
+            Avec chaque filet
+          </p>
         </div>
       </div>
     </div>
@@ -170,9 +182,9 @@ function PerksRow() {
 
 function TrustBar() {
   const items = [
-    { Icon: Leaf, label: "Cuir pleine fleur" },
+    { Icon: Leaf, label: "Tannage français" },
     { Icon: Truck, label: "Expédié sous 48 h" },
-    { Icon: ShieldCheck, label: "Retours 14 jours" },
+    { Icon: ShieldCheck, label: "Retours 30 jours" },
   ];
   return (
     <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-muted">
@@ -186,6 +198,8 @@ function TrustBar() {
   );
 }
 
+/* ─── Composant principal ────────────────────────────────────────────── */
+
 export function ProductDetailClient({ product }: { product: Product }) {
   const [selectedColour, setSelectedColour] = useState(product.defaultColour);
   const [selectedSize, setSelectedSize] = useState(product.defaultSize);
@@ -197,7 +211,10 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const favorite = isFavorite(product.slug);
 
   function handleFavorite() {
-    if (!userId) { setAuthOpen(true); return; }
+    if (!userId) {
+      setAuthOpen(true);
+      return;
+    }
     toggle(product.slug);
   }
 
@@ -207,7 +224,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
     <>
       <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
       <div className="mx-auto max-w-[1320px] px-5 md:px-12 pt-24 md:pt-32 pb-24">
-
+        {/* Fil d'Ariane */}
         <Link
           href="/boutique"
           className="inline-flex items-center gap-2 text-xs tracking-wide text-muted hover:text-ink transition-colors press mb-10 md:mb-14"
@@ -216,20 +233,24 @@ export function ProductDetailClient({ product }: { product: Product }) {
           Retour à la boutique
         </Link>
 
+        {/* Layout principal */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 lg:gap-20 items-start">
-
           {/* GAUCHE : galerie */}
-          <div className="md:col-span-7 md:sticky md:top-28">
+          <div className="md:col-span-7 lg:col-span-7 md:sticky md:top-28">
             <Gallery name={product.name} />
             <div className="mt-6 flex items-center justify-between text-muted">
               <p className="text-[10px] tracking-[0.22em] uppercase font-medium">
-                Réf · ELK-{product.slug.slice(0, 3).toUpperCase()}-{selectedColour.slice(0, 3).toUpperCase()}-{selectedSize.slice(0, 3).toUpperCase()}
+                Réf · ELK-{product.slug.slice(0, 3).toUpperCase()}-
+                {selectedColour.slice(0, 3).toUpperCase()}-
+                {selectedSize.slice(0, 3).toUpperCase()}
               </p>
+              <p className="font-mono text-[10px] tracking-wider tabular-nums">N° 042 / 200</p>
             </div>
           </div>
 
           {/* DROITE : détails */}
-          <div className="md:col-span-5">
+          <div className="md:col-span-5 lg:col-span-5">
+            {/* Famille + titre */}
             <p className="kicker text-muted">{product.family}</p>
             <h1 className="display mt-4 text-[2.4rem] md:text-[2.75rem] xl:text-[3.25rem] leading-[1.05]">
               {product.name}
@@ -238,25 +259,28 @@ export function ProductDetailClient({ product }: { product: Product }) {
               {product.tagline}
             </p>
 
-            {/* Prix */}
+            {/* Prix + avantages */}
             <div className="mt-7 pt-6 border-t border-line">
               <div className="flex items-baseline gap-4 flex-wrap">
                 <p className="font-mono text-3xl md:text-[2.25rem] text-ink tabular-nums tracking-tight">
                   {formatPrice(product.priceEUR)}
                 </p>
+                <p className="text-xs text-muted">TTC · Paiement 3× sans frais</p>
               </div>
               <PerksRow />
             </div>
 
-            {/* Description */}
+            {/* Description courte */}
             <p className="mt-7 text-sm md:text-[15px] text-ink/75 leading-relaxed max-w-[58ch]">
               {product.description}
             </p>
 
-            {/* Coloris */}
+            {/* Sélecteur coloris */}
             <div className="mt-9">
               <div className="flex items-baseline justify-between mb-4">
-                <p className="text-[10px] tracking-[0.22em] uppercase font-medium text-muted">Coloris</p>
+                <p className="text-[10px] tracking-[0.22em] uppercase font-medium text-muted">
+                  Coloris
+                </p>
                 <p className="text-xs text-ink">
                   <span className="text-muted">Sélection · </span>
                   <span className="font-medium">{currentColour.label}</span>
@@ -282,7 +306,11 @@ export function ProductDetailClient({ product }: { product: Product }) {
                       {isActive && (
                         <span className="absolute -top-1.5 -left-1.5 -right-1.5 h-11 rounded-full border border-ink pointer-events-none" />
                       )}
-                      <span className={`text-[10px] tracking-wider uppercase transition-colors ${isActive ? "text-ink" : "text-muted-soft group-hover:text-muted"}`}>
+                      <span
+                        className={`text-[10px] tracking-wider uppercase transition-colors ${
+                          isActive ? "text-ink" : "text-muted-soft group-hover:text-muted"
+                        }`}
+                      >
                         {c.label}
                       </span>
                     </button>
@@ -291,13 +319,18 @@ export function ProductDetailClient({ product }: { product: Product }) {
               </div>
             </div>
 
-            {/* Taille */}
+            {/* Sélecteur taille */}
             <div className="mt-8">
               <div className="flex items-baseline justify-between mb-4">
-                <p className="text-[10px] tracking-[0.22em] uppercase font-medium text-muted">Taille</p>
-                <Link href="/ressources/conseils/mesurer-tete-cheval-taille-filet" className="text-xs text-muted hover:text-ink underline underline-offset-4 decoration-line transition-colors">
+                <p className="text-[10px] tracking-[0.22em] uppercase font-medium text-muted">
+                  Taille
+                </p>
+                <button
+                  type="button"
+                  className="text-xs text-muted hover:text-ink underline underline-offset-4 decoration-line"
+                >
                   Guide des tailles
-                </Link>
+                </button>
               </div>
               <div className="grid grid-cols-3 gap-2">
                 {product.sizes.map((size) => {
@@ -309,12 +342,18 @@ export function ProductDetailClient({ product }: { product: Product }) {
                       type="button"
                       onClick={() => setSelectedSize(size)}
                       className={`press relative h-12 border transition-all duration-200 ${
-                        isActive ? "border-ink bg-ink text-on-ink" : "border-line text-muted hover:border-ink hover:text-ink"
+                        isActive
+                          ? "border-ink bg-ink text-on-ink"
+                          : "border-line text-muted hover:border-ink hover:text-ink"
                       }`}
                     >
                       <span className="text-sm font-medium tracking-wide">{size}</span>
                       {isStandard && (
-                        <span className={`absolute top-1.5 right-2 font-mono text-[8px] tracking-widest ${isActive ? "text-on-ink/60" : "text-muted-soft"}`}>
+                        <span
+                          className={`absolute top-1.5 right-2 font-mono text-[8px] tracking-widest ${
+                            isActive ? "text-on-ink/60" : "text-muted-soft"
+                          }`}
+                        >
                           STD
                         </span>
                       )}
@@ -324,19 +363,21 @@ export function ProductDetailClient({ product }: { product: Product }) {
               </div>
             </div>
 
-            {/* CTA */}
+            {/* CTA + favoris */}
             <div className="mt-9 flex gap-2">
               <button
                 type="button"
-                onClick={() => addItem({
-                  slug: product.slug,
-                  name: product.name,
-                  priceEUR: product.priceEUR,
-                  colour: selectedColour,
-                  colourLabel: currentColour.label,
-                  colourSwatch: currentColour.swatch,
-                  size: selectedSize,
-                })}
+                onClick={() =>
+                  addItem({
+                    slug: product.slug,
+                    name: product.name,
+                    priceEUR: product.priceEUR,
+                    colour: selectedColour,
+                    colourLabel: currentColour.label,
+                    colourSwatch: currentColour.swatch,
+                    size: selectedSize,
+                  })
+                }
                 className="press flex-1 inline-flex items-center justify-between bg-ink text-on-ink pl-6 pr-5 h-14 text-sm tracking-wider hover:bg-ink-soft transition-colors"
               >
                 <span className="inline-flex items-center gap-3 whitespace-nowrap">
@@ -350,7 +391,9 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 onClick={handleFavorite}
                 aria-label={favorite ? "Retirer des favoris" : "Ajouter aux favoris"}
                 className={`press w-14 h-14 border flex items-center justify-center transition-all duration-200 ${
-                  favorite ? "border-ink bg-ink text-on-ink" : "border-line text-ink hover:border-ink"
+                  favorite
+                    ? "border-ink bg-ink text-on-ink"
+                    : "border-line text-ink hover:border-ink"
                 }`}
               >
                 <Heart size={17} weight={favorite ? "fill" : "regular"} />
@@ -359,10 +402,12 @@ export function ProductDetailClient({ product }: { product: Product }) {
 
             <TrustBar />
 
-            {/* Points clés */}
+            {/* Points clés — grille 2 colonnes numérotée */}
             <div className="mt-12 pt-10 border-t border-line">
               <div className="flex items-baseline justify-between mb-7">
-                <p className="text-[10px] tracking-[0.22em] uppercase font-medium text-muted">Points clés</p>
+                <p className="text-[10px] tracking-[0.22em] uppercase font-medium text-muted">
+                  Points clés
+                </p>
                 <p className="font-mono text-[10px] tracking-wider text-muted-soft tabular-nums">
                   {String(product.highlights.length).padStart(2, "0")} caractéristiques
                 </p>
@@ -381,8 +426,12 @@ export function ProductDetailClient({ product }: { product: Product }) {
 
             {/* Description longue */}
             <div className="mt-10 pt-10 border-t border-line">
-              <p className="text-[10px] tracking-[0.22em] uppercase font-medium text-muted mb-4">L'objet</p>
-              <p className="text-sm text-ink/75 leading-relaxed max-w-[58ch]">{product.longDescription}</p>
+              <p className="text-[10px] tracking-[0.22em] uppercase font-medium text-muted mb-4">
+                L'objet
+              </p>
+              <p className="text-sm text-ink/75 leading-relaxed max-w-[58ch]">
+                {product.longDescription}
+              </p>
             </div>
           </div>
         </div>
@@ -396,14 +445,19 @@ export function ProductDetailClient({ product }: { product: Product }) {
         <div className="mt-16 md:mt-24 border-t border-line pt-12">
           <div className="flex items-center justify-between mb-8">
             <p className="kicker text-muted">Questions fréquentes</p>
-            <Link href="/ressources/faq" className="press text-xs text-muted hover:text-ink underline underline-offset-4 transition-colors">
+            <Link
+              href="/faq"
+              className="press text-xs text-muted hover:text-ink underline underline-offset-4 transition-colors"
+            >
               Voir toutes les questions
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16">
             {faqProductCategories.map((cat) => (
               <div key={cat.title} className="mb-8">
-                <p className="text-xs tracking-widest uppercase text-muted-soft mb-2">{cat.title}</p>
+                <p className="text-xs tracking-widest uppercase text-muted-soft mb-2">
+                  {cat.title}
+                </p>
                 {cat.items.map((item) => (
                   <FaqAccordionItem key={item.q} item={item} />
                 ))}
@@ -416,27 +470,38 @@ export function ProductDetailClient({ product }: { product: Product }) {
         <div className="mt-24 md:mt-36 border-t border-line pt-14">
           <div className="flex items-end justify-between mb-10">
             <p className="kicker text-muted">Vous pourriez aussi aimer</p>
-            <Link href="/boutique" className="text-sm text-muted hover:text-ink underline underline-offset-[6px] decoration-line hover:decoration-ink transition-colors press">
+            <Link
+              href="/boutique"
+              className="text-sm text-muted hover:text-ink underline underline-offset-[6px] decoration-line hover:decoration-ink transition-colors press"
+            >
               Voir toute la gamme
             </Link>
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {otherProducts.map((p) => (
-              <Link key={p.slug} href={`/boutique/${p.slug}`} className="group flex gap-6 items-start">
+              <Link
+                key={p.slug}
+                href={`/boutique/${p.slug}`}
+                className="group flex gap-6 items-start"
+              >
                 <div className="relative w-24 md:w-28 shrink-0 aspect-[3/4] overflow-hidden bg-paper-2">
                   <ProductPlaceholder />
                 </div>
                 <div className="py-1">
                   <p className="kicker text-muted">{p.family}</p>
-                  <h3 className="mt-2 text-base font-semibold tracking-tight text-ink group-hover:text-muted transition-colors duration-200">{p.name}</h3>
+                  <h3 className="mt-2 text-base font-semibold tracking-tight text-ink group-hover:text-muted transition-colors duration-200">
+                    {p.name}
+                  </h3>
                   <p className="mt-1 text-sm text-muted leading-snug">{p.tagline}</p>
-                  <p className="mt-3 font-mono text-sm text-ink tabular-nums">{formatPrice(p.priceEUR)}</p>
+                  <p className="mt-3 font-mono text-sm text-ink tabular-nums">
+                    {formatPrice(p.priceEUR)}
+                  </p>
                 </div>
               </Link>
             ))}
           </div>
         </div>
-
       </div>
     </>
   );
