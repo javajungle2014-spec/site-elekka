@@ -93,6 +93,55 @@ body {
   animation: marquee 42s linear infinite;
 }
 
+/* Textures cuir CSS */
+.leather-havana-brown {
+  background:
+    radial-gradient(ellipse 50% 40% at 35% 30%, rgba(255,220,180,0.18), transparent 70%),
+    radial-gradient(ellipse 70% 60% at 70% 80%, rgba(0,0,0,0.5), transparent 60%),
+    linear-gradient(140deg, #4a3424 0%, #2a1d12 100%);
+}
+.leather-noir {
+  background:
+    radial-gradient(ellipse 40% 30% at 35% 30%, rgba(255,255,255,0.05), transparent 70%),
+    radial-gradient(ellipse 70% 60% at 70% 80%, rgba(0,0,0,0.5), transparent 60%),
+    linear-gradient(140deg, #2a2620 0%, #0a0908 100%);
+}
+.leather-dark-brown {
+  background:
+    radial-gradient(ellipse 50% 40% at 35% 30%, rgba(255,200,170,0.18), transparent 70%),
+    radial-gradient(ellipse 70% 60% at 70% 80%, rgba(0,0,0,0.5), transparent 60%),
+    linear-gradient(140deg, #5d2a1c 0%, #2e1410 100%);
+}
+
+@keyframes pulseDot { 0%, 100% { opacity: 0.45; } 50% { opacity: 1; } }
+.pulse-dot { animation: pulseDot 2.6s ease-in-out infinite; }
+
+/* CTA shine */
+.cta-shine { position: relative; overflow: hidden; }
+.cta-shine::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transform: translateX(-100%); transition: transform 700ms ease;
+}
+.cta-shine:hover::after { transform: translateX(100%); }
+
+/* Choice card */
+.choice { border: 1px solid var(--line); background: var(--paper); transition: border-color 200ms ease; position: relative; }
+.choice:hover { border-color: var(--muted-soft); }
+.choice--active { border-color: var(--ink) !important; }
+.choice--active::after {
+  content: ''; position: absolute; inset: -3px;
+  border: 1px solid var(--ink); pointer-events: none;
+}
+
+/* Kicker tight */
+.kicker-tight {
+  font-size: 0.625rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
 /* Intro overlay */
 .intro-overlay {
   position: fixed;
