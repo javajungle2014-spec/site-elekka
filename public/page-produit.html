@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Elekka — Filet Andante</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:        '#0a0a0a',
+          'ink-soft': '#1f1f1f',
+          paper:      '#fafaf9',
+          'paper-2':  '#f2f1ef',
+          'paper-3':  '#e8e7e4',
+          muted:      '#737373',
+          'muted-soft':'#a3a3a3',
+          line:       '#e5e5e5',
+          'line-ink': '#262626',
+          'on-ink':   '#fafaf9',
+          'on-ink-muted': '#a3a3a3',
+        },
+        fontFamily: {
+          sans: ['Geist', 'ui-sans-serif', 'system-ui'],
+          mono: ['"Geist Mono"', 'ui-monospace'],
+        },
+      },
+    },
+  };
+</script>
+<style>
+  body { background: #fafaf9; color: #0a0a0a; font-family: 'Geist', sans-serif; -webkit-font-smoothing: antialiased; font-feature-settings: "ss01", "cv11"; padding-bottom: 84px; }
+
+  .display { font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
+  .display-tight { font-weight: 700; letter-spacing: -0.035em; line-height: 0.92; }
+  .kicker { font-size: 0.6875rem; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 500; }
+  .kicker-tight { font-size: 0.625rem; letter-spacing: 0.24em; text-transform: uppercase; font-weight: 500; }
+  .roman { font-variant-numeric: oldstyle-nums; font-weight: 400; }
+
+  .press { transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), background-color 250ms, color 250ms, border-color 250ms, opacity 250ms; }
+  .press:active { transform: translateY(1px); }
+
+  /* Marquee */
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .marquee-track { animation: marquee 48s linear infinite; }
+
+  @keyframes pulseDot { 0%, 100% { opacity: 0.45; } 50% { opacity: 1; } }
+  .pulse-dot { animation: pulseDot 2.6s ease-in-out infinite; }
+
+  /* Cuir réaliste */
+  .leather-tabac {
+    background:
+      radial-gradient(ellipse 50% 40% at 35% 30%, rgba(255,220,180,0.18), transparent 70%),
+      radial-gradient(ellipse 70% 60% at 70% 80%, rgba(0,0,0,0.5), transparent 60%),
+      linear-gradient(140deg, #4a3424 0%, #2a1d12 100%);
+  }
+  .leather-fauve {
+    background:
+      radial-gradient(ellipse 50% 40% at 35% 30%, rgba(255,235,210,0.25), transparent 70%),
+      radial-gradient(ellipse 70% 60% at 70% 80%, rgba(0,0,0,0.35), transparent 60%),
+      linear-gradient(140deg, #9a7a55 0%, #5e4530 100%);
+  }
+  .leather-noir {
+    background:
+      radial-gradient(ellipse 40% 30% at 35% 30%, rgba(255,255,255,0.05), transparent 70%),
+      radial-gradient(ellipse 70% 60% at 70% 80%, rgba(0,0,0,0.5), transparent 60%),
+      linear-gradient(140deg, #2a2620 0%, #0a0908 100%);
+  }
+  .leather-acajou {
+    background:
+      radial-gradient(ellipse 50% 40% at 35% 30%, rgba(255,200,170,0.18), transparent 70%),
+      radial-gradient(ellipse 70% 60% at 70% 80%, rgba(0,0,0,0.5), transparent 60%),
+      linear-gradient(140deg, #5d2a1c 0%, #2e1410 100%);
+  }
+  .placeholder-paper {
+    background:
+      radial-gradient(ellipse 80% 60% at 30% 30%, rgba(255,255,255,0.6), transparent 70%),
+      linear-gradient(135deg, #f2f1ef 0%, #e8e7e4 100%);
+  }
+
+  /* CTA shine */
+  .cta-shine { position: relative; overflow: hidden; }
+  .cta-shine::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+    transform: translateX(-100%); transition: transform 800ms ease;
+  }
+  .cta-shine:hover::after { transform: translateX(100%); }
+
+  /* Step number circle */
+  .step-num {
+    width: 32px; height: 32px;
+    border: 1px solid #0a0a0a;
+    border-radius: 9999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'Geist', sans-serif;
+    font-size: 11px; letter-spacing: 0.06em;
+    transition: all 250ms ease;
+  }
+  .step-num--done {
+    background: #0a0a0a; color: #fafaf9;
+  }
+
+  /* Étapes : connecteur vertical */
+  .step-connector {
+    position: absolute;
+    left: 15px;
+    top: 32px;
+    bottom: -28px;
+    width: 1px;
+    background: #e5e5e5;
+  }
+  .step-connector--done { background: #0a0a0a; }
+
+  /* Choice card hover */
+  .choice {
+    border: 1px solid #e5e5e5;
+    background: #fafaf9;
+    transition: border-color 250ms ease, background 250ms ease, transform 250ms ease;
+    position: relative;
+  }
+  .choice:hover { border-color: #a3a3a3; }
+  .choice--active {
+    border-color: #0a0a0a !important;
+    background: #fafaf9;
+  }
+  .choice--active::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border: 1px solid #0a0a0a;
+    pointer-events: none;
+  }
+
+  /* Badge "offert" */
+  .badge-offered {
+    background: #0a0a0a;
+    color: #fafaf9;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    padding: 4px 8px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* Annotation lignes */
+  .annot-line {
+    stroke: rgba(250,249,249,0.55);
+    stroke-width: 1;
+    fill: none;
+  }
+  .annot-dot {
+    fill: rgba(250,249,249,0.95);
+  }
+
+  /* Citation italic refined */
+  .quote-mark {
+    font-family: 'Geist', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 5rem;
+    line-height: 0.5;
+    color: #d4d4d4;
+  }
+
+  /* Subtle entrance */
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .rise { animation: rise 700ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: #d4d4d4; }
+  ::-webkit-scrollbar-track { background: transparent; }
+</style>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef, useMemo } = React;
+
+/* ─── Icons ──────────────────────────────────────────────────────────── */
+const Icon = ({ children, size = 16, stroke = 1.4, ...rest }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" strokeWidth={stroke}
+    strokeLinecap="round" strokeLinejoin="round" {...rest}>
+    {children}
+  </svg>
+);
+const ArrowLeft  = (p) => <Icon {...p}><path d="M19 12H5M12 19l-7-7 7-7" /></Icon>;
+const ArrowRight = (p) => <Icon {...p}><path d="M5 12h14M12 5l7 7-7 7" /></Icon>;
+const ArrowUpRight = (p) => <Icon {...p}><path d="M7 17 17 7M7 7h10v10" /></Icon>;
+const ArrowDown = (p) => <Icon {...p}><path d="M12 5v14M19 12l-7 7-7-7" /></Icon>;
+const Check = (p) => <Icon {...p}><path d="M20 6 9 17l-5-5" /></Icon>;
+const Heart = ({ filled, ...p }) => (
+  <Icon {...p}>
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+          fill={filled ? "currentColor" : "none"} />
+  </Icon>
+);
+const Bag = (p) => <Icon {...p}><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0" /></Icon>;
+const Search = (p) => <Icon {...p}><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></Icon>;
+const Menu = (p) => <Icon {...p}><path d="M3 12h18M3 6h18M3 18h18" /></Icon>;
+
+/* ─── Données ─────────────────────────────────────────────────────────── */
+const PRODUCT = {
+  slug: "filet-andante",
+  name: "Andante",
+  family: "Collection Signature",
+  number: "024",
+  edition: "042 / 200",
+  tagline: "Filet d'inspiration anglaise — cuir pleine fleur",
+  basePrice: 24500,
+  description:
+    "Façonné dans une tannerie centenaire d'Aveyron, l'Andante naît d'un cuir pleine fleur tanné végétal et passe entre les mains de quatre artisans avant d'arriver chez vous.",
+  longDescription:
+    "Conçu pour le travail sur le plat comme pour le saut, l'Andante allie souplesse immédiate et tenue dans le temps. Chaque pièce est numérotée à la main au verso de la têtière et accompagnée de son certificat d'origine signé par l'atelier.",
+  hours: 18,
+  hands: 4,
+  weeks: 8,
+  // Configuration steps
+  disciplines: [
+    { key: "dressage",    label: "Dressage",      sub: "Travail sur le plat" },
+    { key: "obstacle",    label: "Obstacle",      sub: "Saut & cross" },
+    { key: "polyvalent",  label: "Polyvalent",    sub: "Toutes pratiques" },
+    { key: "competition", label: "Compétition",   sub: "Concours officiels" },
+  ],
+  colours: [
+    { key: "tabac",  label: "Tabac",  hex: "#3D2A1C", desc: "Brun chaud profond, cuir pleine fleur ciré" },
+    { key: "fauve",  label: "Fauve",  hex: "#8A6A47", desc: "Camel doré, finition lustrée naturelle" },
+    { key: "noir",   label: "Noir",   hex: "#0a0a0a", desc: "Noir intense, parfait en piste" },
+    { key: "acajou", label: "Acajou", hex: "#5d2a1c", desc: "Rouge profond, teinture exclusive" },
+  ],
+  sizes: [
+    { key: "Cob",      label: "Cob",      sub: "Chevaux fins, poneys" },
+    { key: "Full",     label: "Full",     sub: "Chevaux de selle adultes",  recommended: true },
+    { key: "Oversize", label: "Oversize", sub: "Grands gabarits, traits légers" },
+  ],
+  reins: [
+    { key: "none",    label: "Sans rênes",         desc: "Filet seul",                        delta: 0,    note: null },
+    { key: "plates",  label: "Rênes plates",       desc: "Cuir assorti, longueur 145 cm",      delta: 0,    note: "Offertes — valeur 95 €" },
+    { key: "tressees",label: "Rênes tressées",     desc: "Tressage main, prise renforcée",     delta: 4500, note: null },
+    { key: "caoutchouc", label: "Rênes caoutchouc", desc: "Anti-glisse, idéales sur l'obstacle", delta: 6500, note: null },
+  ],
+  enrenements: [
+    { key: "aucun",       label: "Aucun",                desc: "Configuration épurée",                  delta: 0 },
+    { key: "martingale-fixe", label: "Martingale fixe",  desc: "Sangle de cou + courroie",              delta: 8500 },
+    { key: "martingale-anneaux", label: "Martingale à anneaux", desc: "Réglage progressif",            delta: 9500 },
+    { key: "pelham",      label: "Courroies de pelham",  desc: "Pour mors à branches",                  delta: 4500 },
+    { key: "gogue",       label: "Gogue commandée",      desc: "Travail à la longe",                    delta: 11500 },
+  ],
+};
+
+const formatPrice = (cents) =>
+  new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 0 })
+    .format(cents / 100);
+
+const ROMAN = ["", "I", "II", "III", "IV", "V", "VI"];
+
+/* ─── Header ──────────────────────────────────────────────────────────── */
+function Header() {
+  return (
+    <header className="sticky top-0 z-40 bg-paper/90 backdrop-blur-sm border-b border-line">
+      <div className="px-6 md:px-12 h-16 flex items-center justify-between">
+        <div className="flex items-center gap-10">
+          <button className="press md:hidden text-ink"><Menu size={18} /></button>
+          <a href="#" className="display text-2xl tracking-tight">Elekka</a>
+          <nav className="hidden md:flex items-center gap-8 text-[13px]">
+            <a href="#" className="text-ink hover:text-muted transition-colors">Boutique</a>
+            <a href="#" className="text-muted hover:text-ink transition-colors">Sur-mesure</a>
+            <a href="#" className="text-muted hover:text-ink transition-colors">Maison</a>
+            <a href="#" className="text-muted hover:text-ink transition-colors">Journal</a>
+          </nav>
+        </div>
+        <div className="flex items-center gap-6 text-ink">
+          <button className="press"><Search size={16} /></button>
+          <button className="press"><Heart size={16} /></button>
+          <button className="press relative">
+            <Bag size={16} />
+            <span className="absolute -top-1 -right-1.5 w-3.5 h-3.5 bg-ink text-on-ink text-[8px] font-mono flex items-center justify-center rounded-full">2</span>
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+/* ─── Marquee discret ─────────────────────────────────────────────────── */
+function PerksMarquee() {
+  const items = [
+    "Livraison offerte dès 200 €",
+    "Pièces numérotées",
+    "Tannage végétal Aveyron",
+    "Réparation à vie",
+    "Paiement 3× sans frais",
+    "Sur-mesure disponible",
+  ];
+  const Loop = () => (
+    <div className="flex items-center gap-14 shrink-0 px-7">
+      {items.map((it, i) => (
+        <span key={i} className="flex items-center gap-14">
+          <span className="kicker-tight text-on-ink/85">{it}</span>
+          <span className="w-[3px] h-[3px] rounded-full bg-on-ink/40" />
+        </span>
+      ))}
+    </div>
+  );
+  return (
+    <div className="bg-ink text-on-ink py-3.5 overflow-hidden">
+      <div className="flex marquee-track w-max">
+        <Loop /><Loop />
+      </div>
+    </div>
+  );
+}
+
+/* ─── Hero — contemplatif ──────────────────────────────────────────────── */
+function Hero({ product, colour }) {
+  return (
+    <section className="px-6 md:px-12 pt-10 md:pt-16">
+      {/* Métadonnées avant titre */}
+      <div className="flex items-center justify-between mb-10 md:mb-14">
+        <div className="flex items-center gap-6 text-muted">
+          <span className="kicker-tight">{product.family}</span>
+          <span className="w-8 h-px bg-line" />
+          <span className="kicker-tight">N° {product.number}</span>
+          <span className="w-8 h-px bg-line hidden sm:block" />
+          <span className="kicker-tight hidden sm:inline">Édition limitée — {product.edition}</span>
+        </div>
+        <div className="flex items-center gap-2 text-muted">
+          <span className="w-1.5 h-1.5 rounded-full bg-ink pulse-dot" />
+          <span className="kicker-tight">Disponible</span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-12 gap-8 md:gap-16 items-end">
+        {/* Image principale */}
+        <div className="col-span-12 md:col-span-7">
+          <div className={`relative aspect-[4/5] leather-${colour} overflow-hidden`}>
+            <div className="absolute inset-0 ring-1 ring-inset ring-ink/5 pointer-events-none" />
+          </div>
+          {/* Légende sous image */}
+          <div className="mt-3 flex items-center justify-between text-muted">
+            <span className="kicker-tight">Fig. I — Profil</span>
+            <span className="font-mono text-[10px] tracking-wider">01 / 04</span>
+          </div>
+        </div>
+
+        {/* Colonne titre */}
+        <div className="col-span-12 md:col-span-5 md:pb-2">
+          <h1 className="display-tight text-[3.5rem] md:text-[4.5rem] xl:text-[5.5rem] text-ink">
+            {product.name}
+          </h1>
+
+          <p className="mt-4 italic text-muted text-base md:text-lg max-w-[36ch]" style={{ fontWeight: 300 }}>
+            {product.tagline}.
+          </p>
+
+          {/* Ligne de séparation */}
+          <div className="mt-10 mb-8 h-px bg-line-ink" />
+
+          {/* Description */}
+          <p className="text-[15px] text-ink/80 leading-[1.7] max-w-[44ch]">
+            {product.description}
+          </p>
+
+          {/* Trois chiffres clés */}
+          <div className="mt-10 grid grid-cols-3 gap-4">
+            {[
+              { num: product.hours, label: "Heures de\nfaçonnage" },
+              { num: product.hands, label: "Paires de\nmains" },
+              { num: product.weeks, label: "Semaines\nd'attente" },
+            ].map((stat, i) => (
+              <div key={i}>
+                <p className="display text-3xl text-ink tabular-nums">{stat.num}</p>
+                <p className="kicker-tight text-muted mt-2 leading-tight whitespace-pre-line">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── ÉTAPE : header + connecteur ──────────────────────────────────────── */
+function StepHeader({ index, total, label, sub, value, done }) {
+  return (
+    <div className="relative pl-12 mb-8">
+      {index < total && <span className={`step-connector ${done ? 'step-connector--done' : ''}`} />}
+      <div className={`step-num absolute left-0 top-0 ${done ? 'step-num--done' : ''}`}>
+        {done ? <Check size={12} stroke={2.5} /> : ROMAN[index]}
+      </div>
+      <div className="flex items-baseline justify-between gap-4 flex-wrap">
+        <div>
+          <p className="kicker-tight text-muted">Étape {ROMAN[index]} sur {ROMAN[total]}</p>
+          <h3 className="display text-[1.75rem] md:text-[2rem] mt-2">{label}</h3>
+          {sub && <p className="text-sm text-muted italic mt-1.5" style={{ fontWeight: 300 }}>{sub}</p>}
+        </div>
+        {value && (
+          <p className="text-[13px] text-ink">
+            <span className="text-muted">Sélectionné · </span>
+            <span className="font-medium">{value}</span>
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Configurateur en 5 étapes ─────────────────────────────────────────── */
+function Configurator({ product, config, setConfig }) {
+  const TOTAL = 5;
+
+  return (
+    <section className="px-6 md:px-12 mt-32 md:mt-40">
+      {/* En-tête de section */}
+      <div className="grid grid-cols-12 gap-8 mb-16 md:mb-24">
+        <div className="col-span-12 md:col-span-2">
+          <p className="kicker-tight text-muted">/02</p>
+        </div>
+        <div className="col-span-12 md:col-span-10">
+          <p className="display-tight text-[2rem] md:text-[2.75rem] xl:text-[3rem] max-w-[20ch]">
+            Composez votre filet à votre <em className="italic font-light text-muted">main</em>.
+          </p>
+          <p className="mt-6 text-[15px] text-muted leading-relaxed max-w-[52ch]">
+            Cinq décisions, prises ensemble. Notre atelier façonne chaque Andante selon vos choix — du cuir aux finitions, de la discipline aux accessoires.
+          </p>
+        </div>
+      </div>
+
+      {/* Étape I — Discipline */}
+      <div className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
+        <div className="col-span-12 md:col-span-4">
+          <StepHeader
+            index={1} total={TOTAL}
+            label="Discipline"
+            sub="Pour adapter notre recommandation."
+            done={!!config.discipline}
+            value={config.discipline ? product.disciplines.find(d => d.key === config.discipline).label : null}
+          />
+        </div>
+        <div className="col-span-12 md:col-span-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {product.disciplines.map((d) => {
+              const active = config.discipline === d.key;
+              return (
+                <button
+                  key={d.key}
+                  onClick={() => setConfig('discipline', d.key)}
+                  className={`choice press text-left p-5 ${active ? 'choice--active' : ''}`}
+                >
+                  <p className="display text-lg">{d.label}</p>
+                  <p className="text-[11px] text-muted mt-2 leading-snug">{d.sub}</p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Étape II — Coloris */}
+      <div className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
+        <div className="col-span-12 md:col-span-4">
+          <StepHeader
+            index={2} total={TOTAL}
+            label="Coloris"
+            sub="Quatre cuirs, tannés en France."
+            done={!!config.colour}
+            value={config.colour ? product.colours.find(c => c.key === config.colour).label : null}
+          />
+        </div>
+        <div className="col-span-12 md:col-span-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {product.colours.map((c) => {
+              const active = config.colour === c.key;
+              return (
+                <button
+                  key={c.key}
+                  onClick={() => setConfig('colour', c.key)}
+                  className={`choice press text-left ${active ? 'choice--active' : ''}`}
+                >
+                  <div className={`aspect-[4/5] leather-${c.key} relative`}>
+                    {active && (
+                      <span className="absolute top-3 right-3 w-6 h-6 bg-on-ink text-ink rounded-full flex items-center justify-center">
+                        <Check size={11} stroke={2.5} />
+                      </span>
+                    )}
+                  </div>
+                  <div className="p-4">
+                    <div className="flex items-center justify-between">
+                      <p className="display text-base">{c.label}</p>
+                      <span className="font-mono text-[9px] text-muted-soft tracking-wider">
+                        {c.key.toUpperCase()}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-muted mt-1.5 leading-snug">{c.desc}</p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Étape III — Taille */}
+      <div className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
+        <div className="col-span-12 md:col-span-4">
+          <StepHeader
+            index={3} total={TOTAL}
+            label="Taille"
+            sub="Mesures prises au-dessus du chanfrein."
+            done={!!config.size}
+            value={config.size}
+          />
+          <button className="ml-12 mt-4 text-[12px] text-ink underline underline-offset-4 decoration-line hover:decoration-ink press inline-flex items-center gap-1.5">
+            Guide des mesures
+            <ArrowUpRight size={11} />
+          </button>
+        </div>
+        <div className="col-span-12 md:col-span-8">
+          <div className="grid grid-cols-3 gap-2">
+            {product.sizes.map((s) => {
+              const active = config.size === s.key;
+              return (
+                <button
+                  key={s.key}
+                  onClick={() => setConfig('size', s.key)}
+                  className={`choice press text-left p-5 relative ${active ? 'choice--active' : ''}`}
+                >
+                  {s.recommended && !active && (
+                    <span className="absolute -top-2 left-4 bg-paper px-2 text-[9px] tracking-widest uppercase text-muted font-medium">
+                      Recommandé
+                    </span>
+                  )}
+                  <p className="display text-2xl">{s.label}</p>
+                  <p className="text-[11px] text-muted mt-2 leading-snug">{s.sub}</p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Étape IV — Rênes */}
+      <div className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
+        <div className="col-span-12 md:col-span-4">
+          <StepHeader
+            index={4} total={TOTAL}
+            label="Rênes"
+            sub="Une paire de rênes plates est offerte."
+            done={!!config.reins}
+            value={config.reins ? product.reins.find(r => r.key === config.reins).label : null}
+          />
+        </div>
+        <div className="col-span-12 md:col-span-8">
+          <div className="space-y-2">
+            {product.reins.map((r) => {
+              const active = config.reins === r.key;
+              return (
+                <button
+                  key={r.key}
+                  onClick={() => setConfig('reins', r.key)}
+                  className={`choice press w-full text-left p-5 flex items-center justify-between gap-4 ${active ? 'choice--active' : ''}`}
+                >
+                  <div className="flex items-baseline gap-5 min-w-0">
+                    <span className={`font-mono text-[10px] tracking-wider mt-1 ${active ? 'text-ink' : 'text-muted-soft'}`}>
+                      0{product.reins.indexOf(r) + 1}
+                    </span>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <p className="display text-lg">{r.label}</p>
+                        {r.note && <span className="badge-offered">{r.note}</span>}
+                      </div>
+                      <p className="text-[12px] text-muted mt-1 leading-snug">{r.desc}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 shrink-0">
+                    <p className={`font-mono text-sm tabular-nums ${active ? 'text-ink' : 'text-muted'}`}>
+                      {r.delta === 0 ? "—" : `+ ${formatPrice(r.delta)}`}
+                    </p>
+                    <span className={`w-5 h-5 border rounded-full flex items-center justify-center transition-colors ${
+                      active ? 'border-ink bg-ink text-on-ink' : 'border-line'
+                    }`}>
+                      {active && <Check size={10} stroke={3} />}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Étape V — Enrênement */}
+      <div className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
+        <div className="col-span-12 md:col-span-4">
+          <StepHeader
+            index={5} total={TOTAL}
+            label="Enrênement"
+            sub="Optionnel — chaque modèle est interchangeable."
+            done={!!config.enrenement}
+            value={config.enrenement ? product.enrenements.find(e => e.key === config.enrenement).label : null}
+          />
+        </div>
+        <div className="col-span-12 md:col-span-8">
+          <div className="space-y-2">
+            {product.enrenements.map((e) => {
+              const active = config.enrenement === e.key;
+              return (
+                <button
+                  key={e.key}
+                  onClick={() => setConfig('enrenement', e.key)}
+                  className={`choice press w-full text-left p-5 flex items-center justify-between gap-4 ${active ? 'choice--active' : ''}`}
+                >
+                  <div className="flex items-baseline gap-5 min-w-0">
+                    <span className={`font-mono text-[10px] tracking-wider mt-1 ${active ? 'text-ink' : 'text-muted-soft'}`}>
+                      0{product.enrenements.indexOf(e) + 1}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="display text-lg">{e.label}</p>
+                      <p className="text-[12px] text-muted mt-1 leading-snug">{e.desc}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 shrink-0">
+                    <p className={`font-mono text-sm tabular-nums ${active ? 'text-ink' : 'text-muted'}`}>
+                      {e.delta === 0 ? "—" : `+ ${formatPrice(e.delta)}`}
+                    </p>
+                    <span className={`w-5 h-5 border rounded-full flex items-center justify-center transition-colors ${
+                      active ? 'border-ink bg-ink text-on-ink' : 'border-line'
+                    }`}>
+                      {active && <Check size={10} stroke={3} />}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Récapitulatif après config ──────────────────────────────────────── */
+function Recap({ product, config, total }) {
+  const items = [
+    { label: "Discipline",  value: product.disciplines.find(d => d.key === config.discipline)?.label },
+    { label: "Coloris",     value: product.colours.find(c => c.key === config.colour)?.label },
+    { label: "Taille",      value: config.size },
+    { label: "Rênes",       value: product.reins.find(r => r.key === config.reins)?.label },
+    { label: "Enrênement",  value: product.enrenements.find(e => e.key === config.enrenement)?.label },
+  ];
+  return (
+    <section className="px-6 md:px-12 mt-12 md:mt-16">
+      <div className="grid grid-cols-12 gap-8">
+        <div className="col-span-12 md:col-span-4 md:col-start-5 md:col-span-8 md:col-start-5">
+          <div className="border-t border-ink pt-6">
+            <p className="kicker-tight text-muted">Récapitulatif</p>
+            <h3 className="display text-2xl mt-2">Votre Andante</h3>
+
+            <dl className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
+              {items.map((it) => (
+                <div key={it.label} className="flex items-baseline justify-between border-b border-line pb-3">
+                  <dt className="kicker-tight text-muted">{it.label}</dt>
+                  <dd className="text-sm font-medium">{it.value || <span className="text-muted-soft">—</span>}</dd>
+                </div>
+              ))}
+            </dl>
+
+            <div className="mt-8 flex items-baseline justify-between pt-4 border-t border-ink">
+              <p className="kicker text-ink">Total</p>
+              <p className="display text-3xl tabular-nums">{formatPrice(total)}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Image annotée ──────────────────────────────────────────────────── */
+function AnatomieSection({ colour }) {
+  const annotations = [
+    { x: 32, y: 22, label: "Têtière anatomique",       sub: "Évite les pressions occipitales" },
+    { x: 56, y: 38, label: "Frontal cousu sellier",    sub: "Doublage cuir agneau" },
+    { x: 28, y: 58, label: "Muserolle française",      sub: "Réglage millimétré" },
+    { x: 68, y: 70, label: "Boucleries laiton",        sub: "Massif, bruni à la main" },
+  ];
+
+  return (
+    <section className="px-6 md:px-12 mt-32 md:mt-40">
+      <div className="grid grid-cols-12 gap-8 mb-16">
+        <div className="col-span-12 md:col-span-2">
+          <p className="kicker-tight text-muted">/03</p>
+        </div>
+        <div className="col-span-12 md:col-span-10">
+          <p className="display-tight text-[2rem] md:text-[2.75rem] xl:text-[3rem] max-w-[24ch]">
+            <em className="italic font-light text-muted">Anatomie</em> d'un filet d'exception.
+          </p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-12 gap-8">
+        <div className="col-span-12 md:col-span-9 md:col-start-2">
+          <div className={`relative aspect-[16/10] leather-${colour} overflow-hidden`}>
+            {/* SVG annotations */}
+            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+              {annotations.map((a, i) => {
+                // Direction selon position : labels sortent vers le côté le plus proche
+                const labelLeft = a.x > 50;
+                const lx = labelLeft ? a.x - 22 : a.x + 22;
+                const ly = a.y;
+                return (
+                  <g key={i}>
+                    <line x1={a.x} y1={a.y} x2={lx} y2={ly} className="annot-line" vectorEffect="non-scaling-stroke" />
+                    <circle cx={a.x} cy={a.y} r="0.7" className="annot-dot" />
+                    <circle cx={a.x} cy={a.y} r="2" stroke="rgba(250,249,249,0.4)" strokeWidth="0.3" fill="none" vectorEffect="non-scaling-stroke" />
+                  </g>
+                );
+              })}
+            </svg>
+
+            {/* Labels HTML pour typographie nette */}
+            {annotations.map((a, i) => {
+              const labelLeft = a.x > 50;
+              return (
+                <div
+                  key={i}
+                  className="absolute text-on-ink"
+                  style={{
+                    left: `${labelLeft ? a.x - 24 : a.x + 24}%`,
+                    top: `${a.y}%`,
+                    transform: `translate(${labelLeft ? '-100%' : '0'}, -50%)`,
+                    textAlign: labelLeft ? 'right' : 'left',
+                  }}
+                >
+                  <p className="font-mono text-[9px] tracking-widest text-on-ink/55 mb-1">
+                    {String(i + 1).padStart(2, '0')} / 04
+                  </p>
+                  <p className="text-[13px] font-medium leading-tight whitespace-nowrap">{a.label}</p>
+                  <p className="text-[10px] italic text-on-ink/65 mt-1 max-w-[18ch] leading-snug" style={{ fontWeight: 300 }}>
+                    {a.sub}
+                  </p>
+                </div>
+              );
+            })}
+
+            <span className="absolute bottom-5 left-5 font-mono text-[10px] tracking-widest text-on-ink/55">
+              FIG. II — DÉTAIL ANATOMIQUE
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Citation artisan ────────────────────────────────────────────────── */
+function ArtisanQuote() {
+  return (
+    <section className="px-6 md:px-12 mt-32 md:mt-40">
+      <div className="grid grid-cols-12 gap-8">
+        <div className="col-span-12 md:col-span-2">
+          <p className="kicker-tight text-muted">/04</p>
+        </div>
+        <div className="col-span-12 md:col-span-8">
+          <span className="quote-mark">"</span>
+          <p className="display-tight text-[1.75rem] md:text-[2.25rem] xl:text-[2.5rem] -mt-4 leading-[1.15]">
+            Un filet n'est pas un accessoire. C'est une <em className="italic font-light text-muted">conversation</em> entre le cavalier, le cheval et le cuir — qui se patine au fil des années.
+          </p>
+          <div className="mt-10 flex items-center gap-4">
+            <div className="w-12 h-12 placeholder-paper rounded-full" />
+            <div>
+              <p className="text-sm font-medium">Henri Vasselot</p>
+              <p className="kicker-tight text-muted mt-1">Maître sellier — Atelier Saumur</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Notice / Onglets ─────────────────────────────────────────────────── */
+function Notice() {
+  const tabs = [
+    { label: "Description",   content: "Filet anglais à muserolle française. Cuir pleine fleur tanné végétal en Aveyron, monté sellier au fil de lin ciré. Chaque pièce est numérotée à la main et passe par un contrôle qualité en quatre étapes avant expédition. Livré dans un coffret cuir doublé feutre, accompagné de son certificat d'origine signé." },
+    { label: "Composition",   content: "Cuir pleine fleur (75%) — bovin français, tannage végétal extrait de châtaigner. Boucleries en laiton massif (15%), brunies à la main, finition vieillie. Fil de lin ciré naturel (5%). Accessoires inox marin (5%). Aucun composant synthétique, aucun chrome, aucune teinture industrielle." },
+    { label: "Entretien",     content: "Nettoyer mensuellement au savon glycériné en mouvements circulaires. Nourrir le cuir tous les trois mois avec un baume végétal (recommandation : baume Elekka, vendu séparément). Éviter l'humidité prolongée et la chaleur directe. Réparation gratuite la première année, atelier de restauration disponible à vie." },
+    { label: "Livraison",     content: "Expédition sous 48h pour les modèles en stock. Comptez 6 à 8 semaines pour une configuration sur-mesure. Livraison offerte en France métropolitaine. Retours acceptés sous 30 jours, sauf personnalisations gravées. Service client joignable du lundi au vendredi." },
+  ];
+  const [active, setActive] = useState(0);
+  return (
+    <section className="px-6 md:px-12 mt-32 md:mt-40">
+      <div className="grid grid-cols-12 gap-8">
+        <div className="col-span-12 md:col-span-2">
+          <p className="kicker-tight text-muted">/05</p>
+          <p className="kicker mt-2 text-ink">Notice</p>
+        </div>
+        <div className="col-span-12 md:col-span-10">
+          <div className="border-t border-ink">
+            {tabs.map((t, i) => {
+              const isActive = i === active;
+              return (
+                <div key={t.label} className="border-b border-line">
+                  <button
+                    onClick={() => setActive(isActive ? -1 : i)}
+                    className="press w-full flex items-center justify-between py-6 text-left group"
+                  >
+                    <div className="flex items-baseline gap-8">
+                      <span className="font-mono text-[10px] text-muted tracking-widest">/0{i+1}</span>
+                      <span className={`display text-xl md:text-2xl transition-colors ${isActive ? 'text-ink' : 'text-muted group-hover:text-ink'}`}>
+                        {t.label}
+                      </span>
+                    </div>
+                    <span className={`text-muted transition-transform duration-300 ${isActive ? 'rotate-180' : ''}`}>
+                      <ArrowDown size={14} />
+                    </span>
+                  </button>
+                  {isActive && (
+                    <div className="pl-0 md:pl-[6.25rem] pb-8 pr-6 rise">
+                      <p className="text-[14px] text-ink/75 leading-[1.75] max-w-[60ch]">
+                        {t.content}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Suggestions ─────────────────────────────────────────────────────── */
+function Suggestions() {
+  const items = [
+    { name: "Largo",   tagline: "Filet de dressage, têtière anatomique", price: 28500, num: "025" },
+    { name: "Cadenza", tagline: "Filet de saut, muserolle combinée",     price: 26500, num: "026" },
+    { name: "Forte",   tagline: "Filet rené, modèle compétition",         price: 32500, num: "027" },
+  ];
+  return (
+    <section className="px-6 md:px-12 mt-32 md:mt-40">
+      <div className="grid grid-cols-12 gap-8 mb-12">
+        <div className="col-span-12 md:col-span-2">
+          <p className="kicker-tight text-muted">/06</p>
+        </div>
+        <div className="col-span-12 md:col-span-10 flex items-end justify-between">
+          <p className="display-tight text-[2rem] md:text-[2.75rem]">
+            Autres pièces de la <em className="italic font-light text-muted">collection</em>.
+          </p>
+          <a href="#" className="text-sm text-ink press inline-flex items-center gap-2 border-b border-ink pb-1 whitespace-nowrap">
+            Voir tout <ArrowUpRight size={13} />
+          </a>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-12 gap-6">
+        {items.map((it) => (
+          <a key={it.name} href="#" className="col-span-12 sm:col-span-6 md:col-span-4 group">
+            <div className="relative aspect-[4/5] placeholder-paper overflow-hidden">
+              <span className="absolute top-4 left-4 font-mono text-[10px] text-muted tracking-wider">N° {it.num}</span>
+              <span className="absolute top-4 right-4 text-muted group-hover:text-ink transition-colors">
+                <ArrowUpRight size={14} />
+              </span>
+            </div>
+            <div className="mt-5 flex items-baseline justify-between">
+              <div>
+                <p className="display text-xl">{it.name}</p>
+                <p className="text-[12px] text-muted italic mt-1.5 leading-snug max-w-[28ch]" style={{ fontWeight: 300 }}>{it.tagline}</p>
+              </div>
+              <p className="font-mono text-sm tabular-nums">{formatPrice(it.price)}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ─── Footer ──────────────────────────────────────────────────────────── */
+function Footer() {
+  return (
+    <footer className="mt-32 md:mt-40 border-t border-line-ink">
+      <div className="px-6 md:px-12 py-14 grid grid-cols-12 gap-6">
+        <div className="col-span-12 md:col-span-3">
+          <p className="display text-3xl">Elekka</p>
+          <p className="text-xs text-muted italic mt-2" style={{ fontWeight: 300 }}>Maison de sellerie depuis 2014</p>
+          <p className="kicker-tight text-muted mt-6">Saumur — France</p>
+        </div>
+        <div className="col-span-6 md:col-span-2 flex flex-col gap-2 text-[13px]">
+          <p className="kicker-tight text-muted-soft mb-3">Boutique</p>
+          <a href="#" className="text-ink hover:text-muted transition-colors">Filets</a>
+          <a href="#" className="text-ink hover:text-muted transition-colors">Rênes</a>
+          <a href="#" className="text-ink hover:text-muted transition-colors">Sur-mesure</a>
+          <a href="#" className="text-ink hover:text-muted transition-colors">Coffrets</a>
+        </div>
+        <div className="col-span-6 md:col-span-2 flex flex-col gap-2 text-[13px]">
+          <p className="kicker-tight text-muted-soft mb-3">Maison</p>
+          <a href="#" className="text-ink hover:text-muted transition-colors">Atelier</a>
+          <a href="#" className="text-ink hover:text-muted transition-colors">Journal</a>
+          <a href="#" className="text-ink hover:text-muted transition-colors">Cavaliers</a>
+          <a href="#" className="text-ink hover:text-muted transition-colors">Contact</a>
+        </div>
+        <div className="col-span-12 md:col-span-5 md:text-right text-xs text-muted">
+          <p>© 2026 Elekka. Tous droits réservés.</p>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ─── CTA sticky ──────────────────────────────────────────────────────── */
+function StickyCart({ product, config, total, onAdd, added, favorite, onFavorite, complete }) {
+  const filledCount = ['discipline','colour','size','reins','enrenement'].filter(k => config[k]).length;
+  const colour = product.colours.find(c => c.key === config.colour);
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-ink text-on-ink">
+      {/* Progress bar fine en haut */}
+      <div className="h-[2px] bg-on-ink/15">
+        <div
+          className="h-full bg-on-ink transition-all duration-500"
+          style={{ width: `${(filledCount / 5) * 100}%` }}
+        />
+      </div>
+
+      <div className="px-4 md:px-12 h-[72px] flex items-center justify-between gap-4">
+        {/* Récap config */}
+        <div className="flex items-center gap-5 min-w-0">
+          {colour ? (
+            <div className={`hidden sm:block w-11 h-11 leather-${colour.key} shrink-0`} />
+          ) : (
+            <div className="hidden sm:block w-11 h-11 border border-on-ink/20 shrink-0" />
+          )}
+          <div className="min-w-0">
+            <p className="text-[13px] font-medium leading-tight truncate">
+              {product.name}
+              {colour && <span className="text-on-ink-muted"> · {colour.label}</span>}
+              {config.size && <span className="text-on-ink-muted"> · {config.size}</span>}
+            </p>
+            <p className="kicker-tight text-on-ink-muted mt-1 hidden sm:block">
+              {filledCount} / 5 étapes complétées
+              {!complete && <span className="ml-2 italic" style={{ fontWeight: 300 }}>— composez votre filet</span>}
+            </p>
+          </div>
+        </div>
+
+        {/* Prix + CTA */}
+        <div className="flex items-stretch gap-2 shrink-0">
+          <div className="hidden md:flex flex-col justify-center text-right pr-2">
+            <p className="kicker-tight text-on-ink-muted">Total</p>
+            <p className="font-mono text-base tabular-nums leading-tight mt-0.5">{formatPrice(total)}</p>
+          </div>
+          <button
+            onClick={onFavorite}
+            aria-label="Favoris"
+            className={`press hidden sm:flex w-12 h-12 border items-center justify-center transition-colors ${
+              favorite ? 'bg-on-ink text-ink border-on-ink' : 'border-on-ink/25 text-on-ink hover:border-on-ink'
+            }`}
+          >
+            <Heart size={16} filled={favorite} />
+          </button>
+          <button
+            onClick={onAdd}
+            disabled={!complete}
+            className={`cta-shine press inline-flex items-center justify-between h-12 pl-5 pr-3 gap-5 min-w-[210px] transition-colors ${
+              complete
+                ? 'bg-on-ink text-ink hover:bg-paper-2'
+                : 'bg-on-ink/30 text-on-ink/60 cursor-not-allowed'
+            }`}
+          >
+            <span className="text-[13px] font-medium tracking-widest uppercase">
+              {added ? 'Ajouté' : complete ? 'Ajouter au panier' : 'Composer'}
+            </span>
+            {added ? <Check size={16} stroke={2.5} /> : <ArrowRight size={14} />}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── App ─────────────────────────────────────────────────────────────── */
+function App() {
+  const product = PRODUCT;
+
+  // Pré-sélection minimale pour éclairer le parcours sans le verrouiller
+  const [config, setConfigState] = useState({
+    discipline: null,
+    colour:     "tabac",
+    size:       null,
+    reins:      "plates",      // les rênes plates offertes pré-cochées
+    enrenement: "aucun",
+  });
+  const setConfig = (key, value) => setConfigState((c) => ({ ...c, [key]: value }));
+
+  const [favorite, setFavorite] = useState(false);
+  const [added, setAdded]       = useState(false);
+
+  const total = useMemo(() => {
+    let t = product.basePrice;
+    const r = product.reins.find(x => x.key === config.reins);
+    const e = product.enrenements.find(x => x.key === config.enrenement);
+    if (r) t += r.delta;
+    if (e) t += e.delta;
+    return t;
+  }, [config.reins, config.enrenement]);
+
+  const complete = !!(config.discipline && config.colour && config.size && config.reins && config.enrenement);
+
+  function handleAdd() {
+    if (!complete) return;
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1800);
+  }
+
+  return (
+    <div className="min-h-screen">
+      <Header />
+      <PerksMarquee />
+
+      {/* Fil d'Ariane */}
+      <div className="px-6 md:px-12 pt-8">
+        <a href="#" className="inline-flex items-center gap-2 text-[12px] text-muted hover:text-ink transition-colors press">
+          <ArrowLeft size={12} />
+          <span>Boutique</span>
+          <span className="text-muted-soft mx-1.5">/</span>
+          <span>Filets</span>
+          <span className="text-muted-soft mx-1.5">/</span>
+          <span className="text-ink italic" style={{ fontWeight: 300 }}>{product.name}</span>
+        </a>
+      </div>
+
+      <Hero product={product} colour={config.colour || 'tabac'} />
+
+      <Configurator product={product} config={config} setConfig={setConfig} />
+
+      <Recap product={product} config={config} total={total} />
+
+      <AnatomieSection colour={config.colour || 'tabac'} />
+
+      <ArtisanQuote />
+
+      <Notice />
+
+      <Suggestions />
+
+      <Footer />
+
+      <StickyCart
+        product={product}
+        config={config}
+        total={total}
+        onAdd={handleAdd}
+        added={added}
+        favorite={favorite}
+        onFavorite={() => setFavorite((v) => !v)}
+        complete={complete}
+      />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
