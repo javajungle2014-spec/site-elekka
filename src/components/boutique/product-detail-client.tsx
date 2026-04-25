@@ -1,148 +1,231 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
-import {
-  ArrowLeft, ArrowRight, Check, ShoppingBag, Heart,
-  Plus, Minus, Truck, Gift, ShieldCheck,
-} from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, ShoppingBag, Heart, Truck, Gift } from "@phosphor-icons/react";
 import { type Product, formatPrice, products } from "@/lib/products";
 import { useCart } from "@/lib/cart-store";
 import { useFavorites } from "@/lib/favorites-store";
 import { AuthModal } from "@/components/auth-modal";
-import { faqProductCategories, type FaqItem } from "@/lib/faq";
 import { productDescriptions, sharedTabs } from "@/lib/product-tabs";
+import { faqProductCategories, type FaqItem } from "@/lib/faq";
 
-/* ─── Helpers ────────────────────────────────────────────────────────── */
-
-const LEATHER_CLASS: Record<string, string> = {
+/* ─── Leather textures ───────────────────────────────────────────────── */
+const LEATHER: Record<string, string> = {
   "havana-brown": "leather-havana-brown",
   "noir": "leather-noir",
   "dark-brown": "leather-dark-brown",
 };
 
-type TabKey = "description" | "taille" | "composition" | "entretien";
-const TAB_LABELS: Record<TabKey, string> = {
-  description: "Description",
-  taille: "Guide de taille",
-  composition: "Composition",
-  entretien: "Entretien",
-};
+/* ─── Icônes SVG (fidèles à index.html) ─────────────────────────────── */
+function Icon({ children, size = 16, stroke = 1.4, className = "", ...rest }: {
+  children: React.ReactNode; size?: number; stroke?: number; className?: string; [k: string]: unknown;
+}) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth={stroke}
+      strokeLinecap="round" strokeLinejoin="round" className={className} {...rest}>
+      {children}
+    </svg>
+  );
+}
+const IcoArrowLeft  = (p: { size?: number }) => <Icon size={p.size ?? 16}><path d="M19 12H5M12 19l-7-7 7-7" /></Icon>;
+const IcoArrowRight = (p: { size?: number }) => <Icon size={p.size ?? 16}><path d="M5 12h14M12 5l7 7-7 7" /></Icon>;
+const IcoArrowUpRight = (p: { size?: number }) => <Icon size={p.size ?? 16}><path d="M7 17 17 7M7 7h10v10" /></Icon>;
+const IcoArrowDown  = (p: { size?: number }) => <Icon size={p.size ?? 14}><path d="M12 5v14M19 12l-7 7-7-7" /></Icon>;
+const IcoCheck      = (p: { size?: number; stroke?: number }) => <Icon size={p.size ?? 16} stroke={p.stroke ?? 1.4}><path d="M20 6 9 17l-5-5" /></Icon>;
+const IcoHeart      = (p: { size?: number; filled?: boolean }) => <Icon size={p.size ?? 16}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill={p.filled ? "currentColor" : "none"} /></Icon>;
+const IcoBag        = (p: { size?: number }) => <Icon size={p.size ?? 16}><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0" /></Icon>;
 
-/* ─── Sous-composants ────────────────────────────────────────────────── */
+/* ─── Perks marquee ──────────────────────────────────────────────────── */
+function PerksMarquee() {
+  const items = [
+    "Livraison offerte",
+    "Rênes plates offertes",
+    "Cuir pleine fleur",
+    "Retours 14 jours",
+    "Paiement sécurisé",
+    "Conçu par des cavaliers",
+  ];
+  const Loop = () => (
+    <div className="flex items-center gap-14 shrink-0 px-7">
+      {items.map((it, i) => (
+        <span key={i} className="flex items-center gap-14">
+          <span className="kicker-tight text-on-ink/85">{it}</span>
+          <span className="w-[3px] h-[3px] rounded-full bg-on-ink/40" />
+        </span>
+      ))}
+    </div>
+  );
+  return (
+    <div className="bg-ink text-on-ink py-3.5 overflow-hidden">
+      <div className="flex marquee-track w-max">
+        <Loop /><Loop />
+      </div>
+    </div>
+  );
+}
 
+/* ─── Step header ────────────────────────────────────────────────────── */
+const ROMAN = ["", "I", "II", "III", "IV", "V"];
+function StepHeader({ index, total, label, sub, value, done }: {
+  index: number; total: number; label: string; sub?: string; value?: string | null; done: boolean;
+}) {
+  return (
+    <div className="relative pl-12 mb-8">
+      {index < total && (
+        <span className={`absolute left-[15px] top-8 bottom-[-28px] w-px ${done ? "bg-ink" : "bg-line"}`} />
+      )}
+      <div className={`absolute left-0 top-0 w-8 h-8 border rounded-full flex items-center justify-center font-mono text-[10px] transition-colors ${
+        done ? "bg-ink border-ink text-on-ink" : "border-ink text-ink"
+      }`}>
+        {done ? <IcoCheck size={12} stroke={2.5} /> : ROMAN[index]}
+      </div>
+      <div className="flex items-baseline justify-between gap-4 flex-wrap">
+        <div>
+          <p className="kicker-tight text-muted">Étape {ROMAN[index]} sur {ROMAN[total]}</p>
+          <h3 className="display text-[1.75rem] md:text-[2rem] mt-2">{label}</h3>
+          {sub && <p className="text-sm text-muted italic mt-1.5" style={{ fontWeight: 300 }}>{sub}</p>}
+        </div>
+        {value && (
+          <p className="text-[13px] text-ink">
+            <span className="text-muted">Sélectionné · </span>
+            <span className="font-medium">{value}</span>
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Notice / Onglets ───────────────────────────────────────────────── */
+function Notice({ slug }: { slug: string }) {
+  const [active, setActive] = useState<number | null>(null);
+  const tabs = [
+    { label: "Description", content: productDescriptions[slug] ?? "" },
+    { label: "Composition",  content: sharedTabs.composition },
+    { label: "Entretien",    content: sharedTabs.entretien },
+    { label: "Taille",       content: sharedTabs.taille },
+  ];
+  return (
+    <section className="px-6 md:px-12 mt-32 md:mt-40">
+      <div className="grid grid-cols-12 gap-8">
+        <div className="col-span-12 md:col-span-2">
+          <p className="kicker-tight text-muted">/04</p>
+          <p className="kicker mt-2 text-ink">Notice</p>
+        </div>
+        <div className="col-span-12 md:col-span-10">
+          <div className="border-t border-ink">
+            {tabs.map((t, i) => {
+              const isActive = i === active;
+              return (
+                <div key={t.label} className="border-b border-line">
+                  <button
+                    type="button"
+                    onClick={() => setActive(isActive ? null : i)}
+                    className="press w-full flex items-center justify-between py-6 text-left group"
+                  >
+                    <div className="flex items-baseline gap-8">
+                      <span className="font-mono text-[10px] text-muted tracking-widest">/0{i + 1}</span>
+                      <span className={`display text-xl md:text-2xl transition-colors ${isActive ? "text-ink" : "text-muted group-hover:text-ink"}`}>
+                        {t.label}
+                      </span>
+                    </div>
+                    <span className={`text-muted transition-transform duration-300 ${isActive ? "rotate-180" : ""}`}>
+                      <IcoArrowDown size={14} />
+                    </span>
+                  </button>
+                  {isActive && (
+                    <div className="md:pl-[6.25rem] pb-8 pr-6 rise">
+                      {t.content.split("\n\n").map((para, j) => {
+                        const parts = para.split(/(\*\*[^*]+\*\*)/g);
+                        return (
+                          <p key={j} className="text-[14px] text-ink/75 leading-[1.75] max-w-[60ch] mb-3 last:mb-0">
+                            {parts.map((part, k) =>
+                              part.startsWith("**") && part.endsWith("**")
+                                ? <strong key={k} className="text-ink font-semibold">{part.replace(/\*\*/g, "")}</strong>
+                                : part
+                            )}
+                          </p>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── FAQ ────────────────────────────────────────────────────────────── */
 function FaqItem({ item }: { item: FaqItem }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="border-b border-line last:border-0">
       <button type="button" onClick={() => setOpen(v => !v)}
-        className="press w-full flex items-start justify-between gap-4 py-4 text-left">
+        className="press w-full flex items-start justify-between gap-4 py-5 text-left">
         <span className="text-sm leading-snug">{item.q}</span>
-        <span className="shrink-0 mt-0.5 text-muted">{open ? <Minus size={13} /> : <Plus size={13} />}</span>
+        <span className="shrink-0 mt-0.5 text-muted text-lg leading-none">{open ? "−" : "+"}</span>
       </button>
-      {open && <p className="text-xs text-muted leading-relaxed pb-4 max-w-[52ch]">{item.a}</p>}
-    </div>
-  );
-}
-
-function ProductTabs({ slug }: { slug: string }) {
-  const [active, setActive] = useState<TabKey>("description");
-  const content: Record<TabKey, string> = {
-    description: productDescriptions[slug] ?? "",
-    taille: sharedTabs.taille,
-    composition: sharedTabs.composition,
-    entretien: sharedTabs.entretien,
-  };
-  return (
-    <div className="grid grid-cols-12 gap-8 md:gap-16">
-      <div className="col-span-12 md:col-span-2">
-        <p className="kicker-tight text-muted">/05</p>
-        <p className="kicker mt-2 text-ink">Notice</p>
-      </div>
-      <div className="col-span-12 md:col-span-10">
-        <div className="border-t border-ink">
-          {(Object.keys(TAB_LABELS) as TabKey[]).map((tab, i) => {
-            const isActive = active === tab;
-            return (
-              <div key={tab} className="border-b border-line">
-                <button
-                  type="button"
-                  onClick={() => setActive(isActive ? "description" : tab)}
-                  className="press w-full flex items-center justify-between py-6 text-left group"
-                >
-                  <div className="flex items-baseline gap-8">
-                    <span className="font-mono text-[10px] text-muted tracking-widest">/0{i + 1}</span>
-                    <span className={`display text-xl md:text-2xl transition-colors ${isActive ? "text-ink" : "text-muted group-hover:text-ink"}`}>
-                      {TAB_LABELS[tab]}
-                    </span>
-                  </div>
-                  <span className={`text-muted transition-transform duration-300 ${isActive ? "rotate-180" : ""}`}>
-                    <ArrowRight size={14} className={`transition-transform duration-300 ${isActive ? "rotate-90" : ""}`} />
-                  </span>
-                </button>
-                {isActive && (
-                  <div className="md:pl-[6.25rem] pb-8 pr-6 rise">
-                    {content[tab].split("\n\n").map((para, j) => {
-                      const parts = para.split(/(\*\*[^*]+\*\*)/g);
-                      return (
-                        <p key={j} className="text-sm text-ink/75 leading-[1.75] max-w-[60ch] mb-3 last:mb-0">
-                          {parts.map((part, k) =>
-                            part.startsWith("**") && part.endsWith("**")
-                              ? <strong key={k} className="text-ink font-semibold">{part.replace(/\*\*/g, "")}</strong>
-                              : part
-                          )}
-                        </p>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      {open && <p className="text-xs text-muted leading-relaxed pb-5 max-w-[52ch]">{item.a}</p>}
     </div>
   );
 }
 
 /* ─── Composant principal ────────────────────────────────────────────── */
-
 export function ProductDetailClient({ product }: { product: Product }) {
   const [selectedColour, setSelectedColour] = useState(product.defaultColour);
-  const [selectedSize, setSelectedSize] = useState(product.defaultSize);
+  const [selectedSize, setSelectedSize]     = useState<string | null>(product.defaultSize);
+  const [selectedReins, setSelectedReins]   = useState("plates");
   const { addItem } = useCart();
   const { isFavorite, toggle, userId } = useFavorites();
-  const [authOpen, setAuthOpen] = useState(false);
+  const [authOpen, setAuthOpen]   = useState(false);
   const [stickyVisible, setStickyVisible] = useState(false);
-  const [added, setAdded] = useState(false);
-  const ctaRef = useRef<HTMLButtonElement>(null);
+  const [added, setAdded]         = useState(false);
+  const [favorite, setFavoriteState] = useState(false);
+  const ctaRef = useRef<HTMLDivElement>(null);
 
   const currentColour = product.colours.find(c => c.key === selectedColour)!;
-  const favorite = isFavorite(product.slug);
   const otherProducts = products.filter(p => p.slug !== product.slug);
+  const complete = !!(selectedColour && selectedSize);
 
-  // Sticky cart — apparaît quand le CTA principal sort du viewport
+  useEffect(() => { setFavoriteState(isFavorite(product.slug)); }, [isFavorite, product.slug]);
+
+  // Sticky cart
   useEffect(() => {
     const el = ctaRef.current;
     if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setStickyVisible(!entry.isIntersecting),
-      { threshold: 0 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
+    const obs = new IntersectionObserver(([e]) => setStickyVisible(!e.isIntersecting), { threshold: 0 });
+    obs.observe(el);
+    return () => obs.disconnect();
   }, []);
+
+  const reinsOptions = [
+    { key: "plates",      label: "Rênes plates",      desc: "Cuir assorti — longueur 145 cm", note: "Offertes — incluses", delta: 0 },
+    { key: "caoutchouc",  label: "Rênes caoutchouc",  desc: "Anti-glisse, idéales obstacle",  note: null, delta: 2500 },
+  ];
+
+  const total = useMemo(() => {
+    const r = reinsOptions.find(x => x.key === selectedReins);
+    return product.priceEUR * 100 + (r?.delta ?? 0);
+  }, [selectedReins, product.priceEUR]);
 
   function handleFavorite() {
     if (!userId) { setAuthOpen(true); return; }
     toggle(product.slug);
+    setFavoriteState(!favorite);
   }
 
   function handleAdd() {
+    if (!complete) return;
     addItem({
       slug: product.slug, name: product.name, priceEUR: product.priceEUR,
       colour: selectedColour, colourLabel: currentColour.label,
-      colourSwatch: currentColour.swatch, size: selectedSize,
+      colourSwatch: currentColour.swatch, size: (selectedSize ?? product.defaultSize) as import("@/lib/products").Size,
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 1800);
@@ -152,23 +235,27 @@ export function ProductDetailClient({ product }: { product: Product }) {
     <>
       <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
 
-      <div className="min-h-screen">
+      <PerksMarquee />
 
-        {/* ── Fil d'Ariane ── */}
-        <div className="px-6 md:px-12 pt-28 md:pt-32">
-          <Link href="/boutique"
-            className="inline-flex items-center gap-2 text-[12px] text-muted hover:text-ink transition-colors press">
-            <ArrowLeft size={12} />
+      <div className="min-h-screen pb-24">
+
+        {/* Fil d'Ariane */}
+        <div className="px-6 md:px-12 pt-8">
+          <a href="/boutique" className="inline-flex items-center gap-2 text-[12px] text-muted hover:text-ink transition-colors press">
+            <IcoArrowLeft size={12} />
             <span>Boutique</span>
             <span className="text-muted-soft mx-1.5">/</span>
-            <span className="text-ink italic" style={{ fontWeight: 300 }}>{product.name}</span>
-          </Link>
+            <span>Filets</span>
+            <span className="text-muted-soft mx-1.5">/</span>
+            <span className="text-ink italic" style={{ fontWeight: 300 }}>
+              {product.name.replace("Bridon Elekka ", "").replace("Filet Anatomique Elekka ", "")}
+            </span>
+          </a>
         </div>
 
-        {/* ── Hero ── */}
-        <section className="px-6 md:px-12 pt-10 md:pt-14">
-          {/* Métadonnées */}
-          <div className="flex items-center justify-between mb-10">
+        {/* ── /01 Hero ── */}
+        <section className="px-6 md:px-12 pt-10 md:pt-16">
+          <div className="flex items-center justify-between mb-10 md:mb-14">
             <div className="flex items-center gap-6 text-muted">
               <span className="kicker-tight">{product.family}</span>
               <span className="w-8 h-px bg-line" />
@@ -181,89 +268,72 @@ export function ProductDetailClient({ product }: { product: Product }) {
           </div>
 
           <div className="grid grid-cols-12 gap-8 md:gap-16 items-end">
-            {/* Image — texture cuir CSS */}
-            <div className="col-span-12 md:col-span-7 order-2 md:order-1">
-              <div className={`relative aspect-[4/5] overflow-hidden ${LEATHER_CLASS[selectedColour] ?? "bg-paper-2"}`}>
+            {/* Image */}
+            <div className="col-span-12 md:col-span-7">
+              <div className={`relative aspect-[4/5] overflow-hidden ${LEATHER[selectedColour] ?? "bg-paper-2"}`}>
                 <div className="absolute inset-0 ring-1 ring-inset ring-ink/5 pointer-events-none" />
-                {/* Vue label */}
                 <div className="absolute top-5 left-5 right-5 flex items-center justify-between pointer-events-none">
                   <span className="kicker-tight text-on-ink/60">Profil</span>
-                  <span className="font-mono text-[10px] tracking-wider text-on-ink/60">01 / 01</span>
-                </div>
-                {/* Ref produit */}
-                <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between pointer-events-none">
-                  <span className="font-mono text-[10px] tracking-widest text-on-ink/50">
-                    ELK-{product.slug.slice(0, 3).toUpperCase()}-{selectedColour.slice(0, 3).toUpperCase()}-{selectedSize.slice(0, 3).toUpperCase()}
-                  </span>
+                  <span className="font-mono text-[10px] tracking-wider text-on-ink/60 tabular-nums">01 / 01</span>
                 </div>
               </div>
               <div className="mt-3 flex items-center justify-between text-muted">
                 <span className="kicker-tight">Fig. I — {currentColour.label}</span>
-                <span className="font-mono text-[10px] tracking-wider">{formatPrice(product.priceEUR)}</span>
+                <span className="font-mono text-[10px] tracking-wider">
+                  ELK-{product.slug.slice(0, 3).toUpperCase()}
+                </span>
               </div>
             </div>
 
-            {/* Titre + config */}
-            <div className="col-span-12 md:col-span-5 order-1 md:order-2 md:pb-2">
-              <p className="kicker text-muted">{product.family}</p>
-              <h1 className="display mt-4 text-[3rem] md:text-[4rem] xl:text-[4.5rem] leading-[0.95] text-ink">
+            {/* Titre */}
+            <div className="col-span-12 md:col-span-5 md:pb-2">
+              <h1 className="display text-[3.5rem] md:text-[4.5rem] xl:text-[5.5rem] text-ink" style={{ lineHeight: 0.92 }}>
                 {product.name.replace("Bridon Elekka ", "").replace("Filet Anatomique Elekka ", "")}
               </h1>
               <p className="mt-4 italic text-muted text-base md:text-lg max-w-[36ch]" style={{ fontWeight: 300 }}>
-                {product.tagline}
+                {product.tagline}.
               </p>
-
               <div className="mt-10 mb-8 h-px bg-line-ink" />
-
               <p className="text-[15px] text-ink/80 leading-[1.7] max-w-[44ch]">
                 {product.description}
               </p>
-
-              {/* Prix */}
-              <div className="mt-8 flex items-baseline gap-4">
-                <p className="font-mono text-3xl text-ink tabular-nums tracking-tight">
-                  {formatPrice(product.priceEUR)}
-                </p>
-                <p className="text-xs text-muted">TTC · Livraison offerte</p>
-              </div>
-
-              {/* Perks */}
-              <div className="mt-5 flex items-stretch border-y border-line divide-x divide-line">
-                <div className="flex items-center gap-3 px-4 py-3 flex-1">
-                  <Truck size={16} className="text-ink shrink-0" />
-                  <div>
-                    <p className="text-[11px] font-semibold text-ink leading-tight">Livraison offerte</p>
-                    <p className="text-[10px] text-muted mt-0.5">Expédié sous 48 h</p>
+              <div className="mt-10 grid grid-cols-3 gap-4">
+                {[
+                  { num: product.colours.length, label: "Coloris\ndisponibles" },
+                  { num: product.sizes.length,   label: "Tailles\nproposées" },
+                  { num: formatPrice(product.priceEUR), label: "Prix\nTTC" },
+                ].map((s, i) => (
+                  <div key={i}>
+                    <p className="display text-2xl text-ink tabular-nums">{s.num}</p>
+                    <p className="kicker-tight text-muted mt-2 leading-tight whitespace-pre-line">{s.label}</p>
                   </div>
-                </div>
-                <div className="flex items-center gap-3 px-4 py-3 flex-1">
-                  <Gift size={16} className="text-ink shrink-0" />
-                  <div>
-                    <p className="text-[11px] font-semibold text-ink leading-tight">Rênes offertes</p>
-                    <p className="text-[10px] text-muted mt-0.5">Avec chaque filet</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
         </section>
 
-        {/* ── Configurateur ── */}
-        <section className="px-6 md:px-12 mt-24 md:mt-32">
+        {/* ── /02 Configurateur ── */}
+        <section className="px-6 md:px-12 mt-32 md:mt-40">
+          <div className="grid grid-cols-12 gap-8 mb-16 md:mb-24">
+            <div className="col-span-12 md:col-span-2">
+              <p className="kicker-tight text-muted">/02</p>
+            </div>
+            <div className="col-span-12 md:col-span-10">
+              <p className="display text-[2rem] md:text-[2.75rem] xl:text-[3rem] max-w-[20ch]" style={{ lineHeight: 1.05 }}>
+                Composez votre filet à votre <em className="italic font-light text-muted">image</em>.
+              </p>
+              <p className="mt-6 text-[15px] text-muted leading-relaxed max-w-[52ch]">
+                Deux décisions, prises ensemble. Choisissez le coloris qui correspond à votre monture, puis la taille adaptée à sa morphologie.
+              </p>
+            </div>
+          </div>
 
           {/* Étape I — Coloris */}
-          <div className="grid grid-cols-12 gap-8 md:gap-16 mb-14">
+          <div className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
             <div className="col-span-12 md:col-span-4">
-              <div className="relative pl-10 mb-6">
-                <div className="absolute left-0 top-0 w-7 h-7 border border-ink rounded-full flex items-center justify-center">
-                  <span className="font-mono text-[10px]">I</span>
-                </div>
-                <p className="kicker-tight text-muted">Étape I sur II</p>
-                <h3 className="display text-2xl mt-2">Coloris</h3>
-                <p className="text-sm text-muted italic mt-1.5" style={{ fontWeight: 300 }}>
-                  Sélection · <span className="text-ink">{currentColour.label}</span>
-                </p>
-              </div>
+              <StepHeader index={1} total={3} label="Coloris" sub="Cuir pleine fleur — tannage sélectionné."
+                done={!!selectedColour} value={selectedColour ? currentColour.label : null} />
             </div>
             <div className="col-span-12 md:col-span-8">
               <div className={`grid gap-2`} style={{ gridTemplateColumns: `repeat(${product.colours.length}, 1fr)` }}>
@@ -272,14 +342,14 @@ export function ProductDetailClient({ product }: { product: Product }) {
                   return (
                     <button key={c.key} type="button" onClick={() => setSelectedColour(c.key)}
                       className={`choice press text-left ${isActive ? "choice--active" : ""}`}>
-                      <div className={`aspect-[4/5] ${LEATHER_CLASS[c.key] ?? "bg-paper-2"} relative`}>
+                      <div className={`aspect-[4/5] relative ${LEATHER[c.key] ?? "bg-paper-2"}`}>
                         {isActive && (
-                          <span className="absolute top-3 right-3 w-6 h-6 bg-paper text-ink rounded-full flex items-center justify-center">
-                            <Check size={11} weight="bold" />
+                          <span className="absolute top-3 right-3 w-6 h-6 bg-on-ink text-ink rounded-full flex items-center justify-center">
+                            <IcoCheck size={11} stroke={2.5} />
                           </span>
                         )}
                       </div>
-                      <div className="p-3">
+                      <div className="p-4">
                         <p className="display text-base">{c.label}</p>
                       </div>
                     </button>
@@ -290,37 +360,29 @@ export function ProductDetailClient({ product }: { product: Product }) {
           </div>
 
           {/* Étape II — Taille */}
-          <div className="grid grid-cols-12 gap-8 md:gap-16 mb-14">
+          <div className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
             <div className="col-span-12 md:col-span-4">
-              <div className="relative pl-10 mb-6">
-                <div className={`absolute left-0 top-0 w-7 h-7 border rounded-full flex items-center justify-center ${selectedColour ? "border-ink bg-ink text-on-ink" : "border-ink"}`}>
-                  {selectedColour ? <Check size={12} weight="bold" /> : <span className="font-mono text-[10px]">II</span>}
-                </div>
-                <p className="kicker-tight text-muted">Étape II sur II</p>
-                <h3 className="display text-2xl mt-2">Taille</h3>
-                <p className="text-sm text-muted italic mt-1.5" style={{ fontWeight: 300 }}>
-                  Mesures prises au chanfrein
-                </p>
-              </div>
+              <StepHeader index={2} total={3} label="Taille" sub="Mesures prises au-dessus du chanfrein."
+                done={!!selectedSize} value={selectedSize} />
               <Link href="/ressources/conseils/mesurer-tete-cheval-taille-filet"
-                className="ml-10 text-[12px] text-ink underline underline-offset-4 decoration-line hover:decoration-ink press inline-flex items-center gap-1.5 transition-colors">
-                Guide des mesures <ArrowRight size={11} />
+                className="ml-12 mt-4 text-[12px] text-ink underline underline-offset-4 decoration-line hover:decoration-ink press inline-flex items-center gap-1.5 transition-colors">
+                Guide des mesures <IcoArrowUpRight size={11} />
               </Link>
             </div>
             <div className="col-span-12 md:col-span-8">
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-3 gap-2">
                 {product.sizes.map(size => {
                   const isActive = selectedSize === size;
-                  const isStandard = size === "Full";
+                  const isStd = size === "Full";
                   return (
                     <button key={size} type="button" onClick={() => setSelectedSize(size)}
-                      className={`choice press text-left p-6 relative ${isActive ? "choice--active" : ""}`}>
-                      {isStandard && !isActive && (
+                      className={`choice press text-left p-5 relative ${isActive ? "choice--active" : ""}`}>
+                      {isStd && !isActive && (
                         <span className="absolute -top-2 left-4 bg-paper px-2 text-[9px] tracking-widest uppercase text-muted font-medium">
                           Recommandé
                         </span>
                       )}
-                      <p className="display text-3xl">{size}</p>
+                      <p className="display text-2xl">{size}</p>
                       <p className="text-[11px] text-muted mt-2 leading-snug">
                         {size === "Full" ? "Chevaux de selle adultes" : "Poneys, chevaux fins"}
                       </p>
@@ -331,106 +393,116 @@ export function ProductDetailClient({ product }: { product: Product }) {
             </div>
           </div>
 
-          {/* CTA principal */}
-          <div className="grid grid-cols-12 gap-8 md:gap-16">
+          {/* Étape III — Rênes */}
+          <div className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
+            <div className="col-span-12 md:col-span-4">
+              <StepHeader index={3} total={3} label="Rênes" sub="Une paire de rênes plates est offerte."
+                done={!!selectedReins} value={selectedReins ? reinsOptions.find(r => r.key === selectedReins)?.label ?? null : null} />
+            </div>
+            <div className="col-span-12 md:col-span-8">
+              <div className="space-y-2">
+                {reinsOptions.map((r, idx) => {
+                  const isActive = selectedReins === r.key;
+                  return (
+                    <button key={r.key} type="button" onClick={() => setSelectedReins(r.key)}
+                      className={`choice press w-full text-left p-5 flex items-center justify-between gap-4 ${isActive ? "choice--active" : ""}`}>
+                      <div className="flex items-baseline gap-5 min-w-0">
+                        <span className={`font-mono text-[10px] tracking-wider mt-1 ${isActive ? "text-ink" : "text-muted-soft"}`}>
+                          0{idx + 1}
+                        </span>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-3 flex-wrap">
+                            <p className="display text-lg">{r.label}</p>
+                            {r.note && (
+                              <span className="bg-ink text-on-ink text-[9px] tracking-[0.2em] uppercase px-2 py-1 font-medium">
+                                {r.note}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[12px] text-muted mt-1 leading-snug">{r.desc}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4 shrink-0">
+                        <p className={`font-mono text-sm tabular-nums ${isActive ? "text-ink" : "text-muted"}`}>
+                          {r.delta === 0 ? "—" : `+ ${formatPrice(r.delta / 100)}`}
+                        </p>
+                        <span className={`w-5 h-5 border rounded-full flex items-center justify-center transition-colors ${
+                          isActive ? "border-ink bg-ink text-on-ink" : "border-line"
+                        }`}>
+                          {isActive && <IcoCheck size={10} stroke={3} />}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Récap + CTA */}
+          <div ref={ctaRef} className="grid grid-cols-12 gap-8">
             <div className="col-span-12 md:col-span-8 md:col-start-5">
               <div className="border-t border-ink pt-6">
-                <div className="flex items-baseline justify-between mb-6">
-                  <p className="kicker text-ink">Votre configuration</p>
-                  <p className="font-mono text-2xl tabular-nums">{formatPrice(product.priceEUR)}</p>
-                </div>
-                <dl className="grid grid-cols-2 gap-x-8 gap-y-3 mb-8">
+                <p className="kicker-tight text-muted">Récapitulatif</p>
+                <h3 className="display text-2xl mt-2">
+                  {product.name.replace("Bridon Elekka ", "").replace("Filet Anatomique Elekka ", "")}
+                </h3>
+                <dl className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
                   {[
-                    { label: "Modèle", value: product.name },
-                    { label: "Coloris", value: currentColour.label },
-                    { label: "Taille", value: selectedSize },
-                    { label: "Rênes", value: "Plates — offertes" },
-                  ].map(({ label, value }) => (
-                    <div key={label} className="flex items-baseline justify-between border-b border-line pb-2">
-                      <dt className="kicker-tight text-muted">{label}</dt>
-                      <dd className="text-sm font-medium">{value}</dd>
+                    { label: "Coloris",   value: selectedColour ? currentColour.label : null },
+                    { label: "Taille",    value: selectedSize },
+                    { label: "Rênes",     value: reinsOptions.find(r => r.key === selectedReins)?.label },
+                  ].map(it => (
+                    <div key={it.label} className="flex items-baseline justify-between border-b border-line pb-3">
+                      <dt className="kicker-tight text-muted">{it.label}</dt>
+                      <dd className="text-sm font-medium">
+                        {it.value ?? <span className="text-muted-soft">—</span>}
+                      </dd>
                     </div>
                   ))}
                 </dl>
-
-                <div className="flex gap-2">
-                  <button ref={ctaRef} type="button" onClick={handleAdd}
-                    className="cta-shine press flex-1 inline-flex items-center justify-between bg-ink text-on-ink pl-6 pr-5 h-14 text-sm tracking-wider hover:bg-ink-soft transition-colors">
+                <div className="mt-8 flex items-baseline justify-between pt-4 border-t border-ink">
+                  <p className="kicker text-ink">Total</p>
+                  <p className="display text-3xl tabular-nums">{formatPrice(total / 100)}</p>
+                </div>
+                <div className="mt-6 flex gap-2">
+                  <button type="button" onClick={handleAdd} disabled={!complete}
+                    className={`cta-shine press flex-1 inline-flex items-center justify-between pl-6 pr-5 h-14 text-sm tracking-wider transition-colors ${
+                      complete ? "bg-ink text-on-ink hover:bg-ink-soft" : "bg-ink/30 text-on-ink/60 cursor-not-allowed"
+                    }`}>
                     <span className="inline-flex items-center gap-3">
-                      <ShoppingBag size={16} />
-                      <span className="font-medium uppercase">{added ? "Ajouté !" : "Ajouter au panier"}</span>
+                      <IcoBag size={16} />
+                      <span className="font-medium uppercase">{added ? "Ajouté !" : complete ? "Ajouter au panier" : "Composer votre filet"}</span>
                     </span>
-                    {added ? <Check size={14} weight="bold" /> : <ArrowRight size={14} />}
+                    {added ? <IcoCheck size={14} stroke={2.5} /> : <IcoArrowRight size={14} />}
                   </button>
                   <button type="button" onClick={handleFavorite}
                     aria-label={favorite ? "Retirer des favoris" : "Ajouter aux favoris"}
                     className={`press w-14 h-14 border flex items-center justify-center transition-all duration-200 ${
                       favorite ? "border-ink bg-ink text-on-ink" : "border-line text-ink hover:border-ink"
                     }`}>
-                    <Heart size={17} weight={favorite ? "fill" : "regular"} />
+                    <IcoHeart size={17} filled={favorite} />
                   </button>
                 </div>
-
-                <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-muted">
-                  {[
-                    { Icon: ShieldCheck, label: "Retours 14 jours" },
-                    { Icon: Gift, label: "Rênes offertes" },
-                    { Icon: Truck, label: "Livraison offerte" },
-                  ].map(({ Icon, label }) => (
-                    <div key={label} className="flex items-center gap-2">
-                      <Icon size={13} />
-                      <span className="kicker-tight">{label}</span>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ── Points clés ── */}
-        <section className="px-6 md:px-12 mt-24 md:mt-32">
-          <div className="grid grid-cols-12 gap-8 mb-12">
-            <div className="col-span-12 md:col-span-2">
-              <p className="kicker-tight text-muted">/02</p>
-            </div>
-            <div className="col-span-12 md:col-span-10">
-              <p className="display text-[2rem] md:text-[2.75rem] leading-tight max-w-[24ch]">
-                Ce qui fait <em className="italic font-light text-muted">la différence</em>.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-12 gap-8">
-            <div className="col-span-12 md:col-span-10 md:col-start-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-6">
-                {product.highlights.map((h, i) => (
-                  <div key={h} className="flex gap-5 border-b border-line pb-6">
-                    <span className="font-mono text-[10px] text-muted-soft pt-1 tabular-nums tracking-wider shrink-0">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <p className="text-sm text-ink/85 leading-relaxed">{h}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── Citation fondateur ── */}
-        <section className="px-6 md:px-12 mt-24 md:mt-32">
+        {/* ── /03 Citation ── */}
+        <section className="px-6 md:px-12 mt-32 md:mt-40">
           <div className="grid grid-cols-12 gap-8">
             <div className="col-span-12 md:col-span-2">
               <p className="kicker-tight text-muted">/03</p>
             </div>
             <div className="col-span-12 md:col-span-8">
-              <p className="italic text-muted text-5xl leading-[0.5] mb-4" style={{ fontWeight: 300 }}>"</p>
-              <p className="display text-[1.75rem] md:text-[2.25rem] leading-[1.15]">
-                Un filet n'est pas un accessoire.
-                C'est une <em className="italic font-light text-muted">conversation</em> entre le cavalier, le cheval et le cuir — qui se bonifie avec le temps.
+              <span className="italic text-[5rem] leading-[0.5] text-muted/40 block mb-4" style={{ fontWeight: 300 }}>"</span>
+              <p className="display text-[1.75rem] md:text-[2.25rem] xl:text-[2.5rem]" style={{ lineHeight: 1.15 }}>
+                Un filet n'est pas un accessoire. C'est une{" "}
+                <em className="italic font-light text-muted">conversation</em> entre le cavalier, le cheval et le cuir — qui se patine au fil des années.
               </p>
               <div className="mt-10 flex items-center gap-4">
-                <div className="w-10 h-10 bg-paper-2 rounded-full flex items-center justify-center text-xs font-semibold">LM</div>
+                <div className="w-12 h-12 bg-paper-2 rounded-full flex items-center justify-center text-sm font-semibold">LM</div>
                 <div>
                   <p className="text-sm font-medium">Lucas Mourier</p>
                   <p className="kicker-tight text-muted mt-1">Fondateur Elekka · Cavalier</p>
@@ -440,32 +512,15 @@ export function ProductDetailClient({ product }: { product: Product }) {
           </div>
         </section>
 
-        {/* ── Description longue ── */}
-        <section className="px-6 md:px-12 mt-24 md:mt-32">
+        {/* ── /04 Notice ── */}
+        <Notice slug={product.slug} />
+
+        {/* ── /05 FAQ ── */}
+        <section className="px-6 md:px-12 mt-32 md:mt-40">
           <div className="grid grid-cols-12 gap-8">
             <div className="col-span-12 md:col-span-2">
-              <p className="kicker-tight text-muted">/04</p>
-            </div>
-            <div className="col-span-12 md:col-span-8">
-              <p className="kicker text-ink mb-4">L'objet</p>
-              <p className="text-[15px] text-ink/75 leading-[1.75] max-w-[60ch]">
-                {product.longDescription}
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* ── Tabs accordéon ── */}
-        <section className="px-6 md:px-12 mt-24 md:mt-32">
-          <ProductTabs slug={product.slug} />
-        </section>
-
-        {/* ── FAQ ── */}
-        <section className="px-6 md:px-12 mt-24 md:mt-32">
-          <div className="grid grid-cols-12 gap-8">
-            <div className="col-span-12 md:col-span-2">
-              <p className="kicker-tight text-muted">/06</p>
-              <p className="kicker mt-2 text-ink">FAQ</p>
+              <p className="kicker-tight text-muted">/05</p>
+              <p className="kicker mt-2 text-ink">Questions</p>
             </div>
             <div className="col-span-12 md:col-span-10">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16">
@@ -476,39 +531,45 @@ export function ProductDetailClient({ product }: { product: Product }) {
                   </div>
                 ))}
               </div>
-              <Link href="/ressources/faq" className="press text-xs text-muted hover:text-ink underline underline-offset-4 transition-colors">
-                Voir toutes les questions →
+              <Link href="/ressources/faq" className="press text-xs text-muted hover:text-ink underline underline-offset-4 transition-colors inline-flex items-center gap-1">
+                Voir toutes les questions <IcoArrowRight size={11} />
               </Link>
             </div>
           </div>
         </section>
 
-        {/* ── Autres modèles ── */}
-        <section className="px-6 md:px-12 mt-24 md:mt-32 pb-32">
+        {/* ── /06 Autres modèles ── */}
+        <section className="px-6 md:px-12 mt-32 md:mt-40">
           <div className="grid grid-cols-12 gap-8 mb-12">
             <div className="col-span-12 md:col-span-2">
-              <p className="kicker-tight text-muted">/07</p>
+              <p className="kicker-tight text-muted">/06</p>
             </div>
             <div className="col-span-12 md:col-span-10 flex items-end justify-between">
-              <p className="display text-[2rem] md:text-[2.75rem]">
+              <p className="display text-[2rem] md:text-[2.75rem]" style={{ lineHeight: 1.05 }}>
                 Autres pièces de la <em className="italic font-light text-muted">gamme</em>.
               </p>
-              <Link href="/boutique" className="press text-sm text-ink border-b border-ink pb-1 whitespace-nowrap inline-flex items-center gap-2">
-                Voir tout <ArrowRight size={13} />
+              <Link href="/boutique" className="press text-sm text-ink border-b border-ink pb-1 whitespace-nowrap inline-flex items-center gap-2 hover:text-muted transition-colors">
+                Voir tout <IcoArrowUpRight size={13} />
               </Link>
             </div>
           </div>
-
           <div className="grid grid-cols-12 gap-6">
             {otherProducts.map(p => (
               <Link key={p.slug} href={`/boutique/${p.slug}`} className="col-span-12 sm:col-span-6 md:col-span-4 group">
-                <div className={`relative aspect-[4/5] overflow-hidden ${LEATHER_CLASS[p.defaultColour] ?? "bg-paper-2"}`}>
+                <div className={`relative aspect-[4/5] overflow-hidden ${LEATHER[p.defaultColour] ?? "bg-paper-2"}`}>
                   <div className="absolute inset-0 ring-1 ring-inset ring-ink/5 pointer-events-none" />
+                  <span className="absolute top-4 right-4 text-muted/60 group-hover:text-on-ink/80 transition-colors">
+                    <IcoArrowUpRight size={14} />
+                  </span>
                 </div>
                 <div className="mt-5 flex items-baseline justify-between">
                   <div>
-                    <p className="display text-xl">{p.name.replace("Bridon Elekka ", "").replace("Filet Anatomique Elekka ", "")}</p>
-                    <p className="text-[12px] text-muted italic mt-1.5 leading-snug max-w-[28ch]" style={{ fontWeight: 300 }}>{p.tagline}</p>
+                    <p className="display text-xl">
+                      {p.name.replace("Bridon Elekka ", "").replace("Filet Anatomique Elekka ", "")}
+                    </p>
+                    <p className="text-[12px] text-muted italic mt-1.5 leading-snug max-w-[28ch]" style={{ fontWeight: 300 }}>
+                      {p.tagline}
+                    </p>
                   </div>
                   <p className="font-mono text-sm tabular-nums">{formatPrice(p.priceEUR)}</p>
                 </div>
@@ -521,29 +582,42 @@ export function ProductDetailClient({ product }: { product: Product }) {
       {/* ── Sticky cart ── */}
       {stickyVisible && (
         <div className="fixed bottom-0 left-0 right-0 z-50 bg-ink text-on-ink">
-          <div className="px-5 md:px-12 h-[68px] flex items-center justify-between gap-4">
-            <div className="flex items-center gap-4 min-w-0">
-              <div className={`hidden sm:block w-10 h-10 shrink-0 ${LEATHER_CLASS[selectedColour] ?? "bg-paper-2"}`} />
+          <div className="h-[2px] bg-on-ink/15">
+            <div className="h-full bg-on-ink transition-all duration-500" style={{ width: complete ? "100%" : "66%" }} />
+          </div>
+          <div className="px-4 md:px-12 h-[72px] flex items-center justify-between gap-4">
+            <div className="flex items-center gap-5 min-w-0">
+              <div className={`hidden sm:block w-11 h-11 shrink-0 ${LEATHER[selectedColour] ?? "bg-paper-2"}`} />
               <div className="min-w-0">
                 <p className="text-[13px] font-medium leading-tight truncate">
                   {product.name.replace("Bridon Elekka ", "").replace("Filet Anatomique Elekka ", "")}
-                  <span className="text-on-ink-muted"> · {currentColour.label} · {selectedSize}</span>
+                  {currentColour && <span className="text-on-ink-muted"> · {currentColour.label}</span>}
+                  {selectedSize && <span className="text-on-ink-muted"> · {selectedSize}</span>}
                 </p>
-                <p className="kicker-tight text-on-ink-muted mt-0.5 hidden sm:block">Rênes plates offertes</p>
+                <p className="kicker-tight text-on-ink-muted mt-1 hidden sm:block">
+                  {complete ? "Configuration complète" : "Sélectionnez une taille pour continuer"}
+                </p>
               </div>
             </div>
-
-            <div className="flex items-center gap-2 shrink-0">
-              <div className="hidden md:block text-right pr-3">
+            <div className="flex items-stretch gap-2 shrink-0">
+              <div className="hidden md:flex flex-col justify-center text-right pr-2">
                 <p className="kicker-tight text-on-ink-muted">Total</p>
-                <p className="font-mono text-base tabular-nums">{formatPrice(product.priceEUR)}</p>
+                <p className="font-mono text-base tabular-nums leading-tight mt-0.5">{formatPrice(total / 100)}</p>
               </div>
-              <button type="button" onClick={handleAdd}
-                className="cta-shine press inline-flex items-center justify-between bg-on-ink text-ink h-11 pl-5 pr-4 gap-5 min-w-[180px] hover:bg-paper-2 transition-colors">
+              <button type="button" onClick={handleFavorite}
+                className={`press hidden sm:flex w-12 h-12 border items-center justify-center transition-colors ${
+                  favorite ? "bg-on-ink text-ink border-on-ink" : "border-on-ink/25 text-on-ink hover:border-on-ink"
+                }`}>
+                <IcoHeart size={16} filled={favorite} />
+              </button>
+              <button type="button" onClick={handleAdd} disabled={!complete}
+                className={`cta-shine press inline-flex items-center justify-between h-12 pl-5 pr-3 gap-5 min-w-[200px] transition-colors ${
+                  complete ? "bg-on-ink text-ink hover:bg-paper-2" : "bg-on-ink/30 text-on-ink/60 cursor-not-allowed"
+                }`}>
                 <span className="text-[13px] font-medium tracking-widest uppercase">
-                  {added ? "Ajouté !" : "Ajouter au panier"}
+                  {added ? "Ajouté !" : complete ? "Ajouter au panier" : "Composer"}
                 </span>
-                {added ? <Check size={14} weight="bold" /> : <ArrowRight size={14} />}
+                {added ? <IcoCheck size={16} stroke={2.5} /> : <IcoArrowRight size={14} />}
               </button>
             </div>
           </div>
