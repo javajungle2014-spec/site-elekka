@@ -10,6 +10,77 @@ import { AuthModal } from "@/components/auth-modal";
 import { productDescriptions, sharedTabs } from "@/lib/product-tabs";
 import { faqProductCategories, type FaqItem } from "@/lib/faq";
 
+/* ─── Modal guide des tailles ───────────────────────────────────────── */
+function SizeGuideModal({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-[80] flex items-center justify-center px-5">
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-ink/50 backdrop-blur-sm" onClick={onClose} />
+
+      {/* Contenu */}
+      <div className="relative w-full max-w-[540px] bg-paper shadow-2xl overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-5 border-b border-line">
+          <div>
+            <p className="kicker-tight text-muted">Étape III</p>
+            <h2 className="display text-2xl mt-1">Guide des tailles</h2>
+          </div>
+          <button type="button" onClick={onClose}
+            className="press w-9 h-9 flex items-center justify-center text-muted hover:text-ink transition-colors text-xl leading-none">
+            ×
+          </button>
+        </div>
+
+        {/* Tableau */}
+        <div className="px-6 py-6 space-y-6">
+          <p className="text-sm text-muted leading-relaxed">
+            Mesurez le tour de tête de votre cheval à l'aide d'un mètre souple, au niveau du chanfrein. Comparez avec le tableau ci-dessous.
+          </p>
+
+          <table className="w-full text-sm border-collapse">
+            <thead>
+              <tr className="border-b border-ink">
+                <th className="text-left kicker-tight text-muted py-3 pr-4 font-medium">Taille</th>
+                <th className="text-left kicker-tight text-muted py-3 pr-4 font-medium">Tour de tête</th>
+                <th className="text-left kicker-tight text-muted py-3 font-medium">Convient à</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-line">
+                <td className="py-4 pr-4 font-semibold display text-lg">Full</td>
+                <td className="py-4 pr-4 font-mono text-sm">55 – 65 cm</td>
+                <td className="py-4 text-muted text-xs leading-snug">Chevaux de sport, Selle Français, KWPN, Hanovrien, Lusitanien</td>
+              </tr>
+              <tr>
+                <td className="py-4 pr-4 font-semibold display text-lg">Cob</td>
+                <td className="py-4 pr-4 font-mono text-sm">48 – 55 cm</td>
+                <td className="py-4 text-muted text-xs leading-snug">Poneys grands gabarits, Quarter Horse, chevaux de morphologie fine</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div className="bg-paper-2 px-4 py-3 text-xs text-muted leading-relaxed">
+            <strong className="text-ink">Conseil :</strong> En cas de doute entre les deux tailles, optez pour le Full — tous nos modèles sont réglables sur plusieurs crans.
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 pb-6 flex items-center justify-between gap-4 border-t border-line pt-5">
+          <button type="button" onClick={onClose}
+            className="press text-sm text-muted hover:text-ink underline underline-offset-4 transition-colors">
+            Retour à ma commande
+          </button>
+          <a href="/ressources/conseils/mesurer-tete-cheval-taille-filet"
+            className="press inline-flex items-center gap-2 bg-ink text-on-ink px-5 py-2.5 text-xs font-medium hover:bg-ink-soft transition-colors">
+            Je ne sais pas quelle taille prendre
+            <IcoArrowUpRight size={11} />
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Leather textures ───────────────────────────────────────────────── */
 const LEATHER: Record<string, string> = {
   "havana-brown": "leather-havana-brown",
@@ -187,6 +258,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const { isFavorite, toggle, userId } = useFavorites();
   const [authOpen, setAuthOpen]   = useState(false);
   const [stickyVisible, setStickyVisible] = useState(false);
+  const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [added, setAdded]         = useState(false);
   const [favorite, setFavoriteState] = useState(false);
   const ctaRef = useRef<HTMLDivElement>(null);
@@ -251,6 +323,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
   return (
     <>
       <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
+      {sizeGuideOpen && <SizeGuideModal onClose={() => setSizeGuideOpen(false)} />}
 
       <PerksMarquee />
 
@@ -408,10 +481,10 @@ export function ProductDetailClient({ product }: { product: Product }) {
             <div className="col-span-12 md:col-span-4">
               <StepHeader index={3} total={5} label="Taille" sub="Mesures prises au-dessus du chanfrein."
                 done={!!selectedSize} value={selectedSize} />
-              <Link href="/ressources/conseils/mesurer-tete-cheval-taille-filet"
-                className="ml-12 mt-4 text-[12px] text-ink underline underline-offset-4 press inline-flex items-center gap-1.5 transition-colors">
+                      <button type="button" onClick={() => setSizeGuideOpen(true)}
+                className="ml-12 mt-4 text-[12px] text-ink underline underline-offset-4 press inline-flex items-center gap-1.5 transition-colors hover:text-muted">
                 Guide des mesures <IcoArrowUpRight size={11} />
-              </Link>
+              </button>
             </div>
             <div className="col-span-12 md:col-span-8">
               <div className="grid grid-cols-2 gap-2">
