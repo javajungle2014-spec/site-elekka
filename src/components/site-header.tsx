@@ -242,7 +242,7 @@ export function SiteHeader() {
       </div>
 
       {/* Menu mobile déroulant */}
-      <div className={`lg:hidden fixed inset-x-0 top-20 bottom-0 bg-paper border-t border-line transition-[opacity,transform] duration-300 ${open ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"}`}>
+      <div className={`lg:hidden fixed inset-x-0 top-20 bottom-0 z-50 bg-paper border-t border-line overflow-y-auto transition-[opacity,transform] duration-300 ${open ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"}`}>
         <nav className="flex flex-col divide-y divide-line">
           {nav.map((item) => (
             <Link
