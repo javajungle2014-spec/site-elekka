@@ -184,15 +184,15 @@ export function ProductCard({
       {/* ── Infos produit ─────────────────────────────────────────────────── */}
       <div className="mt-5">
         <div className="flex items-start justify-between gap-4">
-          <h2 className="text-lg font-semibold tracking-tight text-ink leading-snug">
+          <h2 className="text-sm md:text-lg font-semibold tracking-tight text-ink leading-snug">
             {product.name}
           </h2>
-          <span className="shrink-0 font-mono text-sm text-ink tabular-nums pt-0.5">
+          <span className="shrink-0 font-mono text-xs md:text-sm text-ink tabular-nums pt-0.5">
             {formatPrice(product.priceEUR)}
           </span>
         </div>
 
-        <p className="mt-1.5 text-sm text-muted leading-relaxed">
+        <p className="mt-1 text-xs md:text-sm text-muted leading-relaxed hidden sm:block">
           {product.tagline}
         </p>
 

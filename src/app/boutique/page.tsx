@@ -75,7 +75,7 @@ export default function BoutiquePage() {
                 </p>
               </header>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-14">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-10 md:gap-x-8 md:gap-y-14">
                 {items.map((product, i) => (
                   <ProductCard key={product.slug} product={product} index={i} />
                 ))}

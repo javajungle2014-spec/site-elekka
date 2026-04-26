@@ -113,6 +113,7 @@ export function SiteHeader() {
   }, [hoveredIcon, barReady]);
 
   return (
+    <>
     <header className={`sticky top-0 z-40 transition-[background-color,border-color,backdrop-filter] duration-300 ${scrolled ? "bg-paper/85 backdrop-blur-md border-b border-line" : "bg-transparent border-b border-transparent"}`}>
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
 
@@ -241,46 +242,49 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {/* Menu mobile déroulant */}
-      <div className={`lg:hidden fixed inset-x-0 top-20 bottom-0 z-50 bg-paper border-t border-line overflow-y-auto transition-[opacity,transform] duration-300 ${open ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"}`}>
-        <nav className="flex flex-col divide-y divide-line">
-          {nav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setOpen(false)}
-              className="flex items-center justify-between px-5 py-5 text-lg tracking-tight press"
-            >
-              <span>{item.label}</span>
-              <span aria-hidden className="text-muted">→</span>
-            </Link>
-          ))}
-          {/* Ressources */}
-          <div className="px-5 py-4">
-            <p className="text-xs tracking-widest uppercase text-muted mb-3">Ressources</p>
-            <div className="flex flex-col gap-3">
-              {ressourcesLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="text-base text-muted hover:text-ink transition-colors press"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </nav>
-        <div className="flex items-center gap-8 px-5 py-6 border-t border-line">
-          <button type="button" aria-label="Mes favoris" className="flex items-center gap-2 text-sm text-muted press">
-            <Heart size={18} /> Favoris
-          </button>
-          <button type="button" aria-label="Mon compte" className="flex items-center gap-2 text-sm text-muted press">
-            <User size={18} /> Mon compte
-          </button>
-        </div>
-      </div>
     </header>
+
+      {/* Menu mobile — en dehors du header pour éviter le backdrop-blur */}
+      {open && (
+        <div className="lg:hidden fixed inset-x-0 top-20 bottom-0 z-[60] overflow-y-auto" style={{ backgroundColor: "#fafaf9" }}>
+          <nav className="flex flex-col divide-y divide-line">
+            {nav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className="flex items-center justify-between px-5 py-5 text-lg tracking-tight press"
+              >
+                <span>{item.label}</span>
+                <span aria-hidden className="text-muted">→</span>
+              </Link>
+            ))}
+            <div className="px-5 py-4">
+              <p className="text-xs tracking-widest uppercase text-muted mb-3">Ressources</p>
+              <div className="flex flex-col gap-3">
+                {ressourcesLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className="text-base text-muted hover:text-ink transition-colors press"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </nav>
+          <div className="flex items-center gap-8 px-5 py-6 border-t border-line">
+            <button type="button" aria-label="Mes favoris" className="flex items-center gap-2 text-sm text-muted press">
+              <Heart size={18} /> Favoris
+            </button>
+            <Link href="/compte" onClick={() => setOpen(false)} className="flex items-center gap-2 text-sm text-muted press">
+              <User size={18} /> Mon compte
+            </Link>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
