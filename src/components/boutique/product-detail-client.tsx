@@ -178,9 +178,11 @@ function FaqItem({ item }: { item: FaqItem }) {
 
 /* ─── Composant principal ────────────────────────────────────────────── */
 export function ProductDetailClient({ product }: { product: Product }) {
+  const [selectedDiscipline, setSelectedDiscipline] = useState<string | null>(null);
   const [selectedColour, setSelectedColour] = useState(product.defaultColour);
   const [selectedSize, setSelectedSize]     = useState<string | null>(product.defaultSize);
-  const [selectedReins, setSelectedReins]   = useState("plates");
+  const [selectedReins, setSelectedReins]   = useState<string | null>(null);
+  const [selectedEquip, setSelectedEquip]   = useState<string | null>(null);
   const { addItem } = useCart();
   const { isFavorite, toggle, userId } = useFavorites();
   const [authOpen, setAuthOpen]   = useState(false);
@@ -191,7 +193,6 @@ export function ProductDetailClient({ product }: { product: Product }) {
 
   const currentColour = product.colours.find(c => c.key === selectedColour)!;
   const otherProducts = products.filter(p => p.slug !== product.slug);
-  const complete = !!(selectedColour && selectedSize);
 
   useEffect(() => { setFavoriteState(isFavorite(product.slug)); }, [isFavorite, product.slug]);
 
@@ -204,15 +205,31 @@ export function ProductDetailClient({ product }: { product: Product }) {
     return () => obs.disconnect();
   }, []);
 
+  const disciplines = [
+    { key: "obstacle",      label: "Saut d'obstacle",  sub: "Travail sur l'obstacle & cross" },
+    { key: "dressage",      label: "Dressage",          sub: "Travail sur le plat" },
+    { key: "multi",         label: "Multi-discipline",  sub: "Toutes pratiques" },
+  ];
+
   const reinsOptions = [
-    { key: "plates",      label: "Rênes plates",      desc: "Cuir assorti — longueur 145 cm", note: "Offertes — incluses", delta: 0 },
-    { key: "caoutchouc",  label: "Rênes caoutchouc",  desc: "Anti-glisse, idéales obstacle",  note: null, delta: 2500 },
+    { key: "aucune",      label: "Sans rênes",         desc: "Filet seul",                          note: null,             deltaEUR: 0 },
+    { key: "caoutchouc",  label: "Rênes caoutchouc",   desc: "Anti-glisse · 59,99 € valeur",        note: "Offertes",       deltaEUR: 0 },
+    { key: "tissu",       label: "Rênes tissu",         desc: "Légères & confortables",              note: "-15 %",          deltaEUR: Math.round(49.99 * 0.85 * 100) / 100 },
+  ];
+
+  const equipOptions = [
+    { key: "aucun",       label: "Sans équipement",    desc: "Configuration épurée",                note: null,             deltaEUR: 0 },
+    { key: "tylman",      label: "Tylman",              desc: "Enrênement d'aide à la décontraction", note: "-15 %",         deltaEUR: Math.round(59.99 * 0.85 * 100) / 100 },
+    { key: "martingale",  label: "Martingale",          desc: "Enrênement fixe réglable",            note: "-15 %",          deltaEUR: Math.round(59.99 * 0.85 * 100) / 100 },
   ];
 
   const total = useMemo(() => {
     const r = reinsOptions.find(x => x.key === selectedReins);
-    return product.priceEUR * 100 + (r?.delta ?? 0);
-  }, [selectedReins, product.priceEUR]);
+    const e = equipOptions.find(x => x.key === selectedEquip);
+    return product.priceEUR + (r?.deltaEUR ?? 0) + (e?.deltaEUR ?? 0);
+  }, [selectedReins, selectedEquip, product.priceEUR]);
+
+  const complete = !!(selectedDiscipline && selectedColour && selectedSize && selectedReins && selectedEquip);
 
   function handleFavorite() {
     if (!userId) { setAuthOpen(true); return; }
@@ -316,27 +333,49 @@ export function ProductDetailClient({ product }: { product: Product }) {
         {/* ── /02 Configurateur ── */}
         <section className="px-6 md:px-12 mt-32 md:mt-40">
           <div className="grid grid-cols-12 gap-8 mb-16 md:mb-24">
-            <div className="col-span-12 md:col-span-2">
-              <p className="kicker-tight text-muted">/02</p>
-            </div>
+            <div className="col-span-12 md:col-span-2"><p className="kicker-tight text-muted">/02</p></div>
             <div className="col-span-12 md:col-span-10">
               <p className="display text-[2rem] md:text-[2.75rem] xl:text-[3rem] max-w-[20ch]" style={{ lineHeight: 1.05 }}>
                 Composez votre filet à votre <em className="italic font-light text-muted">image</em>.
               </p>
               <p className="mt-6 text-[15px] text-muted leading-relaxed max-w-[52ch]">
-                Deux décisions, prises ensemble. Choisissez le coloris qui correspond à votre monture, puis la taille adaptée à sa morphologie.
+                Cinq décisions, prises ensemble. De votre discipline à vos accessoires — chaque détail compte.
               </p>
             </div>
           </div>
 
-          {/* Étape I — Coloris */}
+          {/* Étape I — Discipline */}
           <div className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
             <div className="col-span-12 md:col-span-4">
-              <StepHeader index={1} total={3} label="Coloris" sub="Cuir pleine fleur — tannage sélectionné."
+              <StepHeader index={1} total={5} label="Discipline"
+                sub="Pour personnaliser votre expérience."
+                done={!!selectedDiscipline}
+                value={selectedDiscipline ? disciplines.find(d => d.key === selectedDiscipline)?.label ?? null : null} />
+            </div>
+            <div className="col-span-12 md:col-span-8">
+              <div className="grid grid-cols-3 gap-2">
+                {disciplines.map(d => {
+                  const isActive = selectedDiscipline === d.key;
+                  return (
+                    <button key={d.key} type="button" onClick={() => setSelectedDiscipline(d.key)}
+                      className={`choice press text-left p-5 ${isActive ? "choice--active" : ""}`}>
+                      <p className="display text-lg">{d.label}</p>
+                      <p className="text-[11px] text-muted mt-2 leading-snug">{d.sub}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Étape II — Coloris */}
+          <div className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
+            <div className="col-span-12 md:col-span-4">
+              <StepHeader index={2} total={5} label="Coloris" sub="Cuir pleine fleur — tannage sélectionné."
                 done={!!selectedColour} value={selectedColour ? currentColour.label : null} />
             </div>
             <div className="col-span-12 md:col-span-8">
-              <div className={`grid gap-2`} style={{ gridTemplateColumns: `repeat(${product.colours.length}, 1fr)` }}>
+              <div className="grid grid-cols-2 gap-2">
                 {product.colours.map(c => {
                   const isActive = selectedColour === c.key;
                   return (
@@ -349,9 +388,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                           </span>
                         )}
                       </div>
-                      <div className="p-4">
-                        <p className="display text-base">{c.label}</p>
-                      </div>
+                      <div className="p-4"><p className="display text-base">{c.label}</p></div>
                     </button>
                   );
                 })}
@@ -359,30 +396,28 @@ export function ProductDetailClient({ product }: { product: Product }) {
             </div>
           </div>
 
-          {/* Étape II — Taille */}
+          {/* Étape III — Taille */}
           <div className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
             <div className="col-span-12 md:col-span-4">
-              <StepHeader index={2} total={3} label="Taille" sub="Mesures prises au-dessus du chanfrein."
+              <StepHeader index={3} total={5} label="Taille" sub="Mesures prises au-dessus du chanfrein."
                 done={!!selectedSize} value={selectedSize} />
               <Link href="/ressources/conseils/mesurer-tete-cheval-taille-filet"
-                className="ml-12 mt-4 text-[12px] text-ink underline underline-offset-4 decoration-line hover:decoration-ink press inline-flex items-center gap-1.5 transition-colors">
+                className="ml-12 mt-4 text-[12px] text-ink underline underline-offset-4 press inline-flex items-center gap-1.5 transition-colors">
                 Guide des mesures <IcoArrowUpRight size={11} />
               </Link>
             </div>
             <div className="col-span-12 md:col-span-8">
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 gap-2">
                 {product.sizes.map(size => {
                   const isActive = selectedSize === size;
                   const isStd = size === "Full";
                   return (
                     <button key={size} type="button" onClick={() => setSelectedSize(size)}
-                      className={`choice press text-left p-5 relative ${isActive ? "choice--active" : ""}`}>
+                      className={`choice press text-left p-6 relative ${isActive ? "choice--active" : ""}`}>
                       {isStd && !isActive && (
-                        <span className="absolute -top-2 left-4 bg-paper px-2 text-[9px] tracking-widest uppercase text-muted font-medium">
-                          Recommandé
-                        </span>
+                        <span className="absolute -top-2 left-4 bg-paper px-2 text-[9px] tracking-widest uppercase text-muted font-medium">Recommandé</span>
                       )}
-                      <p className="display text-2xl">{size}</p>
+                      <p className="display text-3xl">{size}</p>
                       <p className="text-[11px] text-muted mt-2 leading-snug">
                         {size === "Full" ? "Chevaux de selle adultes" : "Poneys, chevaux fins"}
                       </p>
@@ -393,10 +428,10 @@ export function ProductDetailClient({ product }: { product: Product }) {
             </div>
           </div>
 
-          {/* Étape III — Rênes */}
+          {/* Étape IV — Rênes */}
           <div className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
             <div className="col-span-12 md:col-span-4">
-              <StepHeader index={3} total={3} label="Rênes" sub="Une paire de rênes plates est offerte."
+              <StepHeader index={4} total={5} label="Rênes" sub="Les rênes caoutchouc sont offertes."
                 done={!!selectedReins} value={selectedReins ? reinsOptions.find(r => r.key === selectedReins)?.label ?? null : null} />
             </div>
             <div className="col-span-12 md:col-span-8">
@@ -407,16 +442,12 @@ export function ProductDetailClient({ product }: { product: Product }) {
                     <button key={r.key} type="button" onClick={() => setSelectedReins(r.key)}
                       className={`choice press w-full text-left p-5 flex items-center justify-between gap-4 ${isActive ? "choice--active" : ""}`}>
                       <div className="flex items-baseline gap-5 min-w-0">
-                        <span className={`font-mono text-[10px] tracking-wider mt-1 ${isActive ? "text-ink" : "text-muted-soft"}`}>
-                          0{idx + 1}
-                        </span>
+                        <span className={`font-mono text-[10px] tracking-wider mt-1 ${isActive ? "text-ink" : "text-muted-soft"}`}>0{idx + 1}</span>
                         <div className="min-w-0">
                           <div className="flex items-center gap-3 flex-wrap">
                             <p className="display text-lg">{r.label}</p>
                             {r.note && (
-                              <span className="bg-ink text-on-ink text-[9px] tracking-[0.2em] uppercase px-2 py-1 font-medium">
-                                {r.note}
-                              </span>
+                              <span className="bg-ink text-on-ink text-[9px] tracking-[0.2em] uppercase px-2 py-1 font-medium">{r.note}</span>
                             )}
                           </div>
                           <p className="text-[12px] text-muted mt-1 leading-snug">{r.desc}</p>
@@ -424,11 +455,49 @@ export function ProductDetailClient({ product }: { product: Product }) {
                       </div>
                       <div className="flex items-center gap-4 shrink-0">
                         <p className={`font-mono text-sm tabular-nums ${isActive ? "text-ink" : "text-muted"}`}>
-                          {r.delta === 0 ? "—" : `+ ${formatPrice(r.delta / 100)}`}
+                          {r.deltaEUR === 0 ? "—" : `+ ${formatPrice(r.deltaEUR)}`}
                         </p>
-                        <span className={`w-5 h-5 border rounded-full flex items-center justify-center transition-colors ${
-                          isActive ? "border-ink bg-ink text-on-ink" : "border-line"
-                        }`}>
+                        <span className={`w-5 h-5 border rounded-full flex items-center justify-center transition-colors ${isActive ? "border-ink bg-ink text-on-ink" : "border-line"}`}>
+                          {isActive && <IcoCheck size={10} stroke={3} />}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Étape V — Équipement */}
+          <div className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
+            <div className="col-span-12 md:col-span-4">
+              <StepHeader index={5} total={5} label="Équipement" sub="Optionnel — chaque accessoire est interchangeable."
+                done={!!selectedEquip} value={selectedEquip ? equipOptions.find(e => e.key === selectedEquip)?.label ?? null : null} />
+            </div>
+            <div className="col-span-12 md:col-span-8">
+              <div className="space-y-2">
+                {equipOptions.map((e, idx) => {
+                  const isActive = selectedEquip === e.key;
+                  return (
+                    <button key={e.key} type="button" onClick={() => setSelectedEquip(e.key)}
+                      className={`choice press w-full text-left p-5 flex items-center justify-between gap-4 ${isActive ? "choice--active" : ""}`}>
+                      <div className="flex items-baseline gap-5 min-w-0">
+                        <span className={`font-mono text-[10px] tracking-wider mt-1 ${isActive ? "text-ink" : "text-muted-soft"}`}>0{idx + 1}</span>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-3 flex-wrap">
+                            <p className="display text-lg">{e.label}</p>
+                            {e.note && (
+                              <span className="bg-ink text-on-ink text-[9px] tracking-[0.2em] uppercase px-2 py-1 font-medium">{e.note}</span>
+                            )}
+                          </div>
+                          <p className="text-[12px] text-muted mt-1 leading-snug">{e.desc}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4 shrink-0">
+                        <p className={`font-mono text-sm tabular-nums ${isActive ? "text-ink" : "text-muted"}`}>
+                          {e.deltaEUR === 0 ? "—" : `+ ${formatPrice(e.deltaEUR)}`}
+                        </p>
+                        <span className={`w-5 h-5 border rounded-full flex items-center justify-center transition-colors ${isActive ? "border-ink bg-ink text-on-ink" : "border-line"}`}>
                           {isActive && <IcoCheck size={10} stroke={3} />}
                         </span>
                       </div>
@@ -449,21 +518,21 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 </h3>
                 <dl className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
                   {[
-                    { label: "Coloris",   value: selectedColour ? currentColour.label : null },
-                    { label: "Taille",    value: selectedSize },
-                    { label: "Rênes",     value: reinsOptions.find(r => r.key === selectedReins)?.label },
+                    { label: "Discipline",   value: selectedDiscipline ? disciplines.find(d => d.key === selectedDiscipline)?.label : null },
+                    { label: "Coloris",      value: selectedColour ? currentColour.label : null },
+                    { label: "Taille",       value: selectedSize },
+                    { label: "Rênes",        value: selectedReins ? reinsOptions.find(r => r.key === selectedReins)?.label : null },
+                    { label: "Équipement",   value: selectedEquip ? equipOptions.find(e => e.key === selectedEquip)?.label : null },
                   ].map(it => (
                     <div key={it.label} className="flex items-baseline justify-between border-b border-line pb-3">
                       <dt className="kicker-tight text-muted">{it.label}</dt>
-                      <dd className="text-sm font-medium">
-                        {it.value ?? <span className="text-muted-soft">—</span>}
-                      </dd>
+                      <dd className="text-sm font-medium">{it.value ?? <span className="text-muted-soft">—</span>}</dd>
                     </div>
                   ))}
                 </dl>
                 <div className="mt-8 flex items-baseline justify-between pt-4 border-t border-ink">
                   <p className="kicker text-ink">Total</p>
-                  <p className="display text-3xl tabular-nums">{formatPrice(total / 100)}</p>
+                  <p className="display text-3xl tabular-nums">{formatPrice(total)}</p>
                 </div>
                 <div className="mt-6 flex gap-2">
                   <button type="button" onClick={handleAdd} disabled={!complete}
@@ -472,7 +541,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                     }`}>
                     <span className="inline-flex items-center gap-3">
                       <IcoBag size={16} />
-                      <span className="font-medium uppercase">{added ? "Ajouté !" : complete ? "Ajouter au panier" : "Composer votre filet"}</span>
+                      <span className="font-medium uppercase">{added ? "Ajouté !" : complete ? "Ajouter au panier" : "Composez votre filet"}</span>
                     </span>
                     {added ? <IcoCheck size={14} stroke={2.5} /> : <IcoArrowRight size={14} />}
                   </button>
@@ -602,7 +671,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
             <div className="flex items-stretch gap-2 shrink-0">
               <div className="hidden md:flex flex-col justify-center text-right pr-2">
                 <p className="kicker-tight text-on-ink-muted">Total</p>
-                <p className="font-mono text-base tabular-nums leading-tight mt-0.5">{formatPrice(total / 100)}</p>
+                <p className="font-mono text-base tabular-nums leading-tight mt-0.5">{formatPrice(total)}</p>
               </div>
               <button type="button" onClick={handleFavorite}
                 className={`press hidden sm:flex w-12 h-12 border items-center justify-center transition-colors ${
