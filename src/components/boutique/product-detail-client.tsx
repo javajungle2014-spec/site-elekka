@@ -381,7 +381,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                   return (
                     <button key={c.key} type="button" onClick={() => setSelectedColour(c.key)}
                       className={`choice press text-left ${isActive ? "choice--active" : ""}`}>
-                      {/* Grande image filet + petit carré couleur unie */}
+                      {/* Grande image filet + deux petits carrés couleur unie */}
                       <div className="flex gap-1.5 p-1.5">
                         <div className={`flex-[3] aspect-[3/4] relative ${LEATHER[c.key] ?? "bg-paper-2"}`}>
                           {isActive && (
@@ -390,7 +390,10 @@ export function ProductDetailClient({ product }: { product: Product }) {
                             </span>
                           )}
                         </div>
-                        <div className="flex-1 self-end aspect-square" style={{ backgroundColor: c.swatch }} />
+                        <div className="flex-1 flex flex-col gap-1.5">
+                          <div className="flex-1 rounded-sm" style={{ backgroundColor: c.swatch }} />
+                          <div className="flex-1 rounded-sm opacity-60" style={{ backgroundColor: c.swatch }} />
+                        </div>
                       </div>
                       <div className="px-3 pb-3 pt-1"><p className="display text-sm">{c.label}</p></div>
                     </button>
