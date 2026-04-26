@@ -287,7 +287,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
           <div className="grid grid-cols-12 gap-8 md:gap-16 items-end">
             {/* Image */}
             <div className="col-span-12 md:col-span-7">
-              <div className={`relative aspect-[4/5] overflow-hidden ${LEATHER[selectedColour] ?? "bg-paper-2"}`}>
+              <div className={`relative aspect-[3/4] overflow-hidden ${LEATHER[selectedColour] ?? "bg-paper-2"}`}>
                 <div className="absolute inset-0 ring-1 ring-inset ring-ink/5 pointer-events-none" />
                 <div className="absolute top-5 left-5 right-5 flex items-center justify-between pointer-events-none">
                   <span className="kicker-tight text-on-ink/60">Profil</span>
@@ -381,14 +381,21 @@ export function ProductDetailClient({ product }: { product: Product }) {
                   return (
                     <button key={c.key} type="button" onClick={() => setSelectedColour(c.key)}
                       className={`choice press text-left ${isActive ? "choice--active" : ""}`}>
-                      <div className={`aspect-[4/5] relative ${LEATHER[c.key] ?? "bg-paper-2"}`}>
-                        {isActive && (
-                          <span className="absolute top-3 right-3 w-6 h-6 bg-on-ink text-ink rounded-full flex items-center justify-center">
-                            <IcoCheck size={11} stroke={2.5} />
-                          </span>
-                        )}
+                      {/* Grande image + petit carré uni */}
+                      <div className="flex gap-1.5 p-1.5">
+                        <div className={`flex-[3] aspect-[3/4] relative ${LEATHER[c.key] ?? "bg-paper-2"}`}>
+                          {isActive && (
+                            <span className="absolute top-2 right-2 w-5 h-5 bg-on-ink text-ink rounded-full flex items-center justify-center">
+                              <IcoCheck size={9} stroke={2.5} />
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex-1 flex flex-col gap-1.5">
+                          <div className="flex-1 rounded-sm" style={{ backgroundColor: c.swatch }} />
+                          <div className="flex-1 rounded-sm opacity-60" style={{ backgroundColor: c.swatch }} />
+                        </div>
                       </div>
-                      <div className="p-4"><p className="display text-base">{c.label}</p></div>
+                      <div className="px-3 pb-3 pt-1"><p className="display text-sm">{c.label}</p></div>
                     </button>
                   );
                 })}
@@ -571,11 +578,8 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 <em className="italic font-light text-muted">conversation</em> entre le cavalier, le cheval et le cuir — qui se patine au fil des années.
               </p>
               <div className="mt-10 flex items-center gap-4">
-                <div className="w-12 h-12 bg-paper-2 rounded-full flex items-center justify-center text-sm font-semibold">LM</div>
-                <div>
-                  <p className="text-sm font-medium">Lucas Mourier</p>
-                  <p className="kicker-tight text-muted mt-1">Fondateur Elekka · Cavalier</p>
-                </div>
+                <div className="w-10 h-10 bg-paper-2 rounded-full flex items-center justify-center text-xs font-semibold text-muted">EK</div>
+                <p className="kicker-tight text-muted">Fondateur Elekka · Cavalier</p>
               </div>
             </div>
           </div>
