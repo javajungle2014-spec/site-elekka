@@ -49,6 +49,20 @@ const categories = [
 export default function BoutiquePage() {
   return (
     <>
+      {/* Bandeau personnalisation */}
+      <Link href="/boutique/personnaliser"
+        className="press group block bg-ink text-on-ink hover:bg-ink-soft transition-all duration-300">
+        <div className="mx-auto max-w-[1400px] px-5 md:px-10 h-16 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <span className="text-base font-semibold tracking-tight">✦ Créez votre filet sur mesure</span>
+            <span className="hidden md:inline text-sm text-on-ink-muted group-hover:text-on-ink transition-colors">Structure · Couleur · Rênes · Enrênement</span>
+          </div>
+          <span className="text-sm font-semibold flex items-center gap-2 shrink-0 group-hover:gap-3 transition-all duration-200">
+            Commencer <ArrowUpRight size={16} />
+          </span>
+        </div>
+      </Link>
+
       <CategoryNav categories={categories.map(({ key, label }) => ({ key, label }))} />
 
       <div className="mx-auto max-w-[1400px] px-5 md:px-10 pt-16 pb-24 space-y-24 md:space-y-32">

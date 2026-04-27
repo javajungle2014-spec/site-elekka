@@ -8,11 +8,14 @@ import { formatPrice } from "@/lib/products";
 
 /* ─── Types ──────────────────────────────────────────────────────────── */
 type Config = {
-  structure: string | null;
+  discipline: string | null;
+  tetiere: string | null;
   frontal: string | null;
   muserolle: string | null;
   colour: string | null;
+  taille: string | null;
   reins: string | null;
+  enrenement: string | null;
 };
 
 /* ─── Données ────────────────────────────────────────────────────────── */
@@ -24,12 +27,23 @@ const LEATHER_COLORS: Record<string, string> = {
 
 const STEPS = [
   {
-    key: "structure",
-    label: "Structure",
-    sub: "La base de votre filet",
+    key: "discipline",
+    label: "Discipline",
+    sub: "Pour personnaliser votre expérience",
     options: [
-      { key: "classique",   label: "Classique",   desc: "Têtière standard, conception anglaise traditionnelle" },
-      { key: "anatomique",  label: "Anatomique",  desc: "Têtière incurvée — soulage la nuque et les oreilles" },
+      { key: "obstacle",   label: "Saut d'obstacle",  desc: "Travail sur l'obstacle et le cross" },
+      { key: "dressage",   label: "Dressage",          desc: "Travail sur le plat, précision des aides" },
+      { key: "multi",      label: "Multi-discipline",  desc: "Toutes pratiques, usage quotidien" },
+    ],
+  },
+  {
+    key: "tetiere",
+    label: "Têtière",
+    sub: "La pièce principale, sur la nuque",
+    options: [
+      { key: "classique",         label: "Classique",            desc: "Têtière standard, conception anglaise traditionnelle" },
+      { key: "signature",         label: "Anatomique Signature", desc: "Incurvée — soulage la nuque et libère les oreilles" },
+      { key: "duo",               label: "Anatomique Duo",       desc: "Double rembourrage — confort maximal sur la nuque" },
     ],
   },
   {
@@ -38,7 +52,8 @@ const STEPS = [
     sub: "La pièce qui traverse le front",
     options: [
       { key: "classique",   label: "Classique",    desc: "Frontal rectiligne, sobre et élégant" },
-      { key: "large",       label: "Anatomique large", desc: "5,5 cm de large — répartit la pression sur le front" },
+      { key: "anatomique",  label: "Anatomique",   desc: "Légèrement incurvé pour suivre la morphologie du front" },
+      { key: "signature",   label: "Signature",    desc: "Large 5,5 cm — répartit la pression, finitions soignées" },
     ],
   },
   {
@@ -46,8 +61,9 @@ const STEPS = [
     label: "Muserolle",
     sub: "Le contact sur le chanfrein",
     options: [
-      { key: "simple",      label: "Simple",       desc: "Muserolle française classique, fermeture standard" },
-      { key: "rembourree",  label: "Rembourrée",   desc: "2,5 à 3 cm d'épaisseur — protège et adoucit le contact" },
+      { key: "simple",        label: "Simple",          desc: "Muserolle française classique, fermeture standard" },
+      { key: "rembourree",    label: "Rembourrée",      desc: "2,5 à 3 cm d'épaisseur — protège et adoucit le contact" },
+      { key: "triple",        label: "Triple attache",  desc: "Triple attache interchangeable : épaisse, ovale, rectangulaire" },
     ],
   },
   {
@@ -56,7 +72,16 @@ const STEPS = [
     sub: "La couleur du cuir pleine fleur",
     options: [
       { key: "havana-brown", label: "Havana Brown", desc: "Brun chaud profond, patine naturelle" },
-      { key: "noir",         label: "Noir",         desc: "Noir intense, élégant en toutes circonstances" },
+      { key: "noir",         label: "Noir",          desc: "Noir intense, élégant en toutes circonstances" },
+    ],
+  },
+  {
+    key: "taille",
+    label: "Taille",
+    sub: "Mesures prises au-dessus du chanfrein",
+    options: [
+      { key: "full", label: "Full", desc: "Chevaux de sport et de selle adultes — taille standard" },
+      { key: "cob",  label: "Cob",  desc: "Poneys grands gabarits, chevaux de morphologie fine" },
     ],
   },
   {
@@ -64,9 +89,19 @@ const STEPS = [
     label: "Rênes",
     sub: "La connexion entre vos mains et le mors",
     options: [
-      { key: "aucune",      label: "Sans rênes",        desc: "Filet seul",                          delta: 0,     note: null },
-      { key: "caoutchouc",  label: "Rênes caoutchouc",  desc: "Anti-glisse, toutes conditions",      delta: 0,     note: "Offertes" },
-      { key: "tissu",       label: "Rênes tissu",        desc: "Légères et confortables en main",     delta: 42.49, note: "-15 %" },
+      { key: "classique",   label: "Rênes Classiques",  desc: "Cuir pleine fleur assorti, longueur 145 cm",   delta: 0,     note: "Offertes" },
+      { key: "anatomique",  label: "Rênes Anatomique",  desc: "Grip intégré, prise en main assurée par tous les temps", delta: 42.49, note: "-15 %" },
+      { key: "signature",   label: "Rênes Signature",   desc: "Cuir souple surpiqué, finition premium",       delta: 55.24, note: "-15 %" },
+    ],
+  },
+  {
+    key: "enrenement",
+    label: "Enrênement",
+    sub: "Optionnel — ajout d'un équipement complémentaire",
+    options: [
+      { key: "aucun",       label: "Sans enrênement",  desc: "Configuration épurée, filet seul",              delta: 0,     note: null },
+      { key: "tylman",      label: "Tylman",            desc: "Enrênement d'aide à la décontraction",          delta: 50.99, note: "-15 %" },
+      { key: "martingale",  label: "Martingale",        desc: "Enrênement fixe réglable, sécurité renforcée",  delta: 50.99, note: "-15 %" },
     ],
   },
 ];
