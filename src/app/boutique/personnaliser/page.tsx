@@ -166,8 +166,8 @@ function SideGroup({ step, config, pick }: { step: AnyStep; config: Config; pick
   return (
     <div className="flex flex-col">
       <div className="px-5 pt-5 pb-3">
-        <p className="text-[11px] tracking-[0.18em] uppercase text-white/50 font-bold">{step.label}</p>
-        <p className="text-[11px] text-white/35 mt-0.5 leading-snug">{step.sub}</p>
+        <p className="text-[11px] tracking-[0.18em] uppercase text-white/80 font-bold">{step.label}</p>
+        <p className="text-[11px] text-white/60 mt-0.5 leading-snug">{step.sub}</p>
       </div>
       <div className="flex flex-col gap-0.5 px-3 pb-4">
         {step.options.map((opt) => {
@@ -181,22 +181,22 @@ function SideGroup({ step, config, pick }: { step: AnyStep; config: Config; pick
                 active ? "bg-white/10" : "hover:bg-white/5"
               }`}>
               <div className={`mt-0.5 w-3.5 h-3.5 rounded-full border shrink-0 flex items-center justify-center transition-all duration-200 ${
-                active ? "border-white bg-white" : "border-white/35"
+                active ? "border-white bg-white" : "border-white/60"
               }`}>
                 {active && <span className="w-1.5 h-1.5 rounded-full bg-[#0a0908] block" />}
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <p className={`text-[14px] font-semibold leading-tight transition-colors ${active ? "text-white" : "text-white/70 group-hover:text-white/90"}`}>
+                  <p className={`text-[14px] font-semibold leading-tight transition-colors ${active ? "text-white" : "text-white/90 group-hover:text-white"}`}>
                     {opt.label}
                   </p>
                   {note && (
-                    <span className="text-[9px] border border-white/25 text-white/50 px-1.5 py-0.5 rounded tracking-wide">{note}</span>
+                    <span className="text-[9px] border border-white/40 text-white/70 px-1.5 py-0.5 rounded tracking-wide">{note}</span>
                   )}
                 </div>
-                <p className={`text-[12px] leading-snug mt-1 transition-colors ${active ? "text-white/60" : "text-white/45"}`}>{opt.desc}</p>
+                <p className={`text-[12px] leading-snug mt-1 transition-colors ${active ? "text-white/80" : "text-white/65"}`}>{opt.desc}</p>
                 {delta !== undefined && delta > 0 && (
-                  <p className={`text-[11px] font-mono mt-1 ${active ? "text-white/65" : "text-white/35"}`}>+ {formatPrice(delta)}</p>
+                  <p className={`text-[11px] font-mono mt-1 ${active ? "text-white/80" : "text-white/55"}`}>+ {formatPrice(delta)}</p>
                 )}
               </div>
             </button>
@@ -212,7 +212,7 @@ function BottomGroup({ step, config, pick }: { step: AnyStep; config: Config; pi
   const current = config[step.key as keyof Config];
   return (
     <div className="flex flex-col px-6 py-5">
-      <p className="text-[11px] tracking-[0.18em] uppercase text-white/50 font-bold mb-3">{step.label}</p>
+      <p className="text-[11px] tracking-[0.18em] uppercase text-white/80 font-bold mb-3">{step.label}</p>
       <div className="flex gap-2 flex-wrap">
         {step.options.map((opt) => {
           const active = current === opt.key;
@@ -222,14 +222,14 @@ function BottomGroup({ step, config, pick }: { step: AnyStep; config: Config; pi
             <button key={opt.key} type="button"
               onClick={() => pick(step.key as keyof Config, opt.key)}
               className={`press flex flex-col gap-0.5 px-4 py-2.5 rounded-lg border text-left transition-all duration-200 ${
-                active ? "border-white/60 bg-white/10 text-white" : "border-white/15 text-white/65 hover:border-white/35 hover:text-white/85"
+                active ? "border-white bg-white/12 text-white" : "border-white/35 text-white/85 hover:border-white/60 hover:text-white"
               }`}>
               <div className="flex items-center gap-2">
                 <p className="text-[13px] font-semibold whitespace-nowrap">{opt.label}</p>
-                {note && <span className="text-[9px] text-white/40 border border-white/20 px-1.5 rounded">{note}</span>}
+                {note && <span className="text-[9px] text-white/60 border border-white/30 px-1.5 rounded">{note}</span>}
               </div>
               {delta !== undefined && delta > 0 && (
-                <p className="text-[10px] font-mono text-white/35">+{formatPrice(delta)}</p>
+                <p className="text-[10px] font-mono text-white/55">+{formatPrice(delta)}</p>
               )}
             </button>
           );
