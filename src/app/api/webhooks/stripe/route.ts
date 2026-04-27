@@ -22,7 +22,7 @@ export async function POST(req: Request) {
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
-    const { userId, items: itemsJson, shippingAddress: addressJson, customerEmail, promoCode } =
+    const { userId, items: itemsJson, shippingAddress: addressJson, customerEmail, promoCode, referralCode } =
       session.metadata ?? {};
 
     const items = JSON.parse(itemsJson ?? "[]") as OrderItem[];
@@ -35,6 +35,7 @@ export async function POST(req: Request) {
       items,
       address,
       totalEUR,
+      referralCode: referralCode || null,
     });
 
     if (promoCode) await incrementPromoUsage(promoCode);

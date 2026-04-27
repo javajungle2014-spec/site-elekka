@@ -3,37 +3,9 @@ import { NextResponse } from "next/server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function GET() {
-  const body = [
-    "mode=payment",
-    "success_url=https://elekka-sellier.fr/checkout/success",
-    "cancel_url=https://elekka-sellier.fr/checkout",
-    "line_items[0][price_data][currency]=eur",
-    "line_items[0][price_data][product_data][name]=Test",
-    "line_items[0][price_data][unit_amount]=9000",
-    "line_items[0][quantity]=1",
-  ].join("&");
-
-  const res = await fetch("https://api.stripe.com/v1/checkout/sessions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`,
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body,
-  });
-  const data = await res.json();
-  return NextResponse.json({
-    status: res.status,
-    ok: res.ok,
-    url: data.url ?? null,
-    error: data.error ?? null,
-  });
-}
-
 export async function POST(req: Request) {
   try {
-    const { items, address, userId, promoCode, discountEUR = 0 } = await req.json();
+    const { items, address, userId, promoCode, discountEUR = 0, referralCode } = await req.json();
 
     if (!items?.length) {
       return NextResponse.json({ error: "Panier vide" }, { status: 400 });
@@ -59,6 +31,7 @@ export async function POST(req: Request) {
       `metadata[shippingAddress]=${encodeURIComponent(JSON.stringify(address))}`,
       `metadata[promoCode]=${encodeURIComponent(promoCode ?? "")}`,
       `metadata[discountEUR]=${discountEUR}`,
+      `metadata[referralCode]=${encodeURIComponent(referralCode ?? "")}`,
     ];
 
     if (discountEUR > 0) {
