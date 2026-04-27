@@ -440,7 +440,7 @@ export default function PersonnaliserPage() {
       </div>
 
       {/* ── GALERIE ACCESSOIRES ──────────────────────────────────────── */}
-      <AccessoriesGallery />
+      <AccessoriesGallery config={config} />
 
     </div>
   );
@@ -448,36 +448,72 @@ export default function PersonnaliserPage() {
 
 /* ─── Galerie accessoires ─────────────────────────────────────────────── */
 const ACCESSORIES = [
-  { id: 1,  name: "Têtière Classique",            category: "Têtière",    seed: "elekka-t1" },
-  { id: 2,  name: "Têtière Anatomique Signature", category: "Têtière",    seed: "elekka-t2" },
-  { id: 3,  name: "Têtière Anatomique Duo",       category: "Têtière",    seed: "elekka-t3" },
-  { id: 4,  name: "Frontal Classique",            category: "Frontal",    seed: "elekka-f1" },
-  { id: 5,  name: "Frontal Anatomique",           category: "Frontal",    seed: "elekka-f2" },
-  { id: 6,  name: "Frontal Signature 5,5 cm",     category: "Frontal",    seed: "elekka-f3" },
-  { id: 7,  name: "Muserolle Simple",             category: "Muserolle",  seed: "elekka-m1" },
-  { id: 8,  name: "Muserolle Rembourrée",         category: "Muserolle",  seed: "elekka-m2" },
-  { id: 9,  name: "Muserolle Triple attache",     category: "Muserolle",  seed: "elekka-m3" },
-  { id: 10, name: "Rênes Classiques",             category: "Rênes",      seed: "elekka-r1" },
-  { id: 11, name: "Rênes Anatomique",             category: "Rênes",      seed: "elekka-r2" },
-  { id: 12, name: "Rênes Signature",              category: "Rênes",      seed: "elekka-r3" },
-  { id: 13, name: "Martingale",                   category: "Enrênement", seed: "elekka-e1" },
-  { id: 14, name: "Tylman",                       category: "Enrênement", seed: "elekka-e2" },
+  { id: 1,  name: "Têtière Classique",            category: "Têtière",    seed: "elekka-t1", configKey: "tetiere",    configValue: "classique"  },
+  { id: 2,  name: "Têtière Anatomique Signature", category: "Têtière",    seed: "elekka-t2", configKey: "tetiere",    configValue: "signature"  },
+  { id: 3,  name: "Têtière Anatomique Duo",       category: "Têtière",    seed: "elekka-t3", configKey: "tetiere",    configValue: "duo"        },
+  { id: 4,  name: "Frontal Classique",            category: "Frontal",    seed: "elekka-f1", configKey: "frontal",    configValue: "classique"  },
+  { id: 5,  name: "Frontal Anatomique",           category: "Frontal",    seed: "elekka-f2", configKey: "frontal",    configValue: "anatomique" },
+  { id: 6,  name: "Frontal Signature 5,5 cm",     category: "Frontal",    seed: "elekka-f3", configKey: "frontal",    configValue: "signature"  },
+  { id: 7,  name: "Muserolle Simple",             category: "Muserolle",  seed: "elekka-m1", configKey: "muserolle",  configValue: "simple"     },
+  { id: 8,  name: "Muserolle Rembourrée",         category: "Muserolle",  seed: "elekka-m2", configKey: "muserolle",  configValue: "rembourree" },
+  { id: 9,  name: "Muserolle Triple attache",     category: "Muserolle",  seed: "elekka-m3", configKey: "muserolle",  configValue: "triple"     },
+  { id: 10, name: "Rênes Classiques",             category: "Rênes",      seed: "elekka-r1", configKey: "reins",      configValue: "classique"  },
+  { id: 11, name: "Rênes Anatomique",             category: "Rênes",      seed: "elekka-r2", configKey: "reins",      configValue: "anatomique" },
+  { id: 12, name: "Rênes Signature",              category: "Rênes",      seed: "elekka-r3", configKey: "reins",      configValue: "signature"  },
+  { id: 13, name: "Martingale",                   category: "Enrênement", seed: "elekka-e1", configKey: "enrenement", configValue: "martingale" },
+  { id: 14, name: "Tylman",                       category: "Enrênement", seed: "elekka-e2", configKey: "enrenement", configValue: "tylman"     },
 ];
 
-const CATEGORIES = ["Tous", "Têtière", "Frontal", "Muserolle", "Rênes", "Enrênement"];
+function ThumbGrid({ items, selected, onSelect }: {
+  items: typeof ACCESSORIES;
+  selected: typeof ACCESSORIES[number];
+  onSelect: (item: typeof ACCESSORIES[number]) => void;
+}) {
+  return (
+    <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+      {items.map(item => {
+        const isActive = selected.id === item.id;
+        return (
+          <button key={item.id} type="button" onClick={() => onSelect(item)}
+            className={`press group relative overflow-hidden transition-all duration-200 ${
+              isActive ? "ring-2 ring-ink ring-offset-2" : "hover:ring-1 hover:ring-ink/30"
+            }`}
+            style={{ aspectRatio: "1/1" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={`https://picsum.photos/seed/${item.seed}/300/300`} alt={item.name}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+            <div className="absolute inset-0 flex flex-col justify-end p-2"
+              style={{ background: "linear-gradient(to top, rgba(10,9,8,0.7) 0%, transparent 55%)" }}>
+              <p className="text-white text-[9px] font-semibold leading-tight line-clamp-2">{item.name}</p>
+            </div>
+            {isActive && (
+              <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-ink flex items-center justify-center">
+                <Check size={8} weight="bold" className="text-on-ink" />
+              </div>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
-function AccessoriesGallery() {
+function AccessoriesGallery({ config }: { config: Config }) {
   const [selected, setSelected] = useState(ACCESSORIES[0]);
-  const [activeCategory, setActiveCategory] = useState("Tous");
 
-  const filtered = activeCategory === "Tous"
-    ? ACCESSORIES
-    : ACCESSORIES.filter(a => a.category === activeCategory);
+  const inSelection = ACCESSORIES.filter(
+    a => config[a.configKey as keyof Config] === a.configValue
+  );
+  const others = ACCESSORIES.filter(
+    a => config[a.configKey as keyof Config] !== a.configValue
+  );
+  const hasSelection = inSelection.length > 0;
 
   return (
     <section style={{ background: "#fafaf9", color: "#0a0908", borderTop: "1px solid #e5e5e5" }}>
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-16">
 
+        {/* En-tête */}
         <div className="mb-10">
           <p className="kicker text-muted mb-2">Accessoires · À la carte</p>
           <h2 className="display text-4xl md:text-5xl">
@@ -485,77 +521,79 @@ function AccessoriesGallery() {
             <span className="text-muted">une par une.</span>
           </h2>
           <p className="mt-4 text-sm text-muted max-w-[48ch] leading-relaxed">
-            Chaque élément du filet sera bientôt disponible séparément.
-            Retrouvez ici l&apos;ensemble de la gamme à venir.
+            Chaque élément sera bientôt disponible séparément.
+            La galerie se met à jour selon votre configuration.
           </p>
         </div>
 
-        <div className="flex gap-2 flex-wrap mb-8">
-          {CATEGORIES.map(cat => (
-            <button key={cat} type="button"
-              onClick={() => { setActiveCategory(cat); setSelected(filtered[0] ?? ACCESSORIES[0]); }}
-              className={`press px-4 py-1.5 text-xs font-semibold tracking-wide border transition-all duration-200 ${
-                activeCategory === cat
-                  ? "bg-ink text-on-ink border-ink"
-                  : "border-line text-muted hover:border-ink/30 hover:text-ink"
-              }`}>
-              {cat}
-            </button>
-          ))}
-        </div>
-
+        {/* Layout photo principale + droite */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-start">
 
+          {/* Photo principale — sticky */}
           <div className="lg:sticky lg:top-24">
             <div className="relative overflow-hidden bg-paper-2" style={{ aspectRatio: "4/3" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                key={selected.seed}
+              <img key={selected.seed}
                 src={`https://picsum.photos/seed/${selected.seed}/900/675`}
                 alt={selected.name}
-                className="w-full h-full object-cover"
-              />
+                className="w-full h-full object-cover" />
               <div className="absolute bottom-0 left-0 right-0 p-5"
-                style={{ background: "linear-gradient(to top, rgba(10,9,8,0.75) 0%, transparent 100%)" }}>
+                style={{ background: "linear-gradient(to top, rgba(10,9,8,0.78) 0%, transparent 100%)" }}>
                 <p className="kicker-tight text-white/50 mb-1">{selected.category}</p>
                 <p className="text-white font-semibold text-lg leading-tight">{selected.name}</p>
-                <p className="text-white/40 text-xs mt-1.5">Photo à venir — emplacement réservé</p>
+                {inSelection.some(a => a.id === selected.id) && (
+                  <div className="flex items-center gap-1.5 mt-2">
+                    <div className="w-3.5 h-3.5 rounded-full bg-white flex items-center justify-center">
+                      <Check size={8} weight="bold" className="text-[#0a0908]" />
+                    </div>
+                    <span className="text-white/70 text-[10px] font-medium">Dans votre configuration</span>
+                  </div>
+                )}
+                <p className="text-white/30 text-xs mt-1">Photo à venir — emplacement réservé</p>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-2">
-            {filtered.map(item => {
-              const isActive = selected.id === item.id;
-              return (
-                <button key={item.id} type="button"
-                  onClick={() => setSelected(item)}
-                  className={`press group relative overflow-hidden transition-all duration-200 ${
-                    isActive ? "ring-2 ring-ink ring-offset-2" : "hover:ring-1 hover:ring-ink/30"
-                  }`}
-                  style={{ aspectRatio: "1/1" }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={`https://picsum.photos/seed/${item.seed}/300/300`}
-                    alt={item.name}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 flex flex-col justify-end p-2"
-                    style={{ background: "linear-gradient(to top, rgba(10,9,8,0.65) 0%, transparent 55%)" }}>
-                    <p className="text-white text-[9px] font-semibold leading-tight line-clamp-2">{item.name}</p>
-                  </div>
-                  {isActive && (
-                    <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-ink flex items-center justify-center">
-                      <Check size={8} weight="bold" className="text-on-ink" />
-                    </div>
-                  )}
-                </button>
-              );
-            })}
-          </div>
+          {/* Colonne droite : deux zones */}
+          <div className="flex flex-col gap-8">
 
+            {/* ZONE 1 — Votre sélection */}
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-ink" />
+                  <p className="text-xs font-bold tracking-[0.12em] uppercase">Votre sélection</p>
+                </div>
+                <div className="flex-1 h-px bg-ink" />
+                <span className="text-xs font-mono text-muted tabular-nums">{inSelection.length} pièce{inSelection.length > 1 ? "s" : ""}</span>
+              </div>
+
+              {hasSelection ? (
+                <ThumbGrid items={inSelection} selected={selected} onSelect={setSelected} />
+              ) : (
+                <div className="border border-dashed border-line rounded p-6 text-center">
+                  <p className="text-sm text-muted">Choisissez vos options ci-dessus</p>
+                  <p className="text-xs text-muted/60 mt-1">Les pièces de votre filet apparaîtront ici</p>
+                </div>
+              )}
+            </div>
+
+            {/* Séparateur */}
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-px bg-line" />
+              <span className="text-[10px] tracking-[0.2em] uppercase text-muted font-medium">Autres pièces</span>
+              <div className="flex-1 h-px bg-line" />
+            </div>
+
+            {/* ZONE 2 — Autres pièces */}
+            <div>
+              <ThumbGrid items={others} selected={selected} onSelect={setSelected} />
+            </div>
+
+          </div>
         </div>
 
+        {/* Pied */}
         <div className="mt-10 pt-8 border-t border-line flex items-center justify-between flex-wrap gap-4">
           <p className="text-xs text-muted">Ces pièces seront disponibles à l&apos;achat séparément prochainement.</p>
           <div className="flex items-center gap-2">
