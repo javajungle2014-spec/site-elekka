@@ -22,13 +22,13 @@ type Product = {
 /* ─── Données produit ────────────────────────────────────────────────────── */
 const product: Product = {
   slug: "renes-classiques",
-  name: "Rênes Classiques",
+  name: "Rênes Elekka",
   category: "Rênes",
   family: "Classique",
   tagline: "Rênes en cuir pleine fleur, assortissables à tous les bridons Elekka. Une prise en main franche, une longueur pensée pour le quotidien.",
   priceEUR: 45,
   description: "Cuir pleine fleur, coutures surpiquées et bords arrondis pour une prise en main confortable.",
-  longDescription: "Les rênes Elekka Classiques sont taillées dans le même cuir pleine fleur que les bridons de la gamme. La longueur standard 145 cm convient à la majorité des morphologies et des disciplines. Finitions propres, couleurs assorties.",
+  longDescription: "Les rênes Elekka sont taillées dans le même cuir pleine fleur que les bridons de la gamme. La longueur standard 145 cm convient à la majorité des morphologies et des disciplines. Finitions propres, couleurs assorties.",
   highlights: ["Cuir pleine fleur", "145 cm", "Coutures surpiquées"],
   colours: [
     { key: "havana", label: "Havana Brown", swatch: "#6f4528", images: [] },
@@ -73,7 +73,7 @@ const specs = [
   ["Expédition", "2 à 4 jours ouvrés"],
 ];
 
-/* ─── Composants visuels ────────────────────────────────────────────────── */
+/* ─── Sous-composants ───────────────────────────────────────────────────── */
 function Price({ value }: { value: number }) {
   return (
     <span className="font-mono text-sm tabular-nums">
@@ -133,7 +133,7 @@ function BuyStrip({
   colourKey: string;
   setColourKey: (key: string) => void;
   size: "Full" | "Cob";
-  setSize: (size: "Full" | "Cob") => void;
+  setSize: (s: "Full" | "Cob") => void;
 }) {
   return (
     <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
@@ -177,10 +177,121 @@ function BuyStrip({
   );
 }
 
-/* ─── Page principale ───────────────────────────────────────────────────── */
+function StorySection({ product: p, leatherClass }: { product: Product; leatherClass: string }) {
+  return (
+    <section id="histoire" className="bg-ink text-on-ink">
+      <div className="mx-auto grid max-w-[1600px] gap-0 lg:grid-cols-2">
+        <div className="flex min-h-[760px] items-center px-4 py-20 md:px-12 lg:px-20">
+          <div className="max-w-2xl">
+            <p className="kicker text-white/45">Le produit</p>
+            <h2 className="display mt-6 text-5xl leading-[0.94] md:text-8xl">Du quotidien, mais avec une vraie présence.</h2>
+            <p className="mt-10 text-xl leading-9 text-white/72">{p.longDescription}</p>
+            <p className="mt-7 leading-8 text-white/55">
+              L&apos;idée n&apos;est pas d&apos;ajouter du décor. La page doit laisser respirer le cuir, montrer la forme, puis donner les preuves : confort, réglage, entretien, livraison.
+            </p>
+          </div>
+        </div>
+        <div className="relative flex min-h-[760px] items-center justify-center bg-white">
+          <div className="absolute left-8 top-8 font-mono text-xs uppercase tracking-[0.22em] text-muted-soft">photo secondaire</div>
+          <div className="scale-75 md:scale-90">
+            <ProductPhotoPlaceholder leatherClass={leatherClass} />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ChapterSection() {
+  return (
+    <section id="details" className="bg-white">
+      <div className="mx-auto max-w-[1600px] px-4 py-20 md:px-8 lg:py-28">
+        <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+          <div className="lg:sticky lg:top-24 lg:self-start">
+            <p className="kicker text-muted">Détails</p>
+            <h2 className="display mt-5 max-w-lg text-5xl leading-[0.96] md:text-7xl">Ce que la page doit raconter.</h2>
+          </div>
+          <div>
+            {chapters.map((chapter) => (
+              <article key={chapter.title} className="grid gap-6 border-t border-line py-12 md:grid-cols-[180px_1fr]">
+                <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted">{chapter.eyebrow}</p>
+                <div>
+                  <h3 className="display text-4xl leading-none md:text-6xl">{chapter.title}</h3>
+                  <p className="mt-5 max-w-2xl text-lg leading-8 text-muted">{chapter.copy}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SpecsSection() {
+  return (
+    <section id="specs" className="bg-paper-2">
+      <div className="mx-auto max-w-[1600px] px-4 py-20 md:px-8 lg:py-28">
+        <div className="mb-12 flex items-end justify-between gap-8">
+          <div>
+            <p className="kicker text-muted">Fiche claire</p>
+            <h2 className="display mt-4 text-5xl leading-none md:text-7xl">Spécifications</h2>
+          </div>
+          <p className="hidden max-w-sm leading-7 text-muted md:block">
+            Une zone simple pour rassurer sans casser le rythme éditorial de la page.
+          </p>
+        </div>
+        <div className="grid border-y border-line md:grid-cols-2 lg:grid-cols-3">
+          {specs.map(([label, value]) => (
+            <div key={label} className="border-b border-line py-6 md:border-r md:px-6">
+              <p className="kicker-tight text-muted">{label}</p>
+              <p className="mt-3 text-xl font-semibold">{value}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FinalPurchase({
+  product: p,
+  activeColour,
+  colourKey,
+  setColourKey,
+  size,
+  setSize,
+}: {
+  product: Product;
+  activeColour: Product["colours"][number];
+  colourKey: string;
+  setColourKey: (key: string) => void;
+  size: "Full" | "Cob";
+  setSize: (s: "Full" | "Cob") => void;
+}) {
+  return (
+    <section className="bg-white px-4 py-16 md:px-8">
+      <div className="mx-auto grid max-w-[1600px] gap-8 border-t border-line pt-10 lg:grid-cols-[1fr_520px]">
+        <div>
+          <p className="kicker text-muted">Prêt à commander</p>
+          <h2 className="display mt-4 text-5xl leading-none md:text-7xl">{p.name}</h2>
+          <p className="mt-6 max-w-xl leading-8 text-muted">
+            Livraison offerte dès 150 €. Retours sous 14 jours. Conseil taille disponible avant commande.
+          </p>
+        </div>
+        <div>
+          <BuyStrip product={p} activeColour={activeColour} colourKey={colourKey} setColourKey={setColourKey} size={size} setSize={setSize} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Page ──────────────────────────────────────────────────────────────── */
 export default function RenesPage() {
   const [colourKey, setColourKey] = useState(product.defaultColour);
-  const [size, setSize] = useState(product.defaultSize);
+  const [size, setSize]           = useState(product.defaultSize);
+
   const activeColour = useMemo(
     () => product.colours.find((c) => c.key === colourKey) ?? product.colours[0],
     [colourKey],
@@ -231,83 +342,10 @@ export default function RenesPage() {
         </div>
       </section>
 
-      {/* Story */}
-      <section id="histoire" className="bg-ink text-on-ink">
-        <div className="mx-auto grid max-w-[1600px] gap-0 lg:grid-cols-2">
-          <div className="flex min-h-[760px] items-center px-4 py-20 md:px-12 lg:px-20">
-            <div className="max-w-2xl">
-              <p className="kicker text-white/45">Le produit</p>
-              <h2 className="display mt-6 text-5xl leading-[0.94] md:text-8xl">Du quotidien, mais avec une vraie présence.</h2>
-              <p className="mt-10 text-xl leading-9 text-white/72">{product.longDescription}</p>
-            </div>
-          </div>
-          <div className="relative flex min-h-[760px] items-center justify-center bg-white">
-            <div className="absolute left-8 top-8 font-mono text-xs uppercase tracking-[0.22em] text-muted-soft">photo secondaire</div>
-            <div className="scale-75 md:scale-90">
-              <ProductPhotoPlaceholder leatherClass={leatherClass} />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Chapitres */}
-      <section id="details" className="bg-white">
-        <div className="mx-auto max-w-[1600px] px-4 py-20 md:px-8 lg:py-28">
-          <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-            <div className="lg:sticky lg:top-24 lg:self-start">
-              <p className="kicker text-muted">Détails</p>
-              <h2 className="display mt-5 max-w-lg text-5xl leading-[0.96] md:text-7xl">Ce que le produit offre.</h2>
-            </div>
-            <div>
-              {chapters.map((chapter) => (
-                <article key={chapter.title} className="grid gap-6 border-t border-line py-12 md:grid-cols-[180px_1fr]">
-                  <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted">{chapter.eyebrow}</p>
-                  <div>
-                    <h3 className="display text-4xl leading-none md:text-6xl">{chapter.title}</h3>
-                    <p className="mt-5 max-w-2xl text-lg leading-8 text-muted">{chapter.copy}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Specs */}
-      <section id="specs" className="bg-paper-2">
-        <div className="mx-auto max-w-[1600px] px-4 py-20 md:px-8 lg:py-28">
-          <div className="mb-12 flex items-end justify-between gap-8">
-            <div>
-              <p className="kicker text-muted">Fiche produit</p>
-              <h2 className="display mt-4 text-5xl leading-none md:text-7xl">Spécifications</h2>
-            </div>
-          </div>
-          <div className="grid border-y border-line md:grid-cols-2 lg:grid-cols-3">
-            {specs.map(([label, value]) => (
-              <div key={label} className="border-b border-line py-6 md:border-r md:px-6">
-                <p className="kicker-tight text-muted">{label}</p>
-                <p className="mt-3 text-xl font-semibold">{value}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Achat final */}
-      <section className="bg-white px-4 py-16 md:px-8">
-        <div className="mx-auto grid max-w-[1600px] gap-8 border-t border-line pt-10 lg:grid-cols-[1fr_520px]">
-          <div>
-            <p className="kicker text-muted">Prêt à commander</p>
-            <h2 className="display mt-4 text-5xl leading-none md:text-7xl">{product.name}</h2>
-            <p className="mt-6 max-w-xl leading-8 text-muted">
-              Livraison offerte dès 150 €. Retours sous 14 jours.
-            </p>
-          </div>
-          <div>
-            <BuyStrip product={product} activeColour={activeColour} colourKey={colourKey} setColourKey={setColourKey} size={size} setSize={setSize} />
-          </div>
-        </div>
-      </section>
+      <StorySection product={product} leatherClass={leatherClass} />
+      <ChapterSection />
+      <SpecsSection />
+      <FinalPurchase product={product} activeColour={activeColour} colourKey={colourKey} setColourKey={setColourKey} size={size} setSize={setSize} />
 
     </main>
   );
