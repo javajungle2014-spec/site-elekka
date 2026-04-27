@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { Product } from "@/lib/products";
+import type { Product, ColourKey, Size } from "@/lib/products";
+import { useCart } from "@/lib/cart-store";
 
 const leatherClassByColour: Record<string, string> = {
   "havana-brown": "leather-havana-brown",
@@ -82,20 +83,15 @@ function Selector({ label, children }: { label: string; children: React.ReactNod
   );
 }
 
-function BuyStrip({
-  product: p,
-  activeColour,
-  colourKey,
-  setColourKey,
-  size,
-  setSize,
-}: {
+function BuyStrip({ product: p, activeColour, colourKey, setColourKey, size, setSize, onAdd, added }: {
   product: Product;
   activeColour: Product["colours"][number];
-  colourKey: string;
-  setColourKey: (k: import("@/lib/products").ColourKey) => void;
-  size: "Full" | "Cob";
-  setSize: (s: "Full" | "Cob") => void;
+  colourKey: ColourKey;
+  setColourKey: (k: ColourKey) => void;
+  size: Size;
+  setSize: (s: Size) => void;
+  onAdd: () => void;
+  added: boolean;
 }) {
   return (
     <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
@@ -104,7 +100,7 @@ function BuyStrip({
           <div className="flex gap-2">
             {p.colours.map((colour) => (
               <button key={colour.key} type="button"
-                onClick={() => setColourKey(colour.key)}
+                onClick={() => setColourKey(colour.key as ColourKey)}
                 className={`press h-10 w-10 rounded-full border p-1 ${colourKey === colour.key ? "border-ink" : "border-line"}`}
                 aria-label={colour.label} aria-pressed={colourKey === colour.key}>
                 <span className="block h-full w-full rounded-full" style={{ background: colour.swatch }} />
@@ -131,8 +127,8 @@ function BuyStrip({
           <p className="kicker-tight text-muted">Prix</p>
           <p className="mt-2"><Price value={p.priceEUR} /></p>
         </div>
-        <button type="button" className="cta-shine press h-12 bg-ink px-7 text-xs font-bold uppercase tracking-[0.18em] text-on-ink">
-          Ajouter
+        <button type="button" onClick={onAdd} className="cta-shine press h-12 bg-ink px-7 text-xs font-bold uppercase tracking-[0.18em] text-on-ink">
+          {added ? "Ajouté ✓" : "Ajouter"}
         </button>
       </div>
     </div>
@@ -140,14 +136,23 @@ function BuyStrip({
 }
 
 export function RenesProductDetail({ product }: { product: Product }) {
-  const [colourKey, setColourKey] = useState<import("@/lib/products").ColourKey>(product.defaultColour);
-  const [size, setSize]           = useState<import("@/lib/products").Size>(product.defaultSize);
+  const [colourKey, setColourKey] = useState<ColourKey>(product.defaultColour);
+  const [size, setSize]           = useState<Size>(product.defaultSize);
+  const [added, setAdded]         = useState(false);
+  const { addItem }               = useCart();
 
   const activeColour = useMemo(
     () => product.colours.find((c) => c.key === colourKey) ?? product.colours[0],
     [colourKey, product.colours],
   );
   const leatherClass = leatherClassByColour[activeColour.key] ?? "leather-havana-brown";
+
+  function handleAdd() {
+    addItem({ slug: product.slug, name: product.name, priceEUR: product.priceEUR,
+      colour: colourKey, colourLabel: activeColour.label, colourSwatch: activeColour.swatch, size });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1800);
+  }
 
   return (
     <main className="min-h-screen bg-white text-ink">
@@ -189,7 +194,7 @@ export function RenesProductDetail({ product }: { product: Product }) {
                 </div>
               ))}
             </div>
-            <BuyStrip product={product} activeColour={activeColour} colourKey={colourKey} setColourKey={setColourKey} size={size} setSize={setSize} />
+            <BuyStrip product={product} activeColour={activeColour} colourKey={colourKey} setColourKey={setColourKey} size={size} setSize={setSize} onAdd={handleAdd} added={added} />
           </div>
         </div>
       </section>
@@ -267,7 +272,7 @@ export function RenesProductDetail({ product }: { product: Product }) {
             </p>
           </div>
           <div>
-            <BuyStrip product={product} activeColour={activeColour} colourKey={colourKey} setColourKey={setColourKey} size={size} setSize={setSize} />
+            <BuyStrip product={product} activeColour={activeColour} colourKey={colourKey} setColourKey={setColourKey} size={size} setSize={setSize} onAdd={handleAdd} added={added} />
           </div>
         </div>
       </section>

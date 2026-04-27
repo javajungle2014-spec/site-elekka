@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { Product, ColourKey, Size } from "@/lib/products";
+import { useCart } from "@/lib/cart-store";
 
 const leatherClassByColour: Record<string, string> = {
   "havana-brown": "leather-havana-brown",
@@ -153,9 +154,10 @@ function ThreePhotoHero({ leatherClass, activeColour }: { leatherClass: string; 
   );
 }
 
-function PurchasePanel({ product: p, activeColour, colourKey, setColourKey, size, setSize }: {
+function PurchasePanel({ product: p, activeColour, colourKey, setColourKey, size, setSize, onAdd, added }: {
   product: Product; activeColour: Product["colours"][number]; colourKey: ColourKey;
   setColourKey: (k: ColourKey) => void; size: Size; setSize: (s: Size) => void;
+  onAdd: () => void; added: boolean;
 }) {
   return (
     <aside className="bg-ink p-5 text-on-ink md:p-8 lg:sticky lg:top-20 lg:self-start">
@@ -207,8 +209,8 @@ function PurchasePanel({ product: p, activeColour, colourKey, setColourKey, size
           </div>
         </div>
         <div className="mt-8 border border-white/18 p-3">
-          <button type="button" className="cta-shine press h-14 w-full bg-on-ink px-6 text-sm font-bold uppercase tracking-[0.18em] text-ink">
-            Ajouter au panier
+          <button type="button" onClick={onAdd} className="cta-shine press h-14 w-full bg-on-ink px-6 text-sm font-bold uppercase tracking-[0.18em] text-ink">
+            {added ? "Ajouté au panier ✓" : "Ajouter au panier"}
           </button>
         </div>
       </div>
@@ -252,8 +254,10 @@ function BenefitsBand({ openBenefit, setOpenBenefit }: { openBenefit: number | n
 export function LicolProductDetail({ product }: { product: Product }) {
   const [colourKey, setColourKey]   = useState<ColourKey>(product.defaultColour);
   const [size, setSize]             = useState<Size>(product.defaultSize);
+  const [added, setAdded]           = useState(false);
   const [openBenefit, setOpenBenefit] = useState<number | null>(0);
   const [selectedGalleryImage, setSelectedGalleryImage] = useState(0);
+  const { addItem }                 = useCart();
 
   const activeColour = useMemo(
     () => product.colours.find((c) => c.key === colourKey) ?? product.colours[0],
@@ -262,12 +266,19 @@ export function LicolProductDetail({ product }: { product: Product }) {
   const leatherClass = leatherClassByColour[activeColour.key] ?? "leather-havana-brown";
   const selectedImage = galleryImages[selectedGalleryImage] ?? galleryImages[0];
 
+  function handleAdd() {
+    addItem({ slug: product.slug, name: product.name, priceEUR: product.priceEUR,
+      colour: colourKey, colourLabel: activeColour.label, colourSwatch: activeColour.swatch, size });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1800);
+  }
+
   return (
     <main className="bg-paper text-ink">
 
       <section className="mx-auto grid min-h-screen max-w-[1680px] gap-4 px-4 pt-20 md:px-8 lg:grid-cols-[1fr_520px] lg:pt-24">
         <ThreePhotoHero leatherClass={leatherClass} activeColour={activeColour.label} />
-        <PurchasePanel product={product} activeColour={activeColour} colourKey={colourKey} setColourKey={setColourKey} size={size} setSize={setSize} />
+        <PurchasePanel product={product} activeColour={activeColour} colourKey={colourKey} setColourKey={setColourKey} size={size} setSize={setSize} onAdd={handleAdd} added={added} />
       </section>
 
       {/* Galerie */}
@@ -290,7 +301,7 @@ export function LicolProductDetail({ product }: { product: Product }) {
             </div>
             <div className="absolute bottom-6 left-6 right-6 grid items-end gap-4 border-t border-line pt-5 md:grid-cols-[1fr_auto_auto]">
               <p className="max-w-sm text-sm leading-6 text-muted">{product.description}</p>
-              <button type="button" className="cta-shine press h-11 bg-ink px-6 text-xs font-bold uppercase tracking-[0.18em] text-on-ink">Ajouter au panier</button>
+              <button type="button" onClick={handleAdd} className="cta-shine press h-11 bg-ink px-6 text-xs font-bold uppercase tracking-[0.18em] text-on-ink">{added ? "Ajouté ✓" : "Ajouter au panier"}</button>
               <div className="flex items-center gap-2">
                 {product.colours.map((colour) => (
                   <button key={colour.key} type="button" onClick={() => setColourKey(colour.key as ColourKey)}
