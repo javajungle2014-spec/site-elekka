@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { Sliders } from "@phosphor-icons/react";
 
 type Props = { categories: { key: string; label: string }[] };
 
@@ -46,6 +48,16 @@ export function CategoryNav({ categories }: Props) {
               )}
             </button>
           ))}
+
+          <div className="ml-auto shrink-0 pl-4 border-l border-line">
+            <Link
+              href="/boutique/personnaliser"
+              className="press flex items-center gap-2 px-4 py-1.5 bg-ink text-on-ink text-xs font-medium hover:bg-ink-soft transition-colors whitespace-nowrap"
+            >
+              <Sliders size={13} />
+              Personnaliser mon filet
+            </Link>
+          </div>
         </nav>
       </div>
     </div>
