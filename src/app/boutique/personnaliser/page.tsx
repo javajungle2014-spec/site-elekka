@@ -329,7 +329,7 @@ export default function PersonnaliserPage() {
       {/* ── BARRE COULEUR ────────────────────────────────────────────── */}
       <div className="flex items-center justify-center gap-10 py-6"
         style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-        <p className="text-[9px] tracking-[0.22em] uppercase text-white/25 font-semibold hidden sm:block">Coloris</p>
+        <p className="text-[11px] tracking-[0.18em] uppercase text-white/80 font-bold hidden sm:block">Coloris</p>
         <div className="flex items-center gap-8">
           {colourStep.options.map((opt) => {
             const active = config.colour === opt.key;
@@ -338,9 +338,9 @@ export default function PersonnaliserPage() {
                 onClick={() => pick("colour", opt.key)}
                 className="press flex flex-col items-center gap-2.5 group">
                 <div className={`w-12 h-12 md:w-14 md:h-14 rounded-full border-2 transition-all duration-300 leather-${opt.key} ${
-                  active ? "border-white scale-110 shadow-[0_0_0_3px_rgba(255,255,255,0.15)]" : "border-white/15 group-hover:border-white/40 group-hover:scale-105"
+                  active ? "border-white scale-110 shadow-[0_0_0_3px_rgba(255,255,255,0.2)]" : "border-white/40 group-hover:border-white/70 group-hover:scale-105"
                 }`} />
-                <span className={`text-[9px] tracking-[0.18em] uppercase font-medium transition-colors ${active ? "text-white" : "text-white/30"}`}>
+                <span className={`text-[11px] tracking-[0.15em] uppercase font-semibold transition-colors ${active ? "text-white" : "text-white/75 group-hover:text-white"}`}>
                   {opt.label}
                 </span>
               </button>
@@ -348,7 +348,7 @@ export default function PersonnaliserPage() {
           })}
         </div>
         {config.colour && (
-          <p className="text-[9px] tracking-[0.22em] uppercase text-white/25 font-semibold hidden sm:block">
+          <p className="text-[11px] tracking-[0.18em] uppercase text-white/80 font-bold hidden sm:block">
             {COLOUR_LABELS[config.colour]}
           </p>
         )}
