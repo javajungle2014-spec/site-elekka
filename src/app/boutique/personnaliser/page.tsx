@@ -360,7 +360,7 @@ export default function PersonnaliserPage() {
       <div className="hidden lg:flex flex-1" style={{ minHeight: "calc(100vh - 56px - 88px - 160px)" }}>
 
         {/* GAUCHE : têtière + frontal */}
-        <div className="w-[220px] xl:w-[240px] shrink-0 flex flex-col divide-y"
+        <div className="w-[260px] xl:w-[290px] shrink-0 flex flex-col divide-y"
           style={{ borderRight: "1px solid rgba(255,255,255,0.07)" }}>
           <SideGroup step={teteireStep} config={config} pick={pick} />
           <SideGroup step={frontalStep} config={config} pick={pick} />
@@ -387,7 +387,7 @@ export default function PersonnaliserPage() {
         </div>
 
         {/* DROITE : muserolle + rênes */}
-        <div className="w-[220px] xl:w-[240px] shrink-0 flex flex-col divide-y"
+        <div className="w-[260px] xl:w-[290px] shrink-0 flex flex-col divide-y"
           style={{ borderLeft: "1px solid rgba(255,255,255,0.07)" }}>
           <SideGroup step={muserolleStep} config={config} pick={pick} />
           <SideGroup step={reinsStep} config={config} pick={pick} />
