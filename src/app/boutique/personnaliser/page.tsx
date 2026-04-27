@@ -2,423 +2,569 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Check, ShoppingBag, ArrowUpRight } from "@phosphor-icons/react";
+import { ArrowLeft, Check, ShoppingBag } from "@phosphor-icons/react";
 import { useCart } from "@/lib/cart-store";
 import { formatPrice } from "@/lib/products";
 
 /* ─── Types ──────────────────────────────────────────────────────────── */
 type Config = {
-  structure: string | null;
-  discipline: string | null;
-  tetiere: string | null;
-  frontal: string | null;
-  muserolle: string | null;
-  colour: string | null;
-  taille: string | null;
-  reins: string | null;
-  enrenement: string | null;
+  structure:   string | null;
+  discipline:  string | null;
+  tetiere:     string | null;
+  frontal:     string | null;
+  muserolle:   string | null;
+  colour:      string | null;
+  taille:      string | null;
+  reins:       string | null;
+  enrenement:  string | null;
 };
 
 /* ─── Données ────────────────────────────────────────────────────────── */
 const LEATHER_COLORS: Record<string, string> = {
   "havana-brown": "#3D2615",
-  "noir": "#1a1815",
-  "dark-brown": "#2e1a10",
+  "noir":         "#1a1815",
+  "dark-brown":   "#2e1a10",
+};
+const COLOUR_LABELS: Record<string, string> = {
+  "havana-brown": "Havana Brown",
+  "noir":         "Noir",
 };
 
 const STEPS = [
   {
-    key: "discipline",
-    label: "Discipline",
-    sub: "Pour personnaliser votre expérience",
+    key: "tetiere", label: "Têtière", sub: "La pièce principale, sur la nuque",
     options: [
-      { key: "obstacle",   label: "Saut d'obstacle",  desc: "Travail sur l'obstacle et le cross" },
-      { key: "dressage",   label: "Dressage",          desc: "Travail sur le plat, précision des aides" },
-      { key: "multi",      label: "Multi-discipline",  desc: "Toutes pratiques, usage quotidien" },
+      { key: "classique", label: "Classique",            desc: "Conception anglaise traditionnelle" },
+      { key: "signature", label: "Anatomique Signature", desc: "Incurvée — soulage la nuque" },
+      { key: "duo",       label: "Anatomique Duo",       desc: "Double rembourrage, confort maximal" },
     ],
   },
   {
-    key: "tetiere",
-    label: "Têtière",
-    sub: "La pièce principale, sur la nuque",
+    key: "frontal", label: "Frontal", sub: "La pièce qui traverse le front",
     options: [
-      { key: "classique",         label: "Classique",            desc: "Têtière standard, conception anglaise traditionnelle" },
-      { key: "signature",         label: "Anatomique Signature", desc: "Incurvée — soulage la nuque et libère les oreilles" },
-      { key: "duo",               label: "Anatomique Duo",       desc: "Double rembourrage — confort maximal sur la nuque" },
+      { key: "classique",  label: "Classique",   desc: "Rectiligne, sobre et élégant" },
+      { key: "anatomique", label: "Anatomique",  desc: "Incurvé, suit la morphologie" },
+      { key: "signature",  label: "Signature",   desc: "Large 5,5 cm, répartit la pression" },
     ],
   },
   {
-    key: "frontal",
-    label: "Frontal",
-    sub: "La pièce qui traverse le front",
+    key: "muserolle", label: "Muserolle", sub: "Le contact sur le chanfrein",
     options: [
-      { key: "classique",   label: "Classique",    desc: "Frontal rectiligne, sobre et élégant" },
-      { key: "anatomique",  label: "Anatomique",   desc: "Légèrement incurvé pour suivre la morphologie du front" },
-      { key: "signature",   label: "Signature",    desc: "Large 5,5 cm — répartit la pression, finitions soignées" },
+      { key: "simple",     label: "Simple",         desc: "Française classique, fermeture standard" },
+      { key: "rembourree", label: "Rembourrée",     desc: "2,5 à 3 cm — protège le contact" },
+      { key: "triple",     label: "Triple attache", desc: "Interchangeable : épaisse, ovale, rect." },
     ],
   },
   {
-    key: "muserolle",
-    label: "Muserolle",
-    sub: "Le contact sur le chanfrein",
+    key: "reins", label: "Rênes", sub: "La connexion mains–mors",
     options: [
-      { key: "simple",        label: "Simple",          desc: "Muserolle française classique, fermeture standard" },
-      { key: "rembourree",    label: "Rembourrée",      desc: "2,5 à 3 cm d'épaisseur — protège et adoucit le contact" },
-      { key: "triple",        label: "Triple attache",  desc: "Triple attache interchangeable : épaisse, ovale, rectangulaire" },
+      { key: "classique",  label: "Classiques",  desc: "Cuir pleine fleur assorti, 145 cm",     delta: 0,     note: "Offertes" },
+      { key: "anatomique", label: "Anatomique",  desc: "Grip intégré, prise assurée par tous temps", delta: 42.49, note: "−15 %" },
+      { key: "signature",  label: "Signature",   desc: "Cuir souple surpiqué, finition premium", delta: 55.24, note: "−15 %" },
     ],
   },
   {
-    key: "colour",
-    label: "Coloris",
-    sub: "La couleur du cuir pleine fleur",
+    key: "colour", label: "Coloris", sub: "Cuir pleine fleur",
     options: [
       { key: "havana-brown", label: "Havana Brown", desc: "Brun chaud profond, patine naturelle" },
       { key: "noir",         label: "Noir",          desc: "Noir intense, élégant en toutes circonstances" },
     ],
   },
   {
-    key: "taille",
-    label: "Taille",
-    sub: "Mesures prises au-dessus du chanfrein",
+    key: "taille", label: "Taille", sub: "Mesures sur le chanfrein",
     options: [
-      { key: "full", label: "Full", desc: "Chevaux de sport et de selle adultes — taille standard" },
-      { key: "cob",  label: "Cob",  desc: "Poneys grands gabarits, chevaux de morphologie fine" },
+      { key: "full", label: "Full", desc: "Chevaux de sport adultes — standard" },
+      { key: "cob",  label: "Cob",  desc: "Poneys grands gabarits, morphologie fine" },
     ],
   },
   {
-    key: "reins",
-    label: "Rênes",
-    sub: "La connexion entre vos mains et le mors",
+    key: "discipline", label: "Discipline", sub: "Votre pratique principale",
     options: [
-      { key: "classique",   label: "Rênes Classiques",  desc: "Cuir pleine fleur assorti, longueur 145 cm",   delta: 0,     note: "Offertes" },
-      { key: "anatomique",  label: "Rênes Anatomique",  desc: "Grip intégré, prise en main assurée par tous les temps", delta: 42.49, note: "-15 %" },
-      { key: "signature",   label: "Rênes Signature",   desc: "Cuir souple surpiqué, finition premium",       delta: 55.24, note: "-15 %" },
+      { key: "obstacle", label: "Saut d'obstacle", desc: "Obstacle et cross" },
+      { key: "dressage", label: "Dressage",         desc: "Travail sur le plat" },
+      { key: "multi",    label: "Multi",             desc: "Toutes pratiques" },
     ],
   },
   {
-    key: "enrenement",
-    label: "Enrênement",
-    sub: "Optionnel — ajout d'un équipement complémentaire",
+    key: "enrenement", label: "Enrênement", sub: "Équipement complémentaire",
     options: [
-      { key: "aucun",       label: "Sans enrênement",  desc: "Configuration épurée, filet seul",              delta: 0,     note: null },
-      { key: "tylman",      label: "Tylman",            desc: "Enrênement d'aide à la décontraction",          delta: 50.99, note: "-15 %" },
-      { key: "martingale",  label: "Martingale",        desc: "Enrênement fixe réglable, sécurité renforcée",  delta: 50.99, note: "-15 %" },
+      { key: "aucun",      label: "Sans",        desc: "Filet seul, configuration épurée",     delta: 0,     note: null },
+      { key: "tylman",     label: "Tylman",      desc: "Aide à la décontraction",              delta: 50.99, note: "−15 %" },
+      { key: "martingale", label: "Martingale",  desc: "Fixe réglable, sécurité renforcée",   delta: 50.99, note: "−15 %" },
     ],
   },
 ];
 
+const REQUIRED   = ["tetiere", "frontal", "muserolle", "colour", "taille", "reins", "enrenement"];
 const BASE_PRICE = 95;
-const ROMAN = ["", "I", "II", "III", "IV", "V"];
 
-/* ─── Visuel assemblage ──────────────────────────────────────────────── */
-function BridleVisual({ config, step }: { config: Config; step: number }) {
+/* ─── Visuel ──────────────────────────────────────────────────────────── */
+function BridleVisual({ config }: { config: Config }) {
   const colour = config.colour ? LEATHER_COLORS[config.colour] : null;
 
-  function part(active: boolean, style: React.CSSProperties, rounded = "4px") {
+  function part(active: boolean, style: React.CSSProperties): React.CSSProperties {
     return {
-      position: "absolute" as const,
-      transition: "all 0.8s cubic-bezier(0.16,1,0.3,1)",
-      borderRadius: rounded,
-      backgroundColor: active && colour ? colour : "rgba(255,255,255,0.07)",
-      boxShadow: active && colour ? `inset 0 1px 0 rgba(255,255,255,0.12), 0 2px 8px rgba(0,0,0,0.4)` : "none",
-      border: active ? "none" : "1px solid rgba(255,255,255,0.1)",
-      opacity: active ? 1 : 0.4,
+      position: "absolute",
+      transition: "all 0.7s cubic-bezier(0.16,1,0.3,1)",
+      borderRadius: 4,
+      backgroundColor: active && colour ? colour : "rgba(255,255,255,0.06)",
+      boxShadow: active && colour ? "inset 0 1px 0 rgba(255,255,255,0.12), 0 2px 12px rgba(0,0,0,0.5)" : "none",
+      border: active ? "none" : "1px solid rgba(255,255,255,0.08)",
+      opacity: active ? 1 : 0.3,
       ...style,
     };
   }
 
-  const hasStructure = !!config.structure;
-  const hasFrontal = !!config.frontal;
-  const hasMuserolle = !!config.muserolle;
-  const hasColour = !!config.colour;
-  const hasReins = config.reins && config.reins !== "aucune";
-  const frontralHeight = config.frontal === "large" ? "6%" : "3.5%";
-  const muserolleHeight = config.muserolle === "rembourree" ? "7%" : "4%";
-  const filled = Object.values(config).filter(Boolean).length;
+  const hasStr  = !!config.tetiere;
+  const hasFro  = !!config.frontal;
+  const hasMus  = !!config.muserolle;
+  const hasRei  = config.reins && config.reins !== "aucune";
+  const frontalH   = config.frontal === "signature" ? "6%" : "3.5%";
+  const muserolleH = config.muserolle === "rembourree" ? "7%" : "4%";
 
   return (
-    <div className="relative overflow-hidden select-none" style={{ background: "#0a0908", aspectRatio: "3/4" }}>
-      {/* Ambiance lumineuse */}
+    <div className="relative overflow-hidden w-full h-full select-none"
+      style={{ background: "#0a0908" }}>
+      {/* lumière showroom */}
       <div className="absolute inset-0 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse 70% 50% at 50% 35%, rgba(255,255,255,0.04) 0%, transparent 70%)" }} />
+        style={{ background: "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(255,255,255,0.05) 0%, transparent 70%)" }} />
 
-      {/* TÊTIÈRE — barre horizontale du haut */}
-      <div style={part(hasStructure, { top: "12%", left: "12%", right: "12%", height: "3.5%" })} />
+      <div style={part(hasStr, { top: "12%", left: "12%", right: "12%", height: "3.5%" })} />
+      <div style={part(hasStr, { top: "12%", left: "15%", width: "5.5%", height: "44%", borderRadius: 3 })} />
+      <div style={part(hasStr, { top: "12%", right: "15%", width: "5.5%", height: "44%", borderRadius: 3 })} />
+      <div style={part(hasStr, { top: "20%", left: "20%", width: "22%", height: "2.5%", transform: "rotate(8deg)", borderRadius: 3, opacity: hasStr ? 0.55 : 0.15 })} />
+      <div style={part(hasFro, { top: "21%", left: "19%", right: "19%", height: frontalH })} />
+      <div style={part(hasMus, { top: "46%", left: "17%", right: "17%", height: muserolleH })} />
+      <div style={part(hasMus, { top: "45%", left: "19%", width: "3%", height: "10%", opacity: hasMus ? 0.45 : 0.12, borderRadius: 2 })} />
+      <div style={part(hasMus, { top: "45%", right: "19%", width: "3%", height: "10%", opacity: hasMus ? 0.45 : 0.12, borderRadius: 2 })} />
+      <div style={part(!!hasRei, { top: "56%", left: "17.5%", width: "4%", height: "36%", borderRadius: 2 })} />
+      <div style={part(!!hasRei, { top: "56%", right: "17.5%", width: "4%", height: "36%", borderRadius: 2 })} />
 
-      {/* MONTANT GAUCHE */}
-      <div style={part(hasStructure, { top: "12%", left: "15%", width: "5.5%", height: "44%", borderRadius: "3px" })} />
-
-      {/* MONTANT DROIT */}
-      <div style={part(hasStructure, { top: "12%", right: "15%", width: "5.5%", height: "44%", borderRadius: "3px" })} />
-
-      {/* SOUS-GORGE — diagonale légère */}
-      <div style={part(hasStructure, { top: "20%", left: "20%", width: "22%", height: "2.5%", transform: "rotate(8deg)", borderRadius: "3px", opacity: hasStructure ? 0.6 : 0.2 })} />
-
-      {/* FRONTAL */}
-      <div style={part(hasFrontal, { top: "21%", left: "19%", right: "19%", height: frontralHeight })} />
-
-      {/* MUSEROLLE */}
-      <div style={part(hasMuserolle, { top: "46%", left: "17%", right: "17%", height: muserolleHeight })} />
-
-      {/* ATTACHES MUSEROLLE GAUCHE */}
-      <div style={part(hasMuserolle, { top: "45%", left: "19%", width: "3%", height: "10%", opacity: hasMuserolle ? 0.5 : 0.15, borderRadius: "2px" })} />
-
-      {/* ATTACHES MUSEROLLE DROIT */}
-      <div style={part(hasMuserolle, { top: "45%", right: "19%", width: "3%", height: "10%", opacity: hasMuserolle ? 0.5 : 0.15, borderRadius: "2px" })} />
-
-      {/* RÊNE GAUCHE */}
-      <div style={part(!!hasReins, { top: "56%", left: "17.5%", width: "4%", height: "36%", borderRadius: "2px" })} />
-
-      {/* RÊNE DROITE */}
-      <div style={part(!!hasReins, { top: "56%", right: "17.5%", width: "4%", height: "36%", borderRadius: "2px" })} />
-
-      {/* Labels flottants */}
-      <div className="absolute inset-0 pointer-events-none">
-        {hasStructure && (
-          <div className="absolute" style={{ top: "8%", left: "50%", transform: "translateX(-50%)" }}>
-            <span className="kicker-tight text-white/30 text-[8px] tracking-[0.2em] whitespace-nowrap">TÊTIÈRE</span>
-          </div>
-        )}
-        {hasFrontal && (
-          <div className="absolute" style={{ top: "18%", left: "50%", transform: "translateX(-50%)" }}>
-            <span className="kicker-tight text-white/30 text-[8px] tracking-[0.2em] whitespace-nowrap">FRONTAL</span>
-          </div>
-        )}
-        {hasMuserolle && (
-          <div className="absolute" style={{ top: "42%", left: "50%", transform: "translateX(-50%)" }}>
-            <span className="kicker-tight text-white/30 text-[8px] tracking-[0.2em] whitespace-nowrap">MUSEROLLE</span>
-          </div>
-        )}
+      {/* labels */}
+      <div className="absolute inset-0 pointer-events-none text-white/25">
+        {hasStr && <span className="absolute text-[8px] tracking-[0.2em] uppercase font-medium whitespace-nowrap" style={{ top: "8%", left: "50%", transform: "translateX(-50%)" }}>Têtière</span>}
+        {hasFro && <span className="absolute text-[8px] tracking-[0.2em] uppercase font-medium whitespace-nowrap" style={{ top: "18%", left: "50%", transform: "translateX(-50%)" }}>Frontal</span>}
+        {hasMus && <span className="absolute text-[8px] tracking-[0.2em] uppercase font-medium whitespace-nowrap" style={{ top: "42%", left: "50%", transform: "translateX(-50%)" }}>Muserolle</span>}
       </div>
 
-      {/* Indicateur progression */}
-      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/10">
-        <div className="h-full bg-white/40 transition-all duration-700" style={{ width: `${(filled / 5) * 100}%` }} />
-      </div>
-
-      {/* Info bas */}
-      <div className="absolute bottom-4 left-5 right-5 flex items-center justify-between">
-        <span className="font-mono text-[9px] text-white/25 tracking-widest">
-          Elekka · Sur mesure
-        </span>
-        <span className="font-mono text-[9px] text-white/35 tracking-widest">
-          {filled} / 5
-        </span>
+      {/* signature bas */}
+      <div className="absolute bottom-4 left-5 right-5 flex justify-between items-end">
+        <span className="font-mono text-[9px] text-white/20 tracking-widest">ELEKKA</span>
+        {config.colour && (
+          <span className="font-mono text-[9px] text-white/35 tracking-widest uppercase">{COLOUR_LABELS[config.colour]}</span>
+        )}
       </div>
     </div>
   );
 }
 
-/* ─── Composant principal ────────────────────────────────────────────── */
+/* ─── Option verticale (panneaux latéraux) ───────────────────────────── */
+type AnyStep = typeof STEPS[number];
+
+function SideGroup({ step, config, pick }: { step: AnyStep; config: Config; pick: (k: keyof Config, v: string) => void }) {
+  const current = config[step.key as keyof Config];
+  return (
+    <div className="flex flex-col">
+      <div className="px-5 pt-5 pb-3">
+        <p className="text-[9px] tracking-[0.22em] uppercase text-white/30 font-semibold">{step.label}</p>
+        <p className="text-[10px] text-white/20 mt-0.5 leading-snug">{step.sub}</p>
+      </div>
+      <div className="flex flex-col gap-0.5 px-3 pb-4">
+        {step.options.map((opt) => {
+          const active = current === opt.key;
+          const note = (opt as { note?: string | null }).note;
+          const delta = (opt as { delta?: number }).delta;
+          return (
+            <button key={opt.key} type="button"
+              onClick={() => pick(step.key as keyof Config, opt.key)}
+              className={`press group flex items-start gap-3 px-3 py-2.5 rounded-lg text-left transition-all duration-200 ${
+                active ? "bg-white/8" : "hover:bg-white/4"
+              }`}>
+              <div className={`mt-0.5 w-3 h-3 rounded-full border shrink-0 flex items-center justify-center transition-all duration-200 ${
+                active ? "border-white bg-white" : "border-white/25"
+              }`}>
+                {active && <span className="w-1 h-1 rounded-full bg-[#0a0908] block" />}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <p className={`text-[12px] font-medium leading-tight transition-colors ${active ? "text-white" : "text-white/50 group-hover:text-white/70"}`}>
+                    {opt.label}
+                  </p>
+                  {note && (
+                    <span className="text-[8px] border border-white/20 text-white/40 px-1.5 py-0.5 rounded tracking-wide">{note}</span>
+                  )}
+                </div>
+                <p className={`text-[10px] leading-snug mt-0.5 transition-colors ${active ? "text-white/45" : "text-white/25"}`}>{opt.desc}</p>
+                {delta !== undefined && delta > 0 && (
+                  <p className={`text-[10px] font-mono mt-1 ${active ? "text-white/60" : "text-white/25"}`}>+ {formatPrice(delta)}</p>
+                )}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Option horizontale (barre du bas) ──────────────────────────────── */
+function BottomGroup({ step, config, pick }: { step: AnyStep; config: Config; pick: (k: keyof Config, v: string) => void }) {
+  const current = config[step.key as keyof Config];
+  return (
+    <div className="flex flex-col px-6 py-5">
+      <p className="text-[9px] tracking-[0.22em] uppercase text-white/30 font-semibold mb-3">{step.label}</p>
+      <div className="flex gap-2 flex-wrap">
+        {step.options.map((opt) => {
+          const active = current === opt.key;
+          const note = (opt as { note?: string | null }).note;
+          const delta = (opt as { delta?: number }).delta;
+          return (
+            <button key={opt.key} type="button"
+              onClick={() => pick(step.key as keyof Config, opt.key)}
+              className={`press flex flex-col gap-0.5 px-3.5 py-2 rounded-lg border text-left transition-all duration-200 ${
+                active ? "border-white/50 bg-white/8 text-white" : "border-white/10 text-white/40 hover:border-white/25 hover:text-white/60"
+              }`}>
+              <div className="flex items-center gap-1.5">
+                <p className="text-[11px] font-semibold whitespace-nowrap">{opt.label}</p>
+                {note && <span className="text-[8px] text-white/35 border border-white/15 px-1 rounded">{note}</span>}
+              </div>
+              {delta !== undefined && delta > 0 && (
+                <p className="text-[9px] font-mono text-white/30">+{formatPrice(delta)}</p>
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Page principale ────────────────────────────────────────────────── */
 export default function PersonnaliserPage() {
-  const [currentStep, setCurrentStep] = useState(0);
   const [config, setConfig] = useState<Config>({
-    structure: null, discipline: null, tetiere: null, frontal: null, muserolle: null, colour: null, taille: null, reins: null, enrenement: null,
+    structure: null, discipline: null, tetiere: null, frontal: null,
+    muserolle: null, colour: null, taille: null, reins: null, enrenement: null,
   });
   const [added, setAdded] = useState(false);
   const { addItem } = useCart();
 
-  const step = STEPS[currentStep];
-  const filled = Object.values(config).filter(Boolean).length;
-  const complete = filled === 5;
+  useEffect(() => {
+    window.scrollTo({ top: 80, behavior: "instant" });
+  }, []);
 
-  const total = BASE_PRICE + (config.reins === "tissu" ? 42.49 : 0);
-
-  function selectOption(value: string) {
-    setConfig(prev => ({ ...prev, [step.key]: value }));
+  function pick(key: keyof Config, val: string) {
+    setConfig(prev => ({ ...prev, [key]: val }));
   }
 
-  function next() {
-    if (currentStep < STEPS.length - 1) setCurrentStep(s => s + 1);
-  }
-
-  function prev() {
-    if (currentStep > 0) setCurrentStep(s => s - 1);
-  }
+  const reinsDelta = (STEPS.find(s => s.key === "reins")?.options.find(o => o.key === config.reins) as { delta?: number } | undefined)?.delta ?? 0;
+  const enrDelta   = (STEPS.find(s => s.key === "enrenement")?.options.find(o => o.key === config.enrenement) as { delta?: number } | undefined)?.delta ?? 0;
+  const total      = BASE_PRICE + reinsDelta + enrDelta;
+  const filled     = REQUIRED.filter(k => config[k as keyof Config]).length;
+  const complete   = filled === REQUIRED.length;
 
   function handleAdd() {
     if (!complete) return;
     addItem({
       slug: "sur-mesure",
-      name: `Filet Elekka Sur Mesure — ${config.structure} / ${config.colour}`,
+      name: `Filet Elekka Sur Mesure — ${config.tetiere} / ${config.colour}`,
       priceEUR: total,
       colour: (config.colour ?? "noir") as import("@/lib/products").ColourKey,
-      colourLabel: config.colour === "havana-brown" ? "Havana Brown" : "Noir",
+      colourLabel: COLOUR_LABELS[config.colour ?? "noir"] ?? "Noir",
       colourSwatch: LEATHER_COLORS[config.colour ?? "noir"],
-      size: "Full",
+      size: (config.taille ?? "Full") as "Full" | "Cob",
     });
     setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
+    setTimeout(() => setAdded(false), 2500);
   }
 
-  const currentValue = config[step?.key as keyof Config];
-  const canNext = !!currentValue;
+  const colourStep     = STEPS.find(s => s.key === "colour")!;
+  const teteireStep    = STEPS.find(s => s.key === "tetiere")!;
+  const frontalStep    = STEPS.find(s => s.key === "frontal")!;
+  const muserolleStep  = STEPS.find(s => s.key === "muserolle")!;
+  const reinsStep      = STEPS.find(s => s.key === "reins")!;
+  const tailleStep     = STEPS.find(s => s.key === "taille")!;
+  const disciplineStep = STEPS.find(s => s.key === "discipline")!;
+  const enrenementStep = STEPS.find(s => s.key === "enrenement")!;
 
   return (
-    <div className="min-h-screen bg-paper pt-20">
+    <div className="min-h-screen flex flex-col" style={{ background: "#0a0908", color: "#fafaf9" }}>
 
-      {/* ── En-tête ── */}
-      <div className="px-5 md:px-12 pt-8 pb-0">
-        <Link href="/boutique" className="inline-flex items-center gap-2 text-[12px] text-muted hover:text-ink transition-colors press mb-8">
-          <ArrowLeft size={12} /> Boutique
-        </Link>
+      {/* ── HEADER ───────────────────────────────────────────────────── */}
+      <header className="sticky top-0 z-50 h-14 flex items-center justify-between px-6 md:px-10"
+        style={{ borderBottom: "1px solid rgba(255,255,255,0.08)", background: "rgba(10,9,8,0.92)", backdropFilter: "blur(12px)" }}>
+        <div className="flex items-center gap-4">
+          <Link href="/boutique"
+            className="press flex items-center gap-1.5 text-[11px] text-white/40 hover:text-white transition-colors">
+            <ArrowLeft size={12} /> Boutique
+          </Link>
+          <span style={{ color: "rgba(255,255,255,0.12)" }}>|</span>
+          <span className="text-[12px] font-semibold tracking-wide text-white/70 hidden sm:block">Configurer mon filet</span>
+        </div>
 
-        <div className="max-w-[1200px] mx-auto">
-          <p className="kicker text-muted">Configuration · Sur mesure</p>
-          <h1 className="display text-4xl md:text-6xl mt-3 leading-[0.95]">
-            Personnalisez<br />
-            <span className="text-muted">votre filet.</span>
-          </h1>
-          <p className="mt-4 text-base text-muted max-w-[48ch] leading-relaxed">
-            Composez pièce par pièce. Même exigence qu'un filet Elekka, vos propres choix.
-            <span className="text-ink font-medium"> À partir de {formatPrice(BASE_PRICE)}.</span>
+        <div className="flex items-center gap-4">
+          {/* progression */}
+          <div className="hidden md:flex items-center gap-3">
+            <div className="flex gap-1">
+              {REQUIRED.map((k) => (
+                <div key={k} className={`w-1 h-1 rounded-full transition-all duration-300 ${
+                  config[k as keyof Config] ? "bg-white" : "bg-white/15"
+                }`} />
+              ))}
+            </div>
+            <span className="text-[10px] font-mono text-white/30 tabular-nums">{filled}/{REQUIRED.length}</span>
+          </div>
+
+          <span className="font-mono font-semibold text-sm tabular-nums text-white">{formatPrice(total)}</span>
+
+          <button type="button" onClick={handleAdd} disabled={!complete}
+            className={`press btn-create-shimmer flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-bold transition-all duration-200 ${
+              complete ? "bg-white text-[#0a0908] shadow-lg hover:scale-105" : "bg-white/10 text-white/25 cursor-not-allowed"
+            }`}>
+            <ShoppingBag size={13} />
+            {added ? "Ajouté !" : complete ? `Ajouter — ${formatPrice(total)}` : "Complétez la config"}
+          </button>
+        </div>
+      </header>
+
+      {/* ── BARRE COULEUR ────────────────────────────────────────────── */}
+      <div className="flex items-center justify-center gap-10 py-6"
+        style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+        <p className="text-[9px] tracking-[0.22em] uppercase text-white/25 font-semibold hidden sm:block">Coloris</p>
+        <div className="flex items-center gap-8">
+          {colourStep.options.map((opt) => {
+            const active = config.colour === opt.key;
+            return (
+              <button key={opt.key} type="button"
+                onClick={() => pick("colour", opt.key)}
+                className="press flex flex-col items-center gap-2.5 group">
+                <div className={`w-12 h-12 md:w-14 md:h-14 rounded-full border-2 transition-all duration-300 leather-${opt.key} ${
+                  active ? "border-white scale-110 shadow-[0_0_0_3px_rgba(255,255,255,0.15)]" : "border-white/15 group-hover:border-white/40 group-hover:scale-105"
+                }`} />
+                <span className={`text-[9px] tracking-[0.18em] uppercase font-medium transition-colors ${active ? "text-white" : "text-white/30"}`}>
+                  {opt.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        {config.colour && (
+          <p className="text-[9px] tracking-[0.22em] uppercase text-white/25 font-semibold hidden sm:block">
+            {COLOUR_LABELS[config.colour]}
+          </p>
+        )}
+      </div>
+
+      {/* ── ZONE PRINCIPALE : gauche | visuel | droite ───────────────── */}
+
+      {/* Desktop layout */}
+      <div className="hidden lg:flex flex-1" style={{ minHeight: "calc(100vh - 56px - 88px - 160px)" }}>
+
+        {/* GAUCHE : têtière + frontal */}
+        <div className="w-[220px] xl:w-[240px] shrink-0 flex flex-col divide-y"
+          style={{ borderRight: "1px solid rgba(255,255,255,0.07)" }}>
+          <SideGroup step={teteireStep} config={config} pick={pick} />
+          <SideGroup step={frontalStep} config={config} pick={pick} />
+        </div>
+
+        {/* CENTRE : visuel */}
+        <div className="flex-1 flex items-center justify-center p-6 xl:p-10">
+          <div className="h-full w-full flex items-center justify-center">
+            <div style={{ height: "min(68vh, 520px)", aspectRatio: "3/4", position: "relative", overflow: "hidden", borderRadius: "2px" }}>
+              <BridleVisual config={config} />
+              {/* CTA overlay — apparaît quand tout est choisi */}
+              <div className={`absolute bottom-0 left-0 right-0 transition-all duration-500 ease-out ${
+                complete ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3 pointer-events-none"
+              }`}>
+                <button type="button" onClick={handleAdd}
+                  className="press w-full flex items-center justify-center gap-2.5 py-4 text-sm font-bold tracking-wide transition-colors"
+                  style={{ background: "rgba(250,250,249,0.97)", color: "#0a0908", backdropFilter: "blur(8px)" }}>
+                  <ShoppingBag size={15} />
+                  {added ? "Ajouté au panier !" : `Ajouter au panier — ${formatPrice(total)}`}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* DROITE : muserolle + rênes */}
+        <div className="w-[220px] xl:w-[240px] shrink-0 flex flex-col divide-y"
+          style={{ borderLeft: "1px solid rgba(255,255,255,0.07)" }}>
+          <SideGroup step={muserolleStep} config={config} pick={pick} />
+          <SideGroup step={reinsStep} config={config} pick={pick} />
+        </div>
+      </div>
+
+      {/* ── BARRE DU BAS ─────────────────────────────────────────────── */}
+      <div className="hidden lg:grid grid-cols-3 divide-x"
+        style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+        <BottomGroup step={disciplineStep} config={config} pick={pick} />
+        <BottomGroup step={tailleStep} config={config} pick={pick} />
+        <BottomGroup step={enrenementStep} config={config} pick={pick} />
+      </div>
+
+      {/* ── MOBILE layout ────────────────────────────────────────────── */}
+      <div className="lg:hidden flex flex-col">
+        {/* Visuel mobile */}
+        <div className="flex items-center justify-center p-6" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+          <div style={{ width: "100%", maxWidth: "280px", aspectRatio: "3/4", position: "relative", overflow: "hidden" }}>
+            <BridleVisual config={config} />
+            <div className={`absolute bottom-0 left-0 right-0 transition-all duration-500 ${
+              complete ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3 pointer-events-none"
+            }`}>
+              <button type="button" onClick={handleAdd}
+                className="press w-full flex items-center justify-center gap-2 py-3.5 text-sm font-bold"
+                style={{ background: "rgba(250,250,249,0.97)", color: "#0a0908" }}>
+                <ShoppingBag size={15} />
+                {added ? "Ajouté !" : `Ajouter — ${formatPrice(total)}`}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Toutes les options en vertical */}
+        <div className="divide-y divide-white/8">
+          {[teteireStep, frontalStep, muserolleStep, reinsStep, tailleStep, disciplineStep, enrenementStep].map(s => (
+            <SideGroup key={s.key} step={s} config={config} pick={pick} />
+          ))}
+        </div>
+
+        {complete && (
+          <div className="p-6">
+            <button type="button" onClick={handleAdd}
+              className="press w-full flex items-center justify-center gap-2 py-4 rounded-full text-sm font-bold bg-white text-[#0a0908]">
+              <ShoppingBag size={16} />
+              {added ? "Ajouté au panier !" : `Ajouter — ${formatPrice(total)}`}
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* ── GALERIE ACCESSOIRES ──────────────────────────────────────── */}
+      <AccessoriesGallery />
+
+    </div>
+  );
+}
+
+/* ─── Galerie accessoires ─────────────────────────────────────────────── */
+const ACCESSORIES = [
+  { id: 1,  name: "Têtière Classique",            category: "Têtière",    seed: "elekka-t1" },
+  { id: 2,  name: "Têtière Anatomique Signature", category: "Têtière",    seed: "elekka-t2" },
+  { id: 3,  name: "Têtière Anatomique Duo",       category: "Têtière",    seed: "elekka-t3" },
+  { id: 4,  name: "Frontal Classique",            category: "Frontal",    seed: "elekka-f1" },
+  { id: 5,  name: "Frontal Anatomique",           category: "Frontal",    seed: "elekka-f2" },
+  { id: 6,  name: "Frontal Signature 5,5 cm",     category: "Frontal",    seed: "elekka-f3" },
+  { id: 7,  name: "Muserolle Simple",             category: "Muserolle",  seed: "elekka-m1" },
+  { id: 8,  name: "Muserolle Rembourrée",         category: "Muserolle",  seed: "elekka-m2" },
+  { id: 9,  name: "Muserolle Triple attache",     category: "Muserolle",  seed: "elekka-m3" },
+  { id: 10, name: "Rênes Classiques",             category: "Rênes",      seed: "elekka-r1" },
+  { id: 11, name: "Rênes Anatomique",             category: "Rênes",      seed: "elekka-r2" },
+  { id: 12, name: "Rênes Signature",              category: "Rênes",      seed: "elekka-r3" },
+  { id: 13, name: "Martingale",                   category: "Enrênement", seed: "elekka-e1" },
+  { id: 14, name: "Tylman",                       category: "Enrênement", seed: "elekka-e2" },
+];
+
+const CATEGORIES = ["Tous", "Têtière", "Frontal", "Muserolle", "Rênes", "Enrênement"];
+
+function AccessoriesGallery() {
+  const [selected, setSelected] = useState(ACCESSORIES[0]);
+  const [activeCategory, setActiveCategory] = useState("Tous");
+
+  const filtered = activeCategory === "Tous"
+    ? ACCESSORIES
+    : ACCESSORIES.filter(a => a.category === activeCategory);
+
+  return (
+    <section style={{ background: "#fafaf9", color: "#0a0908", borderTop: "1px solid #e5e5e5" }}>
+      <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-16">
+
+        <div className="mb-10">
+          <p className="kicker text-muted mb-2">Accessoires · À la carte</p>
+          <h2 className="display text-4xl md:text-5xl">
+            Les pièces<br />
+            <span className="text-muted">une par une.</span>
+          </h2>
+          <p className="mt-4 text-sm text-muted max-w-[48ch] leading-relaxed">
+            Chaque élément du filet sera bientôt disponible séparément.
+            Retrouvez ici l&apos;ensemble de la gamme à venir.
           </p>
         </div>
-      </div>
 
-      {/* ── Contenu principal ── */}
-      <div className="px-5 md:px-12 mt-12 pb-32 max-w-[1200px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+        <div className="flex gap-2 flex-wrap mb-8">
+          {CATEGORIES.map(cat => (
+            <button key={cat} type="button"
+              onClick={() => { setActiveCategory(cat); setSelected(filtered[0] ?? ACCESSORIES[0]); }}
+              className={`press px-4 py-1.5 text-xs font-semibold tracking-wide border transition-all duration-200 ${
+                activeCategory === cat
+                  ? "bg-ink text-on-ink border-ink"
+                  : "border-line text-muted hover:border-ink/30 hover:text-ink"
+              }`}>
+              {cat}
+            </button>
+          ))}
+        </div>
 
-          {/* Visuel sticky */}
-          <div className="lg:col-span-5 lg:sticky lg:top-28">
-            <BridleVisual config={config} step={currentStep} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-start">
 
-            {/* Récapitulatif sous le visuel */}
-            {filled > 0 && (
-              <div className="mt-4 border border-line divide-y divide-line">
-                {STEPS.map(s => {
-                  const val = config[s.key as keyof Config];
-                  const opt = s.options.find(o => o.key === val);
-                  if (!val) return null;
-                  return (
-                    <div key={s.key} className="flex items-center justify-between px-4 py-2.5">
-                      <span className="kicker-tight text-muted">{s.label}</span>
-                      <span className="text-xs font-medium text-ink">{opt?.label}</span>
-                    </div>
-                  );
-                })}
-                <div className="flex items-center justify-between px-4 py-3 bg-paper-2">
-                  <span className="kicker-tight text-ink">Total estimé</span>
-                  <span className="font-mono font-semibold text-sm">{formatPrice(total)}</span>
-                </div>
+          <div className="lg:sticky lg:top-24">
+            <div className="relative overflow-hidden bg-paper-2" style={{ aspectRatio: "4/3" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                key={selected.seed}
+                src={`https://picsum.photos/seed/${selected.seed}/900/675`}
+                alt={selected.name}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute bottom-0 left-0 right-0 p-5"
+                style={{ background: "linear-gradient(to top, rgba(10,9,8,0.75) 0%, transparent 100%)" }}>
+                <p className="kicker-tight text-white/50 mb-1">{selected.category}</p>
+                <p className="text-white font-semibold text-lg leading-tight">{selected.name}</p>
+                <p className="text-white/40 text-xs mt-1.5">Photo à venir — emplacement réservé</p>
               </div>
-            )}
+            </div>
           </div>
 
-          {/* Configurateur */}
-          <div className="lg:col-span-7">
-
-            {/* Barre de progression */}
-            <div className="flex items-center gap-2 mb-10">
-              {STEPS.map((s, i) => {
-                const done = !!config[s.key as keyof Config];
-                const active = i === currentStep;
-                return (
-                  <button key={s.key} type="button" onClick={() => setCurrentStep(i)}
-                    className="press flex items-center gap-2 group">
-                    <div className={`w-7 h-7 rounded-full border flex items-center justify-center text-[10px] font-mono transition-all duration-300 ${
-                      done ? "bg-ink border-ink text-on-ink" :
-                      active ? "border-ink text-ink" :
-                      "border-line text-muted"
-                    }`}>
-                      {done ? <Check size={11} weight="bold" /> : ROMAN[i + 1]}
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+            {filtered.map(item => {
+              const isActive = selected.id === item.id;
+              return (
+                <button key={item.id} type="button"
+                  onClick={() => setSelected(item)}
+                  className={`press group relative overflow-hidden transition-all duration-200 ${
+                    isActive ? "ring-2 ring-ink ring-offset-2" : "hover:ring-1 hover:ring-ink/30"
+                  }`}
+                  style={{ aspectRatio: "1/1" }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={`https://picsum.photos/seed/${item.seed}/300/300`}
+                    alt={item.name}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 flex flex-col justify-end p-2"
+                    style={{ background: "linear-gradient(to top, rgba(10,9,8,0.65) 0%, transparent 55%)" }}>
+                    <p className="text-white text-[9px] font-semibold leading-tight line-clamp-2">{item.name}</p>
+                  </div>
+                  {isActive && (
+                    <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-ink flex items-center justify-center">
+                      <Check size={8} weight="bold" className="text-on-ink" />
                     </div>
-                    <span className={`text-[11px] tracking-wide hidden sm:block transition-colors ${active ? "text-ink" : "text-muted"}`}>
-                      {s.label}
-                    </span>
-                    {i < STEPS.length - 1 && (
-                      <div className={`hidden sm:block w-6 h-px ml-1 ${done ? "bg-ink" : "bg-line"}`} />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Étape courante */}
-            <div className="border-t border-ink pt-8">
-              <div className="flex items-baseline gap-4 mb-2">
-                <p className="kicker-tight text-muted">Étape {ROMAN[currentStep + 1]} sur {ROMAN[STEPS.length]}</p>
-              </div>
-              <h2 className="display text-3xl md:text-4xl mt-1">{step.label}</h2>
-              <p className="text-muted text-sm mt-2 italic" style={{ fontWeight: 300 }}>{step.sub}</p>
-            </div>
-
-            {/* Options */}
-            <div className="mt-8 space-y-3">
-              {step.options.map((opt, idx) => {
-                const isActive = currentValue === opt.key;
-                const delta = (opt as { delta?: number }).delta;
-                const note = (opt as { note?: string | null }).note;
-                return (
-                  <button key={opt.key} type="button"
-                    onClick={() => selectOption(opt.key)}
-                    className={`choice press w-full text-left p-5 md:p-6 flex items-center justify-between gap-6 ${isActive ? "choice--active" : ""}`}>
-                    <div className="flex items-start gap-5 min-w-0">
-                      <span className={`font-mono text-[10px] tracking-wider mt-1 shrink-0 ${isActive ? "text-ink" : "text-muted-soft"}`}>
-                        0{idx + 1}
-                      </span>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-3 flex-wrap">
-                          <p className="display text-xl">{opt.label}</p>
-                          {note && (
-                            <span className="bg-ink text-on-ink text-[9px] tracking-[0.2em] uppercase px-2 py-1 font-medium">{note}</span>
-                          )}
-                        </div>
-                        <p className="text-[13px] text-muted mt-1.5 leading-snug">{opt.desc}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4 shrink-0">
-                      {delta !== undefined && (
-                        <p className={`font-mono text-sm tabular-nums ${isActive ? "text-ink" : "text-muted"}`}>
-                          {delta === 0 ? "—" : `+ ${formatPrice(delta)}`}
-                        </p>
-                      )}
-                      <span className={`w-6 h-6 border rounded-full flex items-center justify-center transition-colors shrink-0 ${
-                        isActive ? "border-ink bg-ink text-on-ink" : "border-line"
-                      }`}>
-                        {isActive && <Check size={11} weight="bold" />}
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Navigation */}
-            <div className="mt-10 flex items-center justify-between gap-4">
-              <button type="button" onClick={prev} disabled={currentStep === 0}
-                className="press inline-flex items-center gap-2 text-sm text-muted hover:text-ink transition-colors disabled:opacity-30">
-                <ArrowLeft size={14} /> Précédent
-              </button>
-
-              {currentStep < STEPS.length - 1 ? (
-                <button type="button" onClick={next} disabled={!canNext}
-                  className={`press inline-flex items-center gap-3 px-6 py-3.5 text-sm font-medium tracking-wide transition-colors ${
-                    canNext ? "bg-ink text-on-ink hover:bg-ink-soft" : "bg-ink/20 text-ink/40 cursor-not-allowed"
-                  }`}>
-                  Étape suivante <ArrowRight size={14} />
+                  )}
                 </button>
-              ) : (
-                <button type="button" onClick={handleAdd} disabled={!complete}
-                  className={`cta-shine press inline-flex items-center gap-3 px-6 py-3.5 text-sm font-medium tracking-wide transition-colors ${
-                    complete ? "bg-ink text-on-ink hover:bg-ink-soft" : "bg-ink/20 text-ink/40 cursor-not-allowed"
-                  }`}>
-                  <ShoppingBag size={15} />
-                  {added ? "Ajouté au panier !" : complete ? `Ajouter — ${formatPrice(total)}` : "Complétez toutes les étapes"}
-                </button>
-              )}
-            </div>
+              );
+            })}
+          </div>
 
-            {/* Rassurant */}
-            {complete && !added && (
-              <div className="mt-6 border-t border-line pt-6 text-xs text-muted space-y-1.5">
-                <p>Livraison offerte · Cuir pleine fleur · Retours 14 jours</p>
-              </div>
-            )}
+        </div>
+
+        <div className="mt-10 pt-8 border-t border-line flex items-center justify-between flex-wrap gap-4">
+          <p className="text-xs text-muted">Ces pièces seront disponibles à l&apos;achat séparément prochainement.</p>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-ink pulse-dot" />
+            <span className="text-xs font-medium">Bientôt disponible</span>
           </div>
         </div>
+
       </div>
-    </div>
+    </section>
   );
 }
