@@ -8,6 +8,7 @@ import { formatPrice } from "@/lib/products";
 
 /* ─── Types ──────────────────────────────────────────────────────────── */
 type Config = {
+  structure: string | null;
   discipline: string | null;
   tetiere: string | null;
   frontal: string | null;
@@ -212,7 +213,7 @@ function BridleVisual({ config, step }: { config: Config; step: number }) {
 export default function PersonnaliserPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [config, setConfig] = useState<Config>({
-    structure: null, frontal: null, muserolle: null, colour: null, reins: null,
+    structure: null, discipline: null, tetiere: null, frontal: null, muserolle: null, colour: null, taille: null, reins: null, enrenement: null,
   });
   const [added, setAdded] = useState(false);
   const { addItem } = useCart();
