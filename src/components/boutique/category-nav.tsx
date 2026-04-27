@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Sliders } from "@phosphor-icons/react";
+import { Sparkle } from "@phosphor-icons/react";
 
 type Props = { categories: { key: string; label: string }[] };
 
@@ -50,13 +50,17 @@ export function CategoryNav({ categories }: Props) {
           ))}
 
           <div className="ml-auto shrink-0 pl-4">
-            <Link
-              href="/boutique/personnaliser"
-              className="press group flex items-center gap-2.5 px-5 py-2 bg-ink text-on-ink text-sm font-semibold hover:bg-ink-soft transition-all duration-200 whitespace-nowrap shadow-sm"
-            >
-              <Sliders size={14} className="group-hover:rotate-90 transition-transform duration-300 shrink-0" />
-              Personnaliser mon filet
-            </Link>
+            {/* anneau pulse derrière le bouton */}
+            <div className="relative">
+              <span aria-hidden className="absolute inset-0 rounded-full bg-ink/30 animate-ping" />
+              <Link
+                href="/boutique/personnaliser"
+                className="press btn-create-shimmer group relative flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-ink text-on-ink text-sm font-bold whitespace-nowrap shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
+              >
+                <Sparkle size={15} weight="fill" className="group-hover:scale-125 transition-transform duration-300 shrink-0 relative z-10" />
+                <span className="relative z-10 tracking-wide">Créer mon filet</span>
+              </Link>
+            </div>
           </div>
         </nav>
       </div>
