@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { products } from "@/lib/products";
 import { ProductCard } from "@/components/boutique/product-card";
 import { CategoryNav } from "@/components/boutique/category-nav";
@@ -83,6 +85,27 @@ export default function BoutiquePage() {
             </section>
           );
         })}
+      </div>
+
+      {/* ── CTA Personnalisation ── */}
+      <div className="mx-auto max-w-[1400px] px-5 md:px-10 pb-24">
+        <Link href="/boutique/personnaliser"
+          className="press group block bg-ink text-on-ink p-8 md:p-12 hover:bg-ink-soft transition-colors">
+          <div className="flex items-end justify-between gap-6">
+            <div>
+              <p className="kicker text-on-ink-muted mb-4">Nouveau</p>
+              <h2 className="display text-3xl md:text-5xl leading-tight">
+                Personnalisez<br />
+                <span className="text-on-ink-muted">votre filet.</span>
+              </h2>
+              <p className="mt-5 text-sm text-on-ink-muted leading-relaxed max-w-[44ch]">
+                Composez pièce par pièce — structure, frontal, muserolle, coloris, rênes.
+                Même prix, vos propres choix. À partir de 95 €.
+              </p>
+            </div>
+            <ArrowUpRight size={32} className="text-on-ink-muted group-hover:text-on-ink transition-colors shrink-0" />
+          </div>
+        </Link>
       </div>
     </>
   );
