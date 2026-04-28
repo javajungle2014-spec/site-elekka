@@ -14,7 +14,7 @@ export default function CGVPage() {
           <h2 className="font-semibold text-base">Article 1 — Objet</h2>
           <p>
             Les présentes conditions générales de vente (CGV) régissent les ventes de produits
-            effectuées sur le site elekka.fr entre Elekka (le vendeur) et tout acheteur non
+            effectuées sur le site elekka-sellier.fr entre Elekka (le vendeur) et tout acheteur non
             professionnel (le client). Toute commande implique l'acceptation sans réserve des
             présentes CGV.
           </p>
@@ -67,7 +67,7 @@ export default function CGVPage() {
           </p>
           <p>
             Pour exercer ce droit, le client doit notifier sa décision à l'adresse
-            <a href="mailto:contact@elekka.fr" className="underline underline-offset-4 mx-1">contact@elekka.fr</a>
+            <a href="mailto:elekka.sellier@gmail.com" className="underline underline-offset-4 mx-1">elekka.sellier@gmail.com</a>
             avant l'expiration du délai. Le produit doit être retourné en parfait état, dans
             son emballage d'origine.
           </p>

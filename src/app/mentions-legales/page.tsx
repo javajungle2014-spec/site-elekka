@@ -13,9 +13,9 @@ export default function MentionsLegalesPage() {
         <section className="space-y-3">
           <h2 className="font-semibold text-base">Éditeur du site</h2>
           <p>
-            Le site <strong>elekka.fr</strong> est édité par :<br />
+            Le site <strong>elekka-sellier.fr</strong> est édité par :<br />
             Elekka<br />
-            Contact : <a href="mailto:contact@elekka.fr" className="underline underline-offset-4">contact@elekka.fr</a>
+            Contact : <a href="mailto:elekka.sellier@gmail.com" className="underline underline-offset-4">elekka.sellier@gmail.com</a>
           </p>
         </section>
 

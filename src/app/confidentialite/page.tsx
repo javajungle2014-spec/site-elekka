@@ -14,7 +14,7 @@ export default function ConfidentialitePage() {
           <h2 className="font-semibold text-base">Responsable du traitement</h2>
           <p>
             Elekka est responsable du traitement des données personnelles collectées sur ce site.
-            Contact : <a href="mailto:contact@elekka.fr" className="underline underline-offset-4">contact@elekka.fr</a>
+            Contact : <a href="mailto:elekka.sellier@gmail.com" className="underline underline-offset-4">elekka.sellier@gmail.com</a>
           </p>
         </section>
 
@@ -62,7 +62,7 @@ export default function ConfidentialitePage() {
             Conformément au RGPD, vous disposez d'un droit d'accès, de rectification,
             d'effacement, de portabilité et d'opposition concernant vos données personnelles.
             Pour exercer ces droits, contactez-nous à{" "}
-            <a href="mailto:contact@elekka.fr" className="underline underline-offset-4">contact@elekka.fr</a>.
+            <a href="mailto:elekka.sellier@gmail.com" className="underline underline-offset-4">elekka.sellier@gmail.com</a>.
           </p>
           <p>
             Vous pouvez également introduire une réclamation auprès de la CNIL
