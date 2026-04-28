@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
 import type { Product, ColourKey, Size } from "@/lib/products";
+import { formatPrice } from "@/lib/products";
 import { useCart } from "@/lib/cart-store";
 
 const leatherClassByColour: Record<string, string> = {
@@ -141,7 +142,14 @@ export function RenesProductDetail({ product }: { product: Product }) {
   const [colourKey, setColourKey] = useState<ColourKey>(product.defaultColour);
   const [size, setSize]           = useState<Size>(product.defaultSize);
   const [added, setAdded]         = useState(false);
+  const [stickyVisible, setStickyVisible] = useState(false);
   const { addItem }               = useCart();
+
+  useEffect(() => {
+    const onScroll = () => setStickyVisible(window.scrollY > 400);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const activeColour = useMemo(
     () => product.colours.find((c) => c.key === colourKey) ?? product.colours[0],
@@ -274,6 +282,37 @@ export function RenesProductDetail({ product }: { product: Product }) {
           </div>
         </div>
       </section>
+
+      {stickyVisible && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-ink text-on-ink">
+          <div className="px-4 md:px-12 h-[72px] flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4 min-w-0">
+              <div className={`hidden sm:block w-11 h-11 shrink-0 ${leatherClass}`} />
+              <div className="min-w-0">
+                <p className="text-[13px] font-medium leading-tight truncate">
+                  {product.name}
+                  <span className="text-on-ink-muted"> · {activeColour.label}</span>
+                  <span className="text-on-ink-muted"> · {size}</span>
+                </p>
+                <p className="kicker-tight text-on-ink-muted mt-1 hidden sm:block">Prêt à commander</p>
+              </div>
+            </div>
+            <div className="flex items-stretch gap-3 shrink-0">
+              <div className="hidden md:flex flex-col justify-center text-right pr-2">
+                <p className="kicker-tight text-on-ink-muted">Total</p>
+                <p className="font-mono text-base tabular-nums leading-tight mt-0.5">{formatPrice(product.priceEUR)}</p>
+              </div>
+              <button type="button" onClick={handleAdd}
+                className="cta-shine press inline-flex items-center justify-between h-12 pl-5 pr-3 gap-5 min-w-[180px] bg-on-ink text-ink hover:bg-paper-2 transition-colors">
+                <span className="text-[13px] font-medium tracking-widest uppercase">
+                  {added ? "Ajouté !" : "Ajouter au panier"}
+                </span>
+                <ArrowRight size={14} />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </main>
   );
