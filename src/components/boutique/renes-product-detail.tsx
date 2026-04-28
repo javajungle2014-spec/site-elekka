@@ -122,13 +122,13 @@ function BuyStrip({ product: p, activeColour, colourKey, setColourKey, size, set
           </div>
         </Selector>
       </div>
-      <div className="flex items-end gap-4">
-        <div>
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
           <p className="kicker-tight text-muted">Prix</p>
-          <p className="mt-2"><Price value={p.priceEUR} /></p>
+          <Price value={p.priceEUR} />
         </div>
-        <button type="button" onClick={onAdd} className="cta-shine press h-12 bg-ink px-7 text-xs font-bold uppercase tracking-[0.18em] text-on-ink">
-          {added ? "Ajouté ✓" : "Ajouter"}
+        <button type="button" onClick={onAdd} className="cta-shine press h-12 w-full bg-ink px-7 text-xs font-bold uppercase tracking-[0.18em] text-on-ink">
+          {added ? "Ajouté ✓" : "Ajouter au panier"}
         </button>
       </div>
     </div>
@@ -257,22 +257,6 @@ export function RenesProductDetail({ product }: { product: Product }) {
                 <p className="mt-3 text-xl font-semibold">{value}</p>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Achat final */}
-      <section className="bg-white px-4 py-16 md:px-8">
-        <div className="mx-auto grid max-w-[1600px] gap-8 border-t border-line pt-10 lg:grid-cols-[1fr_520px]">
-          <div>
-            <p className="kicker text-muted">Prêt à commander</p>
-            <h2 className="display mt-4 text-5xl leading-none md:text-7xl">{product.name}</h2>
-            <p className="mt-6 max-w-xl leading-8 text-muted">
-              Livraison offerte dès 150 €. Retours sous 14 jours. Conseil taille disponible avant commande.
-            </p>
-          </div>
-          <div>
-            <BuyStrip product={product} activeColour={activeColour} colourKey={colourKey} setColourKey={setColourKey} size={size} setSize={setSize} onAdd={handleAdd} added={added} />
           </div>
         </div>
       </section>

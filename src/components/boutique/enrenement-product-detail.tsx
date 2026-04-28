@@ -273,7 +273,7 @@ export function EnrenementProductDetail({ product }: { product: Product }) {
   return (
     <main className="bg-paper text-ink">
 
-      <section className="mx-auto grid min-h-screen max-w-[1680px] gap-4 px-4 pt-20 md:px-8 lg:grid-cols-[1fr_520px] lg:pt-24">
+      <section className="mx-auto grid max-w-[1680px] gap-4 px-4 pt-20 md:px-8 lg:grid-cols-[1fr_520px] lg:pt-24">
         <ThreePhotoHero leatherClass={leatherClass} activeColour={activeColour.label} />
         <PurchasePanel product={product} activeColour={activeColour} colourKey={colourKey} setColourKey={setColourKey} size={size} setSize={setSize} onAdd={handleAdd} added={added} />
       </section>
