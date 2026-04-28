@@ -290,10 +290,10 @@ export default function ComptePage() {
         <div className="space-y-6 relative z-10">
           <p className="kicker text-on-ink-muted">Elekka</p>
           <h2 className="display text-4xl xl:text-5xl leading-[0.95]">
-            La qualité<br />des grandes<br />
-            <span className="text-on-ink-muted">maisons.</span><br />
-            Le prix<br />
-            <span className="text-on-ink-muted">du juste.</span>
+            Votre espace,<br />
+            <span className="text-on-ink-muted">simplement.</span><br />
+            Tout ce qui<br />
+            <span className="text-on-ink-muted">compte.</span>
           </h2>
           <p className="text-sm text-on-ink-muted leading-relaxed max-w-[32ch]">
             Créez un compte pour suivre vos commandes, sauvegarder vos favoris et accéder à vos promotions.
@@ -312,7 +312,7 @@ export default function ComptePage() {
           <div className="mb-10">
             <h1 className="display text-4xl md:text-5xl">
               {formTab === "login"
-                ? <><span>Bon retour</span><br /><span className="text-muted">parmi nous.</span></>
+                ? <><span>Bienvenue</span><br /><span className="text-muted">parmi nous.</span></>
                 : <><span>Rejoindre</span><br /><span className="text-muted">Elekka.</span></>
               }
             </h1>
