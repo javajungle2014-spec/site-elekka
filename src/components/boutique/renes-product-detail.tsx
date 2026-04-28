@@ -1,6 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
+import { ArrowLeft } from "@phosphor-icons/react";
 import type { Product, ColourKey, Size } from "@/lib/products";
 import { useCart } from "@/lib/cart-store";
 
@@ -157,8 +159,20 @@ export function RenesProductDetail({ product }: { product: Product }) {
   return (
     <main className="min-h-screen bg-white text-ink">
 
+      {/* Retour boutique */}
+      <div className="px-4 md:px-8 pt-8 max-w-[1600px] mx-auto">
+        <Link href="/boutique" className="inline-flex items-center gap-2 text-[12px] text-muted hover:text-ink transition-colors press">
+          <ArrowLeft size={12} />
+          <span>Boutique</span>
+          <span className="text-muted-soft mx-1.5">/</span>
+          <span>Rênes</span>
+          <span className="text-muted-soft mx-1.5">/</span>
+          <span className="text-ink italic" style={{ fontWeight: 300 }}>{product.name}</span>
+        </Link>
+      </div>
+
       {/* Hero */}
-      <section className="relative min-h-screen overflow-hidden bg-white pt-20">
+      <section className="relative min-h-screen overflow-hidden bg-white pt-6">
         <div className="absolute inset-x-0 top-20 h-px bg-line" />
         <div className="absolute left-1/2 top-[18%] hidden -translate-x-1/2 whitespace-nowrap text-[17vw] font-black leading-none tracking-[-0.08em] text-ink/[0.035] lg:block select-none pointer-events-none">
           {product.name}

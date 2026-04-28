@@ -1,6 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
+import { ArrowLeft } from "@phosphor-icons/react";
 import type { Product, ColourKey, Size } from "@/lib/products";
 import { useCart } from "@/lib/cart-store";
 
@@ -273,7 +275,19 @@ export function EnrenementProductDetail({ product }: { product: Product }) {
   return (
     <main className="bg-paper text-ink">
 
-      <section className="mx-auto grid max-w-[1680px] gap-4 px-4 pt-20 md:px-8 lg:grid-cols-[1fr_520px] lg:pt-24">
+      {/* Retour boutique */}
+      <div className="px-4 md:px-8 pt-8 max-w-[1680px] mx-auto">
+        <Link href="/boutique" className="inline-flex items-center gap-2 text-[12px] text-muted hover:text-ink transition-colors press">
+          <ArrowLeft size={12} />
+          <span>Boutique</span>
+          <span className="text-muted-soft mx-1.5">/</span>
+          <span>Enrênements</span>
+          <span className="text-muted-soft mx-1.5">/</span>
+          <span className="text-ink italic" style={{ fontWeight: 300 }}>{product.name}</span>
+        </Link>
+      </div>
+
+      <section className="mx-auto grid max-w-[1680px] gap-4 px-4 pt-6 md:px-8 lg:grid-cols-[1fr_520px] lg:pt-10">
         <ThreePhotoHero leatherClass={leatherClass} activeColour={activeColour.label} />
         <PurchasePanel product={product} activeColour={activeColour} colourKey={colourKey} setColourKey={setColourKey} size={size} setSize={setSize} onAdd={handleAdd} added={added} />
       </section>
