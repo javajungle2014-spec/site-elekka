@@ -124,7 +124,7 @@ function BridleVisual({ config }: { config: Config }) {
 
   return (
     <div className="relative overflow-hidden w-full h-full select-none"
-      style={{ background: "#0a0908" }}>
+      style={{ background: "#2e2c29" }}>
       {/* lumière showroom */}
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(255,255,255,0.05) 0%, transparent 70%)" }} />
@@ -287,11 +287,11 @@ export default function PersonnaliserPage() {
   const enrenementStep = STEPS.find(s => s.key === "enrenement")!;
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "#0a0908", color: "#fafaf9" }}>
+    <div className="min-h-screen flex flex-col" style={{ background: "#2e2c29", color: "#fafaf9" }}>
 
       {/* ── HEADER ───────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-50 h-14 flex items-center justify-between px-6 md:px-10"
-        style={{ borderBottom: "1px solid rgba(255,255,255,0.08)", background: "rgba(10,9,8,0.92)", backdropFilter: "blur(12px)" }}>
+      <header className="sticky top-20 z-30 h-14 flex items-center justify-between px-6 md:px-10"
+        style={{ borderBottom: "1px solid rgba(255,255,255,0.08)", background: "rgba(46,44,41,0.92)", backdropFilter: "blur(12px)" }}>
         <div className="flex items-center gap-4">
           <Link href="/boutique"
             className="press flex items-center gap-1.5 text-[11px] text-white/40 hover:text-white transition-colors">
