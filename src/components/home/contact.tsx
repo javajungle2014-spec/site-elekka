@@ -90,7 +90,7 @@ export function ContactSection() {
     }`;
 
   return (
-    <section id="contact" className="mt-24 md:mt-36 scroll-mt-24">
+    <section id="contact" className="mt-24 md:mt-36 scroll-mt-36">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16">
 

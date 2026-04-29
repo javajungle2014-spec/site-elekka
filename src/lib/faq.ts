@@ -52,10 +52,6 @@ export const faqCategories: FaqCategory[] = [
         a: "Après chaque utilisation, essuyez les résidus avec un chiffon humide. Nourrissez le cuir régulièrement avec une graisse ou huile adaptée. Évitez l'exposition prolongée à l'humidité ou au soleil direct, et rangez-le dans un endroit sec et aéré.",
       },
       {
-        q: "Quelle graisse utiliser ?",
-        a: "Nous recommandons une huile de pied de bœuf ou une glycérine neutre pour nourrir le cuir sans l'alourdir. Évitez les produits trop gras qui peuvent obstruer les pores du cuir et ternir sa finition.",
-      },
-      {
         q: "Combien de temps dure un filet Elekka ?",
         a: "Avec un entretien régulier, un filet en cuir pleine fleur peut durer plusieurs années, voire davantage. La durabilité est l'un des grands avantages du cuir de qualité face aux matériaux synthétiques.",
       },
