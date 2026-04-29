@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, Check, ShoppingBag } from "@phosphor-icons/react";
 import { useCart } from "@/lib/cart-store";
 import { formatPrice } from "@/lib/products";
@@ -479,9 +480,8 @@ function ThumbGrid({ items, selected, onSelect }: {
               isActive ? "ring-2 ring-ink ring-offset-2" : "hover:ring-1 hover:ring-ink/30"
             }`}
             style={{ aspectRatio: "1/1" }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`https://picsum.photos/seed/${item.seed}/300/300`} alt={item.name}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+            <Image src={`https://picsum.photos/seed/${item.seed}/300/300`} alt={item.name}
+              fill sizes="150px" className="object-cover transition-transform duration-300 group-hover:scale-105" />
             <div className="absolute inset-0 flex flex-col justify-end p-2"
               style={{ background: "linear-gradient(to top, rgba(10,9,8,0.7) 0%, transparent 55%)" }}>
               <p className="text-white text-[9px] font-semibold leading-tight line-clamp-2">{item.name}</p>
@@ -532,11 +532,10 @@ function AccessoriesGallery({ config }: { config: Config }) {
           {/* Photo principale — sticky */}
           <div className="lg:sticky lg:top-24">
             <div className="relative overflow-hidden bg-paper-2" style={{ aspectRatio: "4/3" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img key={selected.seed}
+              <Image key={selected.seed}
                 src={`https://picsum.photos/seed/${selected.seed}/900/675`}
                 alt={selected.name}
-                className="w-full h-full object-cover" />
+                fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" priority />
               <div className="absolute bottom-0 left-0 right-0 p-5"
                 style={{ background: "linear-gradient(to top, rgba(10,9,8,0.78) 0%, transparent 100%)" }}>
                 <p className="kicker-tight text-white/50 mb-1">{selected.category}</p>
