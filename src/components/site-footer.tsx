@@ -26,7 +26,7 @@ export function SiteFooter() {
           <div className="md:col-span-4">
             <p className="kicker text-on-ink-muted">Contact</p>
             <ul className="mt-5 space-y-3 text-sm">
-              <li><a href="mailto:contact@elekka.fr" className="text-on-ink hover:underline underline-offset-4">contact@elekka.fr</a></li>
+              <li><a href="mailto:elekka.sellier@gmail.com" className="text-on-ink hover:underline underline-offset-4">elekka.sellier@gmail.com</a></li>
               <li className="text-on-ink-muted">Réponse sous 48 h ouvrées</li>
               <li className="text-on-ink-muted">France — expédition Europe</li>
             </ul>

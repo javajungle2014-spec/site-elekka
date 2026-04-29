@@ -19,40 +19,34 @@ export default function AProposPage() {
       <div className="mt-16 grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-x-20 gap-y-12 max-w-[1100px]">
         <section className="space-y-6 text-base md:text-[1.0625rem] leading-relaxed text-ink">
           <p>
-            Elekka est née d'une frustration simple : pourquoi les bridons de qualité sérieuse
-            coûtent-ils systématiquement le prix du prestige ? Lucas, cavalier depuis l'enfance
-            et fils de cavalier, a grandi dans une grande écurie de compétition. Il connaît les
-            grandes marques, les utilise, les respecte — mais il ne comprend pas ce qui justifie
-            l'écart de prix face à un cavalier amateur ou un enfant en club.
+            Elekka est née d'un constat simple : pourquoi un bon filet devrait-il
+            forcément coûter aussi cher ? Issue d'une famille de cavaliers, la marque
+            s'inscrit dans une pratique réelle. Celle du terrain — un équipement conçu
+            sur le terrain, pour le terrain.
           </p>
           <p>
-            Le constat est net : la qualité du cuir, la précision de la coupe, l'ergonomie de
-            l'anatomique — tout cela est accessible sans les frais de structure d'une maison
-            installée depuis des décennies. Ce qui coûte cher, c'est souvent le nom.
+            Les grandes marques sont connues, respectées, utilisées. Mais une question
+            reste : qu'est-ce qui justifie vraiment ces prix ? Le cuir, la précision de
+            la coupe, l'ergonomie, l'anatomie. Ce qui coûte cher, souvent, ce n'est pas
+            le produit. C'est le nom.
           </p>
           <p>
-            Elekka réduit la marge, simplifie la distribution, et concentre l'investissement
-            sur le produit lui-même. Pas sur la publicité.
+            Elekka fait un choix simple : concentrer chaque décision sur le produit.
+            Distribution directe. Pas d'intermédiaires superflus. Chaque modèle est
+            développé en conditions réelles — sur des chevaux, dans le travail.
           </p>
         </section>
 
         <section className="space-y-6 text-base md:text-[1.0625rem] leading-relaxed text-ink">
           <p>
-            Les deux modèles anatomiques — le Signature et le Fusion — ont été dessinés par
-            Lucas lui-même. Pas sur un bureau, à partir de photos. Sur des chevaux, dans un
-            manège. La têtière incurvée du Signature libère la nuque sans artifice de
-            communication. La muserolle à triple attache du Fusion répond à un besoin réel :
-            ne pas multiplier les bridons pour s'adapter à plusieurs chevaux.
+            Le bien-être du cheval n'est pas un argument. C'est un point de départ.
           </p>
           <p>
-            Le bien-être du cheval n'est pas un argument marketing ici. C'est le point de
-            départ de chaque décision de conception.
+            Le résultat : un matériel précis, confortable, pensé pour durer. Un prix
+            qui correspond au produit — pas à ce qui l'entoure.
           </p>
           <p>
-            Elekka vend en direct, sans intermédiaire superflu. Quelques selleries partenaires
-            soigneusement choisies permettent de voir et toucher les modèles avant d'acheter.
-            Le reste se passe en ligne, à prix fixe, sans soldes ni promotions — parce qu'un
-            prix juste dès le départ vaut mieux qu'un prix gonflé attendant la remise.
+            Notre marketing, c'est votre soutien. On compte sur vous.
           </p>
         </section>
       </div>
@@ -89,10 +83,10 @@ export default function AProposPage() {
           Voir la collection
         </Link>
         <a
-          href="mailto:contact@elekka.fr"
+          href="mailto:elekka.sellier@gmail.com"
           className="press text-sm text-muted hover:text-ink transition-colors"
         >
-          contact@elekka.fr
+          elekka.sellier@gmail.com
         </a>
       </div>
     </article>
