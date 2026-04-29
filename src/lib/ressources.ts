@@ -34,10 +34,6 @@ export const conseils: Article[] = [
         heading: "Filet classique ou anatomique ?",
         body: "Un filet classique convient à la grande majorité des chevaux. Un filet anatomique, avec sa têtière incurvée et sa muserolle rembourrée, est particulièrement recommandé pour les chevaux sensibles au niveau de la nuque ou du chanfrein. Il favorise la décontraction, réduit les tensions et améliore la précision des aides. Si votre cheval résiste ou semble inconfortable avec un filet classique, le choix anatomique vaut largement la peine d'être envisagé.",
       },
-      {
-        heading: "Les points à vérifier avant d'acheter",
-        body: "Vérifiez la qualité des coutures et de la quincaillerie (boucles, anneaux). Un filet de qualité ne doit pas avoir de bords tranchants ni de finitions approximatives. Le cuir doit être souple dès la première utilisation, sans être trop sec. Enfin, assurez-vous que le modèle est conforme aux règlements de compétition de votre discipline si vous pratiquez en concours.",
-      },
     ],
   },
   {
