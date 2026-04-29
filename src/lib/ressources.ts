@@ -168,31 +168,31 @@ export const conseils: Article[] = [
 export const blog: Article[] = [
   {
     slug: "naissance-elekka",
-    title: "Elekka : la naissance d'une marque équestre",
-    description: "Comment Elekka est née d'une conviction simple — offrir la qualité des grandes maisons équestres à un prix juste. L'histoire de Lucas et de sa vision.",
+    title: "Elekka : une marque née du terrain",
+    description: "Une conviction simple : replacer le produit au centre. Comment Elekka est née d'un constat partagé par beaucoup de cavaliers.",
     date: "2026-03-15",
     readTime: "4 min",
     category: "La marque",
     keywords: ["marque équestre française", "bridon cuir qualité prix", "équipement équestre abordable", "Elekka sellerie"],
     content: [
       {
-        body: "Elekka est née d'une frustration simple et partagée par beaucoup de cavaliers : pourquoi faut-il payer le prix du prestige pour avoir un filet de qualité ?",
+        body: "Elekka est née d'un constat partagé par beaucoup de cavaliers : pourquoi un bon filet devrait-il forcément coûter aussi cher ? Issue d'une famille de cavaliers, la marque s'inscrit dans une pratique réelle. Celle du terrain, des chevaux au travail, du matériel utilisé, observé, ajusté et parfois remis en question.",
       },
       {
-        heading: "Une légitimité terrain",
-        body: "Lucas, fondateur d'Elekka, est cavalier depuis toujours et fils de cavalier. Il vit et travaille au sein d'une grande écurie de compétition. C'est là, au quotidien, qu'il a observé la réalité du marché équestre : des produits de qualité identique vendus à des prix très différents selon le prestige de la marque.",
+        heading: "Une exigence née en écurie",
+        body: "Dans le monde équestre, les grandes marques sont connues, respectées et utilisées. Elles ont construit leur réputation avec le temps. Mais une question demeure : qu'est-ce qui fait réellement la qualité d'un filet ? Pour Elekka, la réponse ne se trouve pas dans un logo. Elle se trouve dans le cuir, la coupe, l'ergonomie, les finitions et l'attention portée au confort du cheval. Un bon filet doit être précis, confortable et durable. Il doit respecter les zones sensibles, accompagner le contact et rester fiable dans le travail quotidien.",
       },
       {
-        heading: "La conviction fondatrice",
-        body: "La qualité d'un filet ne vient pas de son logo. Elle vient du cuir, de la coupe, des finitions, de l'attention portée aux zones de pression. Ces éléments ne sont pas l'apanage des grandes maisons — ils sont accessibles à qui accepte de réduire les marges et de mettre le produit au centre.",
+        heading: "Une autre vision du prix",
+        body: "Elekka fait le choix de concentrer chaque décision sur le produit. Moins d'intermédiaires. Moins de dépenses inutiles. Plus d'attention portée à la conception, aux matériaux et aux détails qui comptent vraiment. L'objectif n'est pas de proposer un produit « moins cher ». L'objectif est de proposer un prix cohérent avec ce que le cavalier achète réellement : un filet bien pensé, bien conçu, et fait pour durer.",
       },
       {
-        heading: "Des modèles conçus par un cavalier",
-        body: "Les filets Signature et Fusion ont été développés par Lucas lui-même, en s'appuyant sur son expérience terrain et sur les retours de cavaliers de tous niveaux. Chaque détail — la courbure de la têtière, l'épaisseur du rembourrage, la position de la fermeture — répond à un besoin réel.",
+        heading: "Des modèles pensés par des cavaliers",
+        body: "Les modèles Elekka sont développés à partir de besoins concrets : confort de la têtière, stabilité de la muserolle, précision des ajustements, qualité du cuir et simplicité d'utilisation. Chaque détail répond à une idée simple : créer un matériel qui fonctionne sur le terrain, pas seulement en photo.",
       },
       {
-        heading: "Et maintenant",
-        body: "Elekka propose aujourd'hui trois modèles, vendus en ligne et dans quelques selleries partenaires. La marque grandit lentement, à la juste mesure de ses engagements : qualité réelle, prix honnête, respect du cheval.",
+        heading: "Aujourd'hui",
+        body: "Elekka grandit avec une ambition claire : proposer des filets élégants, fiables et accessibles, sans compromis sur le respect du cheval. Une marque construite autour d'une idée essentielle : le prix ne fait pas la qualité d'une bride. Le produit, lui, doit la prouver.",
       },
     ],
   },
