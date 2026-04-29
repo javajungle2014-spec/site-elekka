@@ -7,7 +7,7 @@ export const faqCategories: FaqCategory[] = [
     items: [
       {
         q: "Comment choisir entre Full et Cob ?",
-        a: "Le Full convient aux chevaux de grande taille (au-delà de 1,65 m au garrot), le Cob aux poneys et chevaux plus petits. En cas de doute, le Full est le choix le plus courant pour un cheval standard.",
+        a: "Choisissez la taille selon la morphologie de votre cheval. La taille Full convient généralement aux chevaux de taille standard à grande. La taille Cob est recommandée pour les poneys D, petits chevaux ou chevaux à tête plus fine. En cas d'hésitation, la taille Full reste le choix le plus courant.",
       },
       {
         q: "Comment mesurer la tête de mon cheval ?",
