@@ -441,7 +441,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
 
           <div className="grid grid-cols-12 gap-8 md:gap-12 items-start">
             {/* Image + thumbnails */}
-            <div className="col-span-12 md:col-span-7">
+            <div className="col-span-12 md:col-span-6">
               <div className="flex gap-3">
 
                 {/* Rail miniatures avec carrousel si > 6 */}
@@ -498,19 +498,24 @@ export function ProductDetailClient({ product }: { product: Product }) {
               </div>
             </div>
 
-            {/* Titre */}
-            <div className="col-span-12 md:col-span-5 md:pb-2">
-              <h1 className="display text-[3.5rem] md:text-[4.5rem] xl:text-[5.5rem] text-ink" style={{ lineHeight: 0.92 }}>
-                {product.name.replace("Bridon Elekka ", "").replace("Filet Anatomique Elekka ", "")}
-              </h1>
-              <p className="mt-4 italic text-muted text-base md:text-lg max-w-[36ch]" style={{ fontWeight: 300 }}>
-                {product.tagline}.
-              </p>
-              <div className="mt-10 mb-8 h-px bg-line-ink" />
+            {/* Titre + CTA Composer */}
+            <div className="col-span-12 md:col-span-6 flex flex-col gap-8 md:pb-2">
+              <div>
+                <h1 className="display text-[3.5rem] md:text-[4.5rem] xl:text-[5rem] text-ink" style={{ lineHeight: 0.92 }}>
+                  {product.name.replace("Bridon Elekka ", "").replace("Filet Anatomique Elekka ", "")}
+                </h1>
+                <p className="mt-4 italic text-muted text-base md:text-lg max-w-[36ch]" style={{ fontWeight: 300 }}>
+                  {product.tagline}.
+                </p>
+              </div>
+
+              <div className="h-px bg-line-ink" />
+
               <p className="text-[15px] text-ink/80 leading-[1.7] max-w-[44ch]">
                 {product.description}
               </p>
-              <div className="mt-10 grid grid-cols-3 gap-4">
+
+              <div className="grid grid-cols-3 gap-4">
                 {[
                   { num: product.colours.length, label: "Coloris\ndisponibles" },
                   { num: product.sizes.length,   label: "Tailles\nproposées" },
@@ -522,12 +527,27 @@ export function ProductDetailClient({ product }: { product: Product }) {
                   </div>
                 ))}
               </div>
+
+              {/* Bouton Composer */}
+              <button
+                type="button"
+                onClick={() => document.getElementById("configurateur")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+                className="cta-shine press group mt-2 flex items-center justify-between bg-ink text-on-ink px-6 py-4 hover:bg-ink-soft transition-colors"
+              >
+                <span className="text-sm font-semibold tracking-wide">Composer mon filet</span>
+                <span className="flex items-center gap-2 text-on-ink-muted text-xs group-hover:text-on-ink transition-colors">
+                  Personnaliser
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </span>
+              </button>
             </div>
           </div>
         </section>
 
         {/* ── /02 Configurateur ── */}
-        <section className="px-6 md:px-12 mt-32 md:mt-40">
+        <section id="configurateur" className="px-6 md:px-12 mt-32 md:mt-40">
           <div className="grid grid-cols-12 gap-8 mb-16 md:mb-24">
             <div className="col-span-12 md:col-span-2"><p className="kicker-tight text-muted">/02</p></div>
             <div className="col-span-12 md:col-span-10">
