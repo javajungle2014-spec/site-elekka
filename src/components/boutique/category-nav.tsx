@@ -4,9 +4,9 @@ import Link from "next/link";
 import { Sparkle, CaretDown } from "@phosphor-icons/react";
 
 const pieces = [
-  { href: "/boutique/tetiere",   label: "Têtière" },
-  { href: "/boutique/muserolle", label: "Muserolle" },
-  { href: "/boutique/frontal",   label: "Frontal" },
+  { key: "pieces-tetiere",   label: "Têtière" },
+  { key: "pieces-muserolle", label: "Muserolle" },
+  { key: "pieces-frontal",   label: "Frontal" },
 ];
 
 type Props = { categories: { key: string; label: string }[] };
@@ -14,15 +14,6 @@ type Props = { categories: { key: string; label: string }[] };
 export function CategoryNav({ categories }: Props) {
   const [active, setActive] = useState(categories[0]?.key ?? "");
   const [piecesOpen, setPiecesOpen] = useState(false);
-  const piecesRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (piecesRef.current && !piecesRef.current.contains(e.target as Node)) setPiecesOpen(false);
-    }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
 
   useEffect(() => {
     const observers: IntersectionObserver[] = [];
@@ -43,13 +34,18 @@ export function CategoryNav({ categories }: Props) {
 
   function scrollTo(key: string) {
     document.getElementById(key)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setPiecesOpen(false);
   }
 
   return (
     <div className="sticky top-20 z-30 bg-paper/90 backdrop-blur-md border-b border-line">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-        <div className="flex items-center h-12 flex-1 min-w-0">
+
+        {/* Barre principale */}
+        <div className="flex items-center h-12">
           <nav className="flex items-center gap-1 overflow-x-auto scrollbar-none h-full flex-1 min-w-0">
+
+            {/* Catégories normales */}
             {categories.map(({ key, label }) => (
               <button
                 key={key}
@@ -65,14 +61,12 @@ export function CategoryNav({ categories }: Props) {
                 )}
               </button>
             ))}
-          </nav>
 
-          {/* Dropdown Pièces détachées — en dehors du overflow pour ne pas être coupé */}
-          <div ref={piecesRef} className="relative shrink-0">
+            {/* Pièces détachées — dans la nav, ouvre la sous-barre */}
             <button
               type="button"
               onClick={() => setPiecesOpen((v) => !v)}
-              className={`press relative flex items-center gap-1 px-4 h-12 text-sm font-medium transition-colors duration-200 ${
+              className={`press relative shrink-0 flex items-center gap-1.5 px-4 h-full text-sm font-medium transition-colors duration-200 ${
                 piecesOpen ? "text-ink" : "text-muted hover:text-ink"
               }`}
             >
@@ -81,21 +75,7 @@ export function CategoryNav({ categories }: Props) {
               {piecesOpen && <span className="absolute bottom-0 left-4 right-4 h-[2px] bg-ink rounded-full" />}
             </button>
 
-            {piecesOpen && (
-              <div className="absolute top-full right-0 mt-0 w-48 bg-paper border border-line shadow-lg z-[100]">
-                {pieces.map((piece) => (
-                  <Link
-                    key={piece.href}
-                    href={piece.href}
-                    onClick={() => setPiecesOpen(false)}
-                    className="block px-4 py-3 text-sm text-muted hover:text-ink hover:bg-paper-2 transition-colors border-b border-line last:border-0"
-                  >
-                    {piece.label}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
+          </nav>
 
           {/* Créer mon filet */}
           <div className="shrink-0 pl-4">
@@ -111,6 +91,23 @@ export function CategoryNav({ categories }: Props) {
             </div>
           </div>
         </div>
+
+        {/* Sous-barre Pièces détachées — s'affiche en dessous, pas de problème d'overflow */}
+        {piecesOpen && (
+          <div className="flex items-center gap-1 border-t border-line h-10">
+            {pieces.map(({ key, label }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => scrollTo(key)}
+                className="press relative shrink-0 px-4 h-full text-sm text-muted hover:text-ink transition-colors duration-200"
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        )}
+
       </div>
     </div>
   );
