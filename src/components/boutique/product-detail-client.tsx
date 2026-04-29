@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, ShoppingBag, Heart, Truck, Gift } from "@phosphor-icons/react";
 import { type Product, formatPrice, products } from "@/lib/products";
@@ -252,6 +253,9 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const [selectedDiscipline, setSelectedDiscipline] = useState<string | null>(null);
   const [selectedColour, setSelectedColour] = useState(product.defaultColour);
   const [selectedSize, setSelectedSize]     = useState<string | null>(product.defaultSize);
+  const [selectedImageIdx, setSelectedImageIdx] = useState(0);
+
+  useEffect(() => { setSelectedImageIdx(0); }, [selectedColour]);
   const [selectedReins, setSelectedReins]   = useState<string | null>(null);
   const [selectedEquip, setSelectedEquip]   = useState<string | null>(null);
   const { addItem } = useCart();
@@ -357,26 +361,62 @@ export function ProductDetailClient({ product }: { product: Product }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-12 gap-8 md:gap-16 items-start">
-            {/* Image */}
-            <div className="col-span-12 md:col-span-7">
-              <div className={`relative aspect-[3/4] overflow-hidden ${LEATHER[selectedColour] ?? "bg-paper-2"}`}>
-                <div className="absolute inset-0 ring-1 ring-inset ring-ink/5 pointer-events-none" />
-                <div className="absolute top-5 left-5 right-5 flex items-center justify-between pointer-events-none">
-                  <span className="kicker-tight text-on-ink/60">Profil</span>
-                  <span className="font-mono text-[10px] tracking-wider text-on-ink/60 tabular-nums">01 / 01</span>
+          <div className="grid grid-cols-12 gap-8 md:gap-12 items-start">
+            {/* Image + thumbnails */}
+            <div className="col-span-12 md:col-span-6">
+              <div className="flex gap-3">
+
+                {/* Rail miniatures — visible seulement si photos disponibles */}
+                {currentColour.images.length > 1 && (
+                  <div className="flex flex-col gap-2 shrink-0 w-[72px]">
+                    {currentColour.images.map((img, i) => (
+                      <button key={i} type="button"
+                        onClick={() => setSelectedImageIdx(i)}
+                        className={`press relative aspect-[3/4] overflow-hidden border-2 transition-all duration-200 ${
+                          selectedImageIdx === i ? "border-ink" : "border-transparent hover:border-line"
+                        }`}>
+                        <Image src={img} alt={`${product.name} vue ${i + 1}`} fill sizes="72px" className="object-cover" />
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Image principale */}
+                <div className="flex-1">
+                  <div className={`relative aspect-[3/4] overflow-hidden ${
+                    currentColour.images.length > 0 ? "bg-paper-2" : (LEATHER[selectedColour] ?? "bg-paper-2")
+                  }`}>
+                    {currentColour.images.length > 0 ? (
+                      <Image
+                        src={currentColour.images[selectedImageIdx] ?? currentColour.images[0]}
+                        alt={`${product.name} — ${currentColour.label}`}
+                        fill sizes="(min-width: 768px) 35vw, 100vw"
+                        className="object-cover"
+                        priority
+                      />
+                    ) : (
+                      <>
+                        <div className="absolute inset-0 ring-1 ring-inset ring-ink/5 pointer-events-none" />
+                        <div className="absolute top-5 left-5 right-5 flex items-center justify-between pointer-events-none">
+                          <span className="kicker-tight text-on-ink/60">Profil</span>
+                          <span className="font-mono text-[10px] tracking-wider text-on-ink/60 tabular-nums">01 / 01</span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  <div className="mt-3 flex items-center justify-between text-muted">
+                    <span className="kicker-tight">Fig. {selectedImageIdx + 1} — {currentColour.label}</span>
+                    <span className="font-mono text-[10px] tracking-wider">
+                      ELK-{product.slug.slice(0, 3).toUpperCase()}
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div className="mt-3 flex items-center justify-between text-muted">
-                <span className="kicker-tight">Fig. I — {currentColour.label}</span>
-                <span className="font-mono text-[10px] tracking-wider">
-                  ELK-{product.slug.slice(0, 3).toUpperCase()}
-                </span>
+
               </div>
             </div>
 
             {/* Titre */}
-            <div className="col-span-12 md:col-span-5 md:pb-2">
+            <div className="col-span-12 md:col-span-6 md:pb-2">
               <h1 className="display text-[3.5rem] md:text-[4.5rem] xl:text-[5.5rem] text-ink" style={{ lineHeight: 0.92 }}>
                 {product.name.replace("Bridon Elekka ", "").replace("Filet Anatomique Elekka ", "")}
               </h1>
