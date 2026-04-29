@@ -168,7 +168,7 @@ export const conseils: Article[] = [
 export const blog: Article[] = [
   {
     slug: "naissance-elekka",
-    title: "Elekka : une marque née du terrain",
+    title: "Elekka : une marque née sur le terrain",
     description: "Une conviction simple : replacer le produit au centre. Comment Elekka est née d'un constat partagé par beaucoup de cavaliers.",
     date: "2026-03-15",
     readTime: "4 min",
