@@ -38,7 +38,7 @@ export const conseils: Article[] = [
   },
   {
     slug: "entretien-cuir-equestre",
-    title: "Entretien du cuir équestre : les bons gestes pour durer",
+    title: "Entretien du cuir : les gestes essentiels",
     description: "Comment nettoyer, nourrir et conserver votre filet en cuir. Les conseils d'entretien pour prolonger la vie de votre équipement équestre.",
     date: "2026-04-05",
     readTime: "4 min",
@@ -46,27 +46,30 @@ export const conseils: Article[] = [
     keywords: ["entretien cuir équestre", "graisser filet cheval", "cuir selle entretien", "nettoyer bridon cuir"],
     content: [
       {
-        body: "Un filet en cuir de qualité peut durer des années, voire des décennies, avec un entretien régulier et adapté. Voici les bons gestes à adopter dès la première utilisation.",
+        body: "Un cuir de qualité se reconnaît aussi à sa capacité à durer. Avec un entretien régulier, votre filet conserve sa souplesse, sa tenue et son élégance au fil du temps. Le cuir est une matière vivante. Il évolue, se patine, s'assouplit et réagit à l'humidité, à la chaleur, à la sueur et à l'usage. Pour préserver ses qualités naturelles, quelques gestes simples suffisent.",
       },
       {
         heading: "Avant la première utilisation",
-        body: "Avant de passer votre filet pour la première fois, nourrissez le cuir avec une huile de pied de bœuf ou une glycérine neutre. Laissez pénétrer quelques heures. Ce geste assouplit le cuir, évite les frottements et prolonge sa durée de vie.",
+        body: "Avant d'utiliser votre filet pour la première fois, nous vous conseillons de nourrir légèrement le cuir avec un produit adapté : baume, graisse fine ou huile spécifique pour cuir. Appliquez une petite quantité à l'aide d'un chiffon doux, laissez pénétrer, puis essuyez l'excédent. Ce premier soin permet d'assouplir le cuir et de le préparer à l'usage.",
       },
       {
-        heading: "Après chaque utilisation",
-        body: "Essuyez les résidus de bave et de sueur avec un chiffon légèrement humide. Ne laissez jamais le cuir sécher avec de l'humidité dessus — cela favorise le craquelage et le développement de moisissures.",
+        heading: "Après chaque séance",
+        body: "Après utilisation, retirez les traces de sueur, de poussière et de salive avec un chiffon légèrement humide. Ne laissez pas le cuir sécher avec des résidus dessus : à long terme, cela peut le fragiliser, le marquer ou favoriser l'apparition de craquelures.",
       },
       {
-        heading: "Nettoyage hebdomadaire",
-        body: "Une fois par semaine, démontez le filet et nettoyez chaque pièce avec un savon pour cuir (glycérine, savon de selle). Rincez légèrement et laissez sécher à l'air libre, à l'abri du soleil direct. Appliquez ensuite une fine couche de graisse nourrissante.",
+        heading: "Entretien régulier",
+        body: "Une fois par semaine, ou plus souvent selon l'intensité d'utilisation, démontez votre filet et nettoyez chaque pièce avec un savon glycériné ou un savon spécial cuir. Laissez sécher naturellement, à température ambiante, loin d'une source directe de chaleur ou du soleil. Une fois le cuir propre et sec, appliquez une fine couche de baume ou de graisse nourrissante pour conserver sa souplesse.",
       },
       {
-        heading: "Quelle graisse utiliser ?",
-        body: "Privilégiez l'huile de pied de bœuf pour nourrir en profondeur, ou une glycérine neutre pour l'entretien courant. Évitez les graisses trop épaisses ou colorées qui peuvent obstruer les pores du cuir ou tacher les mains et la robe de votre cheval.",
+        heading: "Nourrir sans excès",
+        body: "Un cuir doit être nourri, mais jamais saturé. Les huiles peuvent être utilisées ponctuellement sur un cuir sec ou neuf, mais toujours avec modération. Une application excessive peut détendre le cuir, modifier sa tenue ou foncer sa couleur. Pour l'entretien courant, privilégiez un soin léger, appliqué régulièrement en fine couche.",
       },
       {
         heading: "Conservation",
-        body: "Rangez votre filet dans un endroit sec, tempéré et aéré. Évitez les sacs fermés hermétiquement ou les box humides. Un porte-bridon ou un cintre adapté permet de conserver la forme du filet dans le temps.",
+        body: "Rangez votre filet dans un endroit sec, tempéré et aéré. Évitez les lieux humides, les sacs fermés trop longtemps ou les fortes variations de température. Un porte-bridon adapté permet de conserver la forme du filet et d'éviter les plis inutiles.",
+      },
+      {
+        body: "Bien entretenu, un filet en cuir ne se remplace pas vite. Il vous accompagne, se patine et gagne en caractère avec le temps.",
       },
     ],
   },
