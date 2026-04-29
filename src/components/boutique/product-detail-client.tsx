@@ -254,8 +254,6 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const [selectedColour, setSelectedColour] = useState(product.defaultColour);
   const [selectedSize, setSelectedSize]     = useState<string | null>(product.defaultSize);
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
-
-  useEffect(() => { setSelectedImageIdx(0); }, [selectedColour]);
   const [selectedReins, setSelectedReins]   = useState<string | null>(null);
   const [selectedEquip, setSelectedEquip]   = useState<string | null>(null);
   const { addItem } = useCart();
