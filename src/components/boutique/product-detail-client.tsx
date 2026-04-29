@@ -250,8 +250,19 @@ function FaqItem({ item }: { item: FaqItem }) {
 
 /* ─── Rail de miniatures avec carrousel ─────────────────────────────── */
 const THUMB_VISIBLE = 6;
-const THUMB_H = 72; // px par miniature (aspect 3/4 sur 54px de large)
-const THUMB_GAP = 8;
+
+function ArrowBtn({ dir, disabled, onClick }: { dir: "up" | "down"; disabled: boolean; onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick} disabled={disabled}
+      className={`press h-7 w-full flex items-center justify-center border border-line transition-colors ${
+        disabled ? "text-muted-soft cursor-not-allowed opacity-30" : "hover:border-ink text-ink"
+      }`}>
+      <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+        <path d={dir === "up" ? "M1 5L5 1L9 5" : "M1 1L5 5L9 1"} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    </button>
+  );
+}
 
 function ThumbnailRail({ images, selected, onSelect, productName }: {
   images: string[];
@@ -261,44 +272,58 @@ function ThumbnailRail({ images, selected, onSelect, productName }: {
 }) {
   const [offset, setOffset] = useState(0);
   const maxOffset = Math.max(0, images.length - THUMB_VISIBLE);
-  const canUp   = offset > 0;
-  const canDown = offset < maxOffset;
+  const needsCarousel = images.length > THUMB_VISIBLE;
 
   return (
-    <div className="flex flex-col gap-1.5 shrink-0 w-[54px]">
-      {/* Flèche haut */}
-      <button type="button" onClick={() => setOffset(o => Math.max(0, o - 1))}
-        disabled={!canUp}
-        className={`press h-6 flex items-center justify-center border border-line transition-colors ${canUp ? "hover:border-ink text-ink" : "text-muted-soft cursor-not-allowed"}`}>
-        <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
-          <path d="M1 5L5 1L9 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </button>
+    <>
+      {/* Desktop : rail vertical à gauche */}
+      <div className="hidden md:flex flex-col gap-1.5 shrink-0 w-[60px]">
+        {needsCarousel && (
+          <ArrowBtn dir="up" disabled={offset === 0} onClick={() => setOffset(o => Math.max(0, o - 1))} />
+        )}
 
-      {/* Miniatures visibles */}
-      <div className="flex flex-col gap-1.5 overflow-hidden" style={{ height: THUMB_VISIBLE * THUMB_H + (THUMB_VISIBLE - 1) * THUMB_GAP }}>
-        <div className="flex flex-col gap-1.5 transition-transform duration-300 ease-out"
-          style={{ transform: `translateY(-${offset * (THUMB_H + THUMB_GAP)}px)` }}>
-          {images.map((img, i) => (
-            <button key={i} type="button" onClick={() => onSelect(i)}
-              className={`press relative shrink-0 overflow-hidden border-2 transition-all duration-200 ${
-                selected === i ? "border-ink" : "border-transparent hover:border-line"
-              }`}
-              style={{ width: 54, height: THUMB_H }}>
-              <Image src={img} alt={`${productName} vue ${i + 1}`} fill sizes="54px" className="object-cover" />
-            </button>
-          ))}
+        <div className="flex flex-col gap-1.5 overflow-hidden flex-1">
+          <div className="flex flex-col gap-1.5 transition-transform duration-300 ease-out"
+            style={{ transform: `translateY(calc(-${offset} * (100% / ${THUMB_VISIBLE} + 2px)))` }}>
+            {images.map((img, i) => (
+              <button key={i} type="button" onClick={() => onSelect(i)}
+                className={`press relative shrink-0 overflow-hidden border-2 transition-all duration-200 w-full`}
+                style={{ aspectRatio: "3/4", borderColor: selected === i ? "var(--ink)" : "transparent",
+                  outline: selected === i ? "none" : undefined,
+                  boxShadow: selected !== i ? "0 0 0 1px #e5e5e5" : undefined }}>
+                <Image src={img} alt={`${productName} vue ${i + 1}`} fill sizes="60px" className="object-cover" />
+              </button>
+            ))}
+          </div>
         </div>
+
+        {needsCarousel && (
+          <ArrowBtn dir="down" disabled={offset >= maxOffset} onClick={() => setOffset(o => Math.min(maxOffset, o + 1))} />
+        )}
       </div>
 
-      {/* Flèche bas */}
-      <button type="button" onClick={() => setOffset(o => Math.min(maxOffset, o + 1))}
-        disabled={!canDown}
-        className={`press h-6 flex items-center justify-center border border-line transition-colors ${canDown ? "hover:border-ink text-ink" : "text-muted-soft cursor-not-allowed"}`}>
-        <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
-          <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </button>
+      {/* Mobile : strip horizontale en dessous de l'image (rendu via portail dans le parent) */}
+    </>
+  );
+}
+
+/* ─── Strip horizontale mobile ──────────────────────────────────────── */
+function ThumbnailStrip({ images, selected, onSelect, productName }: {
+  images: string[];
+  selected: number;
+  onSelect: (i: number) => void;
+  productName: string;
+}) {
+  return (
+    <div className="flex md:hidden gap-2 overflow-x-auto scrollbar-none mt-3 pb-1">
+      {images.map((img, i) => (
+        <button key={i} type="button" onClick={() => onSelect(i)}
+          className={`press relative shrink-0 overflow-hidden border-2 transition-all duration-200 rounded-sm`}
+          style={{ width: 56, height: 74, borderColor: selected === i ? "var(--ink)" : "transparent",
+            boxShadow: selected !== i ? "0 0 0 1px #e5e5e5" : undefined }}>
+          <Image src={img} alt={`${productName} vue ${i + 1}`} fill sizes="56px" className="object-cover" />
+        </button>
+      ))}
     </div>
   );
 }
@@ -458,6 +483,16 @@ export function ProductDetailClient({ product }: { product: Product }) {
                       ELK-{product.slug.slice(0, 3).toUpperCase()}
                     </span>
                   </div>
+
+                  {/* Strip horizontal mobile */}
+                  {currentColour.images.length > 1 && (
+                    <ThumbnailStrip
+                      images={currentColour.images}
+                      selected={selectedImageIdx}
+                      onSelect={setSelectedImageIdx}
+                      productName={product.name}
+                    />
+                  )}
                 </div>
 
               </div>
