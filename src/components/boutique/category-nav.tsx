@@ -48,29 +48,31 @@ export function CategoryNav({ categories }: Props) {
   return (
     <div className="sticky top-20 z-30 bg-paper/90 backdrop-blur-md border-b border-line">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-        <nav className="flex items-center gap-1 overflow-x-auto scrollbar-none h-12">
-          {categories.map(({ key, label }) => (
-            <button
-              key={key}
-              type="button"
-              onClick={() => scrollTo(key)}
-              className={`press relative shrink-0 px-4 h-full text-sm font-medium transition-colors duration-200 ${
-                active === key ? "text-ink" : "text-muted hover:text-ink"
-              }`}
-            >
-              {label}
-              {active === key && (
-                <span className="absolute bottom-0 left-4 right-4 h-[2px] bg-ink rounded-full" />
-              )}
-            </button>
-          ))}
+        <div className="flex items-center h-12 flex-1 min-w-0">
+          <nav className="flex items-center gap-1 overflow-x-auto scrollbar-none h-full flex-1 min-w-0">
+            {categories.map(({ key, label }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => scrollTo(key)}
+                className={`press relative shrink-0 px-4 h-full text-sm font-medium transition-colors duration-200 ${
+                  active === key ? "text-ink" : "text-muted hover:text-ink"
+                }`}
+              >
+                {label}
+                {active === key && (
+                  <span className="absolute bottom-0 left-4 right-4 h-[2px] bg-ink rounded-full" />
+                )}
+              </button>
+            ))}
+          </nav>
 
-          {/* Dropdown Pièces détachées */}
+          {/* Dropdown Pièces détachées — en dehors du overflow pour ne pas être coupé */}
           <div ref={piecesRef} className="relative shrink-0">
             <button
               type="button"
               onClick={() => setPiecesOpen((v) => !v)}
-              className={`press relative flex items-center gap-1 px-4 h-full text-sm font-medium transition-colors duration-200 ${
+              className={`press relative flex items-center gap-1 px-4 h-12 text-sm font-medium transition-colors duration-200 ${
                 piecesOpen ? "text-ink" : "text-muted hover:text-ink"
               }`}
             >
@@ -80,7 +82,7 @@ export function CategoryNav({ categories }: Props) {
             </button>
 
             {piecesOpen && (
-              <div className="absolute top-full left-0 mt-0 w-44 bg-paper border border-line shadow-lg z-50">
+              <div className="absolute top-full right-0 mt-0 w-48 bg-paper border border-line shadow-lg z-[100]">
                 {pieces.map((piece) => (
                   <Link
                     key={piece.href}
@@ -95,8 +97,8 @@ export function CategoryNav({ categories }: Props) {
             )}
           </div>
 
-          <div className="ml-auto shrink-0 pl-4">
-            {/* anneau pulse derrière le bouton */}
+          {/* Créer mon filet */}
+          <div className="shrink-0 pl-4">
             <div className="relative">
               <span aria-hidden className="absolute inset-0 rounded-full bg-ink/30 animate-ping" />
               <Link
@@ -108,7 +110,7 @@ export function CategoryNav({ categories }: Props) {
               </Link>
             </div>
           </div>
-        </nav>
+        </div>
       </div>
     </div>
   );
