@@ -198,31 +198,31 @@ export const blog: Article[] = [
   },
   {
     slug: "collection-2026",
-    title: "Collection 2026 : présentation de nos trois modèles",
-    description: "Découvrez les trois filets de la gamme Elekka — Essentiel, Signature et Fusion — leurs caractéristiques, leurs différences et comment choisir celui qui convient à votre cheval.",
+    title: "Collection 2026 : trois modèles, trois approches",
+    description: "Essentiel, Signature, Fusion : trouvez le filet adapté à votre cheval. Présentation complète de la collection Elekka 2026.",
     date: "2026-03-20",
     readTime: "5 min",
     category: "Produits",
     keywords: ["filet Elekka", "bridon cuir 2026", "filet Signature Fusion Essentiel", "gamme filets équitation"],
     content: [
       {
-        body: "La gamme Elekka se compose de trois modèles, chacun pensé pour répondre à un besoin précis. Voici une présentation détaillée pour vous aider à choisir.",
+        body: "La collection Elekka 2026 se compose de trois modèles, chacun pensé pour répondre à une attente différente : la simplicité, le confort anatomique ou l'adaptabilité maximale. Chaque filet conserve la même exigence : un cuir sélectionné avec soin, une conception précise, des finitions propres et un prix cohérent avec le produit.",
       },
       {
         heading: "Le Filet Essentiel — 90 €",
-        body: "C'est notre modèle d'entrée de gamme — dans le bon sens du terme. Classique et épuré, il répond à toutes les situations. Cuir pleine fleur, muserolle simple, quincaillerie argentée. Disponible en Havana Brown et Noir, en Full et Cob. Pour le cavalier qui veut un filet fiable, sans fioritures, à un prix raisonnable.",
+        body: "Le modèle le plus épuré de la collection. Simple, élégant et polyvalent, l'Essentiel répond aux besoins du quotidien sans superflu. Il s'adresse aux cavaliers qui recherchent un filet fiable et durable, avec une ligne sobre et classique. Cuir pleine fleur, muserolle simple, finitions soignées : l'Essentiel va droit au but. Disponible en Havana Brown et Noir, en tailles Full et Cob.",
       },
       {
         heading: "Le Filet Anatomique Signature — 110 €",
-        body: "Conçu par Lucas pour répondre aux besoins des chevaux sensibles. Têtière anatomique incurvée qui soulage la nuque, muserolle rembourrée épaisse (2,5 à 3 cm) avec fermeture côté gauche. Rênes caoutchouc incluses. Browband 17 pouces (Full) ou 16 pouces (Cob). Disponible en Havana Brown et Noir.",
+        body: "Le modèle pensé pour le confort et la précision. Le Signature a été développé pour les chevaux qui demandent plus d'attention au niveau de la nuque, du chanfrein et du contact. Sa têtière anatomique incurvée permet de mieux répartir les pressions, tandis que sa muserolle rembourrée apporte davantage de confort pendant le travail. La fermeture côté gauche limite les surépaisseurs sous la tête du cheval et participe à une meilleure stabilité de l'ensemble.",
       },
       {
         heading: "Le Filet Anatomique Fusion — 110 €",
-        body: "Notre modèle le plus complet. Browband anatomique large 5,5 cm, muserolle à triple attache (épaisse, ovale, rectangulaire) pour s'adapter à toutes les morphologies. Fermeture côté gauche, rênes caoutchouc incluses. Disponible en Havana Brown et Dark Brown.",
+        body: "Le modèle le plus complet de la collection. Le Fusion a été conçu pour les cavaliers qui veulent aller plus loin dans l'ajustement. Sa conception permet d'adapter le filet selon la morphologie du cheval et les préférences du cavalier. Plus modulable, plus travaillé, plus affirmé, il conserve l'essentiel : confort, stabilité et précision. C'est le modèle idéal pour ceux qui veulent un filet anatomique plus abouti, capable de s'adapter à différents chevaux et différentes utilisations.",
       },
       {
-        heading: "Lequel choisir ?",
-        body: "Si votre cheval est sensible au niveau de la nuque ou du chanfrein, ou si vous cherchez à améliorer sa décontraction, le Signature ou le Fusion s'imposent. Si vous cherchez un filet classique, polyvalent et durable, l'Essentiel est le bon choix. En cas de doute, écrivez-nous — nous vous aidons à décider.",
+        heading: "Quel modèle choisir ?",
+        body: "Si vous recherchez un filet simple, élégant et efficace pour le travail quotidien, l'Essentiel est le choix le plus naturel. Si votre cheval est sensible au niveau de la nuque ou du chanfrein, ou si vous souhaitez privilégier le confort anatomique, le Signature est le modèle le plus adapté. Si vous cherchez un filet plus complet, plus modulable et capable de s'adapter à différentes morphologies, le Fusion est le choix le plus polyvalent. En cas d'hésitation, contactez-nous : nous vous aiderons à choisir le modèle le plus adapté à votre cheval.",
       },
     ],
   },
