@@ -766,49 +766,6 @@ export function ProductDetailClient({ product }: { product: Product }) {
       </div>
 
       {/* ── Sticky cart ── */}
-      {stickyVisible && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-ink text-on-ink">
-          <div className="h-[2px] bg-on-ink/15">
-            <div className="h-full bg-on-ink transition-all duration-500" style={{ width: complete ? "100%" : "66%" }} />
-          </div>
-          <div className="px-4 md:px-12 h-[72px] flex items-center justify-between gap-4">
-            <div className="flex items-center gap-5 min-w-0">
-              <div className={`hidden sm:block w-11 h-11 shrink-0 ${LEATHER[selectedColour] ?? "bg-paper-2"}`} />
-              <div className="min-w-0">
-                <p className="text-[13px] font-medium leading-tight truncate">
-                  {product.name.replace("Bridon Elekka ", "").replace("Filet Anatomique Elekka ", "")}
-                  {currentColour && <span className="text-on-ink-muted"> · {currentColour.label}</span>}
-                  {selectedSize && <span className="text-on-ink-muted"> · {selectedSize}</span>}
-                </p>
-                <p className="kicker-tight text-on-ink-muted mt-1 hidden sm:block">
-                  {complete ? "Configuration complète" : "Sélectionnez une taille pour continuer"}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-stretch gap-2 shrink-0">
-              <div className="hidden md:flex flex-col justify-center text-right pr-2">
-                <p className="kicker-tight text-on-ink-muted">Total</p>
-                <p className="font-mono text-base tabular-nums leading-tight mt-0.5">{formatPrice(total)}</p>
-              </div>
-              <button type="button" onClick={handleFavorite}
-                className={`press hidden sm:flex w-12 h-12 border items-center justify-center transition-colors ${
-                  favorite ? "bg-on-ink text-ink border-on-ink" : "border-on-ink/25 text-on-ink hover:border-on-ink"
-                }`}>
-                <IcoHeart size={16} filled={favorite} />
-              </button>
-              <button type="button" onClick={handleAdd} disabled={!complete}
-                className={`cta-shine press inline-flex items-center justify-between h-12 pl-5 pr-3 gap-5 min-w-[200px] transition-colors ${
-                  complete ? "bg-on-ink text-ink hover:bg-paper-2" : "bg-on-ink/30 text-on-ink/60 cursor-not-allowed"
-                }`}>
-                <span className="text-[13px] font-medium tracking-widest uppercase">
-                  {added ? "Ajouté !" : complete ? "Ajouter au panier" : "Composer"}
-                </span>
-                {added ? <IcoCheck size={16} stroke={2.5} /> : <IcoArrowRight size={14} />}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }
