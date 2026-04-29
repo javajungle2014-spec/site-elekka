@@ -4,9 +4,9 @@ import Link from "next/link";
 import { Sparkle, CaretDown } from "@phosphor-icons/react";
 
 const pieces = [
-  { key: "pieces-tetiere",   label: "Têtière" },
-  { key: "pieces-muserolle", label: "Muserolle" },
-  { key: "pieces-frontal",   label: "Frontal" },
+  { href: "/boutique/tetiere",   label: "Têtière" },
+  { href: "/boutique/muserolle", label: "Muserolle" },
+  { href: "/boutique/frontal",   label: "Frontal" },
 ];
 
 type Props = { categories: { key: string; label: string }[] };
@@ -82,17 +82,14 @@ export function CategoryNav({ categories }: Props) {
             {piecesOpen && (
               <div className="absolute top-full left-0 mt-0 w-44 bg-paper border border-line shadow-lg z-50">
                 {pieces.map((piece) => (
-                  <button
-                    key={piece.key}
-                    type="button"
-                    onClick={() => {
-                      document.getElementById(piece.key)?.scrollIntoView({ behavior: "smooth", block: "start" });
-                      setPiecesOpen(false);
-                    }}
-                    className="block w-full text-left px-4 py-3 text-sm text-muted hover:text-ink hover:bg-paper-2 transition-colors border-b border-line last:border-0"
+                  <Link
+                    key={piece.href}
+                    href={piece.href}
+                    onClick={() => setPiecesOpen(false)}
+                    className="block px-4 py-3 text-sm text-muted hover:text-ink hover:bg-paper-2 transition-colors border-b border-line last:border-0"
                   >
                     {piece.label}
-                  </button>
+                  </Link>
                 ))}
               </div>
             )}
