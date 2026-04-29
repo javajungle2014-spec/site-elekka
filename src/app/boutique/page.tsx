@@ -16,33 +16,33 @@ const categories = [
     key: "Bridons",
     label: "Bridons",
     title: "Nos bridons.",
-    subtitle: "Trois modèles, un seul niveau.",
+    subtitle: "La précision, sans compromis.",
     description:
-      "Chaque modèle est conçu pour le confort du cheval et la précision du cavalier. Cuir pleine fleur, quincaillerie inox, finitions soignées.",
+      "Moins de contraintes. Plus de sensations. Pensé pour laisser place à l'essentiel, affiner le contact et renforcer la connexion avec votre cheval.",
   },
   {
     key: "Licoles",
     label: "Licoles",
     title: "Nos licoles.",
-    subtitle: "Cuir pleine fleur, au quotidien.",
+    subtitle: "L'exigence, au quotidien.",
     description:
-      "Des licoles conçus avec la même exigence que nos bridons. Résistants, souples dès le premier usage, pour la sellerie comme pour le pré.",
+      "Fiables, jour après jour. Pensés pour durer, sans compromis, avec une conception simple et solide, faite pour accompagner le quotidien avec élégance.",
   },
   {
     key: "Rênes",
     label: "Rênes",
     title: "Nos rênes.",
-    subtitle: "La connexion entre les mains et le mors.",
+    subtitle: "Chaque sensation compte.",
     description:
-      "Rênes en cuir pleine fleur, avec ou sans grip caoutchouc. Légères, durables, taillées pour une prise en main précise.",
+      "Des rênes pensées pour une prise en main précise et un contact constant. Légères, équilibrées, sans compromis sur le ressenti.",
   },
   {
     key: "Enrênements",
     label: "Enrênements",
     title: "Nos enrênements.",
-    subtitle: "Un appui juste, pour un travail juste.",
+    subtitle: "Guider sans contraindre.",
     description:
-      "Enrênements en cuir pleine fleur, réglables et compatibles avec tous les bridons Elekka. Conçus pour accompagner le travail sans contraindre.",
+      "Des enrênements conçus pour accompagner le travail dans le respect du cheval. Ajustement précis, action juste, utilisation maîtrisée.",
   },
 ];
 
@@ -105,21 +105,12 @@ export default function BoutiquePage() {
       <div className="mx-auto max-w-[1400px] px-5 md:px-10 pb-24 space-y-20">
         {[
           {
-            key: "pieces-tetiere",
-            href: "/boutique/tetiere",
-            label: "Têtière",
-            title: "Têtières.",
-            subtitle: "La pièce principale, sur la nuque.",
-            description: "Classique ou anatomique, la têtière définit le confort et la ligne du filet. Cuir pleine fleur, bouclerie inox.",
-            price: "35 €",
-          },
-          {
             key: "pieces-muserolle",
             href: "/boutique/muserolle",
             label: "Muserolle",
             title: "Muserolles.",
-            subtitle: "Le contact sur le chanfrein.",
-            description: "Simple, rembourrée ou triple attache — chaque modèle répond à un usage précis. Cuir pleine fleur, bouclerie inox.",
+            subtitle: "Choisissez, remplacez, adaptez.",
+            description: "Une muserolle pensée pour s'intégrer parfaitement à votre filet, selon vos besoins et ceux de votre cheval.",
             price: "30 €",
           },
           {
@@ -127,9 +118,18 @@ export default function BoutiquePage() {
             href: "/boutique/frontal",
             label: "Frontal",
             title: "Frontaux.",
-            subtitle: "La pièce qui traverse le front.",
-            description: "Rectiligne ou anatomique, large ou discret. Le frontal affine la silhouette du filet. Cuir pleine fleur, bouclerie inox.",
+            subtitle: "Changez de style, en un geste.",
+            description: "Une pièce simple à remplacer, pour ajuster l'équilibre et l'allure de votre filet.",
             price: "25 €",
+          },
+          {
+            key: "pieces-tetiere",
+            href: "/boutique/tetiere",
+            label: "Têtière",
+            title: "Têtières.",
+            subtitle: "Adaptez votre filet, sans compromis.",
+            description: "Remplacez facilement la têtière pour plus de confort, selon votre cheval et votre équitation.",
+            price: "35 €",
           },
         ].map((piece) => (
           <section key={piece.key} id={piece.key} className="scroll-mt-28">
