@@ -106,26 +106,32 @@ export default function BoutiquePage() {
         {[
           {
             key: "pieces-tetiere",
+            href: "/boutique/tetiere",
             label: "Têtière",
             title: "Têtières.",
             subtitle: "La pièce principale, sur la nuque.",
-            description: "Classique ou anatomique, la têtière définit le confort et la ligne du filet. Disponible à l'achat séparément prochainement.",
+            description: "Classique ou anatomique, la têtière définit le confort et la ligne du filet. Cuir pleine fleur, bouclerie inox.",
+            price: "35 €",
           },
           {
             key: "pieces-muserolle",
+            href: "/boutique/muserolle",
             label: "Muserolle",
             title: "Muserolles.",
             subtitle: "Le contact sur le chanfrein.",
-            description: "Simple, rembourrée ou triple attache — chaque modèle répond à un usage précis. Disponible à l'achat séparément prochainement.",
+            description: "Simple, rembourrée ou triple attache — chaque modèle répond à un usage précis. Cuir pleine fleur, bouclerie inox.",
+            price: "30 €",
           },
           {
             key: "pieces-frontal",
+            href: "/boutique/frontal",
             label: "Frontal",
             title: "Frontaux.",
             subtitle: "La pièce qui traverse le front.",
-            description: "Rectiligne ou anatomique, large ou discret. Le frontal affine la silhouette du filet. Disponible à l'achat séparément prochainement.",
+            description: "Rectiligne ou anatomique, large ou discret. Le frontal affine la silhouette du filet. Cuir pleine fleur, bouclerie inox.",
+            price: "25 €",
           },
-        ].map((piece, i) => (
+        ].map((piece) => (
           <section key={piece.key} id={piece.key} className="scroll-mt-28">
             <header className="mb-10">
               <p className="kicker text-muted">{piece.label}</p>
@@ -135,16 +141,22 @@ export default function BoutiquePage() {
               </h2>
               <p className="mt-6 text-base text-muted leading-relaxed max-w-[52ch]">{piece.description}</p>
             </header>
-            <div className="border border-dashed border-line p-10 md:p-16 flex items-center justify-between gap-6">
-              <div>
-                <p className="text-sm font-semibold">Bientôt disponible</p>
-                <p className="text-sm text-muted mt-1">En attendant, configurez votre filet sur mesure.</p>
+            <Link href={piece.href}
+              className="press group flex items-center justify-between gap-6 border border-line p-8 md:p-12 hover:border-ink transition-colors duration-200">
+              <div className="flex items-center gap-8">
+                <div className="leather-havana-brown w-20 h-20 shrink-0" />
+                <div>
+                  <p className="text-lg font-semibold">{piece.label} Elekka</p>
+                  <p className="text-sm text-muted mt-1">Havana Brown · Noir · Full · Cob</p>
+                </div>
               </div>
-              <Link href="/boutique/personnaliser"
-                className="press shrink-0 flex items-center gap-2 bg-ink text-on-ink px-5 py-2.5 text-xs font-bold uppercase tracking-widest hover:bg-ink-soft transition-colors">
-                Configurer
-              </Link>
-            </div>
+              <div className="flex items-center gap-6 shrink-0">
+                <p className="font-mono text-xl font-semibold">{piece.price}</p>
+                <span className="press text-xs font-bold uppercase tracking-widest border border-ink px-5 py-2.5 group-hover:bg-ink group-hover:text-on-ink transition-colors">
+                  Voir →
+                </span>
+              </div>
+            </Link>
           </section>
         ))}
       </div>
