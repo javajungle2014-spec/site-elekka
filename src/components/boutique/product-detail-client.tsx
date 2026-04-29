@@ -248,6 +248,61 @@ function FaqItem({ item }: { item: FaqItem }) {
   );
 }
 
+/* ─── Rail de miniatures avec carrousel ─────────────────────────────── */
+const THUMB_VISIBLE = 6;
+const THUMB_H = 72; // px par miniature (aspect 3/4 sur 54px de large)
+const THUMB_GAP = 8;
+
+function ThumbnailRail({ images, selected, onSelect, productName }: {
+  images: string[];
+  selected: number;
+  onSelect: (i: number) => void;
+  productName: string;
+}) {
+  const [offset, setOffset] = useState(0);
+  const maxOffset = Math.max(0, images.length - THUMB_VISIBLE);
+  const canUp   = offset > 0;
+  const canDown = offset < maxOffset;
+
+  return (
+    <div className="flex flex-col gap-1.5 shrink-0 w-[54px]">
+      {/* Flèche haut */}
+      <button type="button" onClick={() => setOffset(o => Math.max(0, o - 1))}
+        disabled={!canUp}
+        className={`press h-6 flex items-center justify-center border border-line transition-colors ${canUp ? "hover:border-ink text-ink" : "text-muted-soft cursor-not-allowed"}`}>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+          <path d="M1 5L5 1L9 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+
+      {/* Miniatures visibles */}
+      <div className="flex flex-col gap-1.5 overflow-hidden" style={{ height: THUMB_VISIBLE * THUMB_H + (THUMB_VISIBLE - 1) * THUMB_GAP }}>
+        <div className="flex flex-col gap-1.5 transition-transform duration-300 ease-out"
+          style={{ transform: `translateY(-${offset * (THUMB_H + THUMB_GAP)}px)` }}>
+          {images.map((img, i) => (
+            <button key={i} type="button" onClick={() => onSelect(i)}
+              className={`press relative shrink-0 overflow-hidden border-2 transition-all duration-200 ${
+                selected === i ? "border-ink" : "border-transparent hover:border-line"
+              }`}
+              style={{ width: 54, height: THUMB_H }}>
+              <Image src={img} alt={`${productName} vue ${i + 1}`} fill sizes="54px" className="object-cover" />
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Flèche bas */}
+      <button type="button" onClick={() => setOffset(o => Math.min(maxOffset, o + 1))}
+        disabled={!canDown}
+        className={`press h-6 flex items-center justify-center border border-line transition-colors ${canDown ? "hover:border-ink text-ink" : "text-muted-soft cursor-not-allowed"}`}>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+          <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  );
+}
+
 /* ─── Composant principal ────────────────────────────────────────────── */
 export function ProductDetailClient({ product }: { product: Product }) {
   const [selectedDiscipline, setSelectedDiscipline] = useState<string | null>(null);
@@ -361,22 +416,17 @@ export function ProductDetailClient({ product }: { product: Product }) {
 
           <div className="grid grid-cols-12 gap-8 md:gap-12 items-start">
             {/* Image + thumbnails */}
-            <div className="col-span-12 md:col-span-6">
+            <div className="col-span-12 md:col-span-7">
               <div className="flex gap-3">
 
-                {/* Rail miniatures — visible seulement si photos disponibles */}
+                {/* Rail miniatures avec carrousel si > 6 */}
                 {currentColour.images.length > 1 && (
-                  <div className="flex flex-col gap-2 shrink-0 w-[72px]">
-                    {currentColour.images.map((img, i) => (
-                      <button key={i} type="button"
-                        onClick={() => setSelectedImageIdx(i)}
-                        className={`press relative aspect-[3/4] overflow-hidden border-2 transition-all duration-200 ${
-                          selectedImageIdx === i ? "border-ink" : "border-transparent hover:border-line"
-                        }`}>
-                        <Image src={img} alt={`${product.name} vue ${i + 1}`} fill sizes="72px" className="object-cover" />
-                      </button>
-                    ))}
-                  </div>
+                  <ThumbnailRail
+                    images={currentColour.images}
+                    selected={selectedImageIdx}
+                    onSelect={setSelectedImageIdx}
+                    productName={product.name}
+                  />
                 )}
 
                 {/* Image principale */}
@@ -388,8 +438,8 @@ export function ProductDetailClient({ product }: { product: Product }) {
                       <Image
                         src={currentColour.images[selectedImageIdx] ?? currentColour.images[0]}
                         alt={`${product.name} — ${currentColour.label}`}
-                        fill sizes="(min-width: 768px) 35vw, 100vw"
-                        className="object-cover"
+                        fill sizes="(min-width: 768px) 40vw, 100vw"
+                        className="object-cover transition-opacity duration-300"
                         priority
                       />
                     ) : (
@@ -414,7 +464,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
             </div>
 
             {/* Titre */}
-            <div className="col-span-12 md:col-span-6 md:pb-2">
+            <div className="col-span-12 md:col-span-5 md:pb-2">
               <h1 className="display text-[3.5rem] md:text-[4.5rem] xl:text-[5.5rem] text-ink" style={{ lineHeight: 0.92 }}>
                 {product.name.replace("Bridon Elekka ", "").replace("Filet Anatomique Elekka ", "")}
               </h1>
