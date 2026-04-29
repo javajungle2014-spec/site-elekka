@@ -42,10 +42,6 @@ export const faqCategories: FaqCategory[] = [
         q: "En quoi un filet anatomique est-il meilleur pour mon cheval ?",
         a: "Un filet anatomique soulage les zones sensibles de la tête — nuque, chanfrein, barres — ce qui favorise la décontraction, l'équilibre et la précision des aides. Votre cheval travaille plus à l'aise, vous communiquez mieux.",
       },
-      {
-        q: "Qui a conçu les modèles Elekka ?",
-        a: "Les modèles Elekka ont été conçus par Lucas, cavalier et fils de cavalier, vivant et travaillant au sein d'une grande écurie de compétition. Chaque détail est issu d'une connaissance terrain directe des besoins du cheval et du cavalier.",
-      },
     ],
   },
   {
