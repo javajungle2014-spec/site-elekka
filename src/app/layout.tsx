@@ -32,6 +32,7 @@ export const metadata: Metadata = {
   description:
     "Bridons en cuir conçus par des cavaliers, pour des cavaliers. Même exigence que les grandes maisons, à prix juste.",
   metadataBase: new URL("https://elekka-sellier.fr"),
+  verification: { google: "dd49c415fec81d9e" },
   openGraph: {
     title: "Elekka — Bridons en cuir pour chevaux",
     description:
