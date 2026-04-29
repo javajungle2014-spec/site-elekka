@@ -101,6 +101,54 @@ export default function BoutiquePage() {
         })}
       </div>
 
+      {/* ── Pièces détachées ── */}
+      <div className="mx-auto max-w-[1400px] px-5 md:px-10 pb-24 space-y-20">
+        {[
+          {
+            key: "pieces-tetiere",
+            label: "Têtière",
+            title: "Têtières.",
+            subtitle: "La pièce principale, sur la nuque.",
+            description: "Classique ou anatomique, la têtière définit le confort et la ligne du filet. Disponible à l'achat séparément prochainement.",
+          },
+          {
+            key: "pieces-muserolle",
+            label: "Muserolle",
+            title: "Muserolles.",
+            subtitle: "Le contact sur le chanfrein.",
+            description: "Simple, rembourrée ou triple attache — chaque modèle répond à un usage précis. Disponible à l'achat séparément prochainement.",
+          },
+          {
+            key: "pieces-frontal",
+            label: "Frontal",
+            title: "Frontaux.",
+            subtitle: "La pièce qui traverse le front.",
+            description: "Rectiligne ou anatomique, large ou discret. Le frontal affine la silhouette du filet. Disponible à l'achat séparément prochainement.",
+          },
+        ].map((piece, i) => (
+          <section key={piece.key} id={piece.key} className="scroll-mt-28">
+            <header className="mb-10">
+              <p className="kicker text-muted">{piece.label}</p>
+              <h2 className="display mt-4 text-5xl md:text-7xl">
+                {piece.title}<br />
+                <span className="text-muted">{piece.subtitle}</span>
+              </h2>
+              <p className="mt-6 text-base text-muted leading-relaxed max-w-[52ch]">{piece.description}</p>
+            </header>
+            <div className="border border-dashed border-line p-10 md:p-16 flex items-center justify-between gap-6">
+              <div>
+                <p className="text-sm font-semibold">Bientôt disponible</p>
+                <p className="text-sm text-muted mt-1">En attendant, configurez votre filet sur mesure.</p>
+              </div>
+              <Link href="/boutique/personnaliser"
+                className="press shrink-0 flex items-center gap-2 bg-ink text-on-ink px-5 py-2.5 text-xs font-bold uppercase tracking-widest hover:bg-ink-soft transition-colors">
+                Configurer
+              </Link>
+            </div>
+          </section>
+        ))}
+      </div>
+
       {/* ── CTA Personnalisation ── */}
       <div className="mx-auto max-w-[1400px] px-5 md:px-10 pb-24">
         <Link href="/boutique/personnaliser"

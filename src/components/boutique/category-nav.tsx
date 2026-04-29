@@ -1,12 +1,28 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Sparkle } from "@phosphor-icons/react";
+import { Sparkle, CaretDown } from "@phosphor-icons/react";
+
+const pieces = [
+  { key: "pieces-tetiere",   label: "Têtière" },
+  { key: "pieces-muserolle", label: "Muserolle" },
+  { key: "pieces-frontal",   label: "Frontal" },
+];
 
 type Props = { categories: { key: string; label: string }[] };
 
 export function CategoryNav({ categories }: Props) {
   const [active, setActive] = useState(categories[0]?.key ?? "");
+  const [piecesOpen, setPiecesOpen] = useState(false);
+  const piecesRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (piecesRef.current && !piecesRef.current.contains(e.target as Node)) setPiecesOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
 
   useEffect(() => {
     const observers: IntersectionObserver[] = [];
@@ -48,6 +64,39 @@ export function CategoryNav({ categories }: Props) {
               )}
             </button>
           ))}
+
+          {/* Dropdown Pièces détachées */}
+          <div ref={piecesRef} className="relative shrink-0">
+            <button
+              type="button"
+              onClick={() => setPiecesOpen((v) => !v)}
+              className={`press relative flex items-center gap-1 px-4 h-full text-sm font-medium transition-colors duration-200 ${
+                piecesOpen ? "text-ink" : "text-muted hover:text-ink"
+              }`}
+            >
+              Pièces détachées
+              <CaretDown size={11} className={`transition-transform duration-200 ${piecesOpen ? "rotate-180" : ""}`} />
+              {piecesOpen && <span className="absolute bottom-0 left-4 right-4 h-[2px] bg-ink rounded-full" />}
+            </button>
+
+            {piecesOpen && (
+              <div className="absolute top-full left-0 mt-0 w-44 bg-paper border border-line shadow-lg z-50">
+                {pieces.map((piece) => (
+                  <button
+                    key={piece.key}
+                    type="button"
+                    onClick={() => {
+                      document.getElementById(piece.key)?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      setPiecesOpen(false);
+                    }}
+                    className="block w-full text-left px-4 py-3 text-sm text-muted hover:text-ink hover:bg-paper-2 transition-colors border-b border-line last:border-0"
+                  >
+                    {piece.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           <div className="ml-auto shrink-0 pl-4">
             {/* anneau pulse derrière le bouton */}
