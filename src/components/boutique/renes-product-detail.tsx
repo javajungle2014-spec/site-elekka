@@ -6,12 +6,7 @@ import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
 import type { Product, ColourKey, Size } from "@/lib/products";
 import { formatPrice } from "@/lib/products";
 import { useCart } from "@/lib/cart-store";
-
-const leatherClassByColour: Record<string, string> = {
-  "havana-brown": "leather-havana-brown",
-  "noir":         "leather-noir",
-  "dark-brown":   "leather-dark-brown",
-};
+import { leatherClassByColour } from "@/components/boutique/shared";
 
 const chapters = [
   {
