@@ -75,31 +75,35 @@ export const conseils: Article[] = [
   },
   {
     slug: "filet-anatomique-bienfaits",
-    title: "Filet anatomique : pourquoi ça change tout pour votre cheval",
-    description: "Nuque soulagée, chanfrein protégé, décontraction améliorée — les véritables bénéfices du filet anatomique pour le bien-être et les performances de votre cheval.",
+    title: "Filet anatomique : pourquoi le confort change tout",
+    description: "Nuque soulagée, chanfrein protégé, décontraction améliorée — pourquoi le filet anatomique change vraiment quelque chose pour votre cheval.",
     date: "2026-04-10",
     readTime: "6 min",
     category: "Conseils",
     keywords: ["filet anatomique cheval", "pression nuque cheval", "bien-être cheval équipement", "bridon anatomique bienfaits", "équipement équestre bien-être"],
     content: [
       {
-        body: "De plus en plus plébiscité par les cavaliers professionnels et amateurs, le filet anatomique répond à une préoccupation centrale : le bien-être du cheval pendant le travail. Mais qu'est-ce qui le distingue vraiment d'un filet classique ?",
+        body: "De plus en plus utilisé par les cavaliers professionnels comme amateurs, le filet anatomique répond à une exigence simple : mieux respecter la morphologie du cheval pendant le travail. Contrairement à un filet classique, il ne se contente pas de maintenir le mors en place. Il cherche à limiter les points de pression, améliorer le confort et permettre au cheval de se déplacer avec plus de liberté. Chez Elekka, nous pensons qu'un bon filet doit se faire oublier. Il doit accompagner le cheval, jamais le gêner.",
       },
       {
-        heading: "Les zones de pression à surveiller",
-        body: "La tête du cheval est une zone particulièrement sensible. La nuque, le chanfrein, les barres et les tempes concentrent de nombreux nerfs et tendons. Un équipement mal ajusté ou inadapté peut générer des tensions chroniques, des douleurs, voire des blocages qui affectent directement le comportement et les performances de l'animal.",
+        heading: "Une tête sensible, des zones à respecter",
+        body: "La tête du cheval est une zone particulièrement sensible. La nuque, les oreilles, le chanfrein, les tempes, les barres et la mâchoire concentrent de nombreuses terminaisons nerveuses. Un filet mal ajusté, trop serré ou mal conçu peut créer des pressions inutiles. À long terme, ces tensions peuvent gêner le cheval dans son attitude, sa décontraction et sa disponibilité au travail. Le rôle d'un filet anatomique est donc simple : mieux répartir les pressions et libérer les zones sensibles.",
       },
       {
-        heading: "La têtière incurvée : soulager la nuque",
-        body: "Sur un filet classique, la têtière est plate et repose uniformément sur la nuque. Sur un filet anatomique, elle est incurvée et évidée au niveau de la nuque, ce qui libère la zone des oreilles et réduit la pression sur les processus articulaires. Résultat : le cheval accepte mieux le contact, relâche la nuque et travaille plus librement dans son dos.",
+        heading: "Une têtière pensée pour soulager la nuque",
+        body: "Sur un filet classique, la têtière est souvent droite et repose directement derrière les oreilles. Sur un filet anatomique, la têtière est travaillée pour mieux épouser la forme de la tête. Elle libère davantage la base des oreilles et répartit la pression de manière plus équilibrée sur la nuque. Ce détail peut sembler discret, mais il change beaucoup dans le ressenti du cheval. Une nuque moins contrainte favorise une meilleure décontraction, une attitude plus naturelle et un contact plus stable.",
       },
       {
-        heading: "La muserolle rembourrée : protéger le chanfrein",
-        body: "La muserolle est la partie du filet qui repose sur le chanfrein du cheval. Sur les modèles Elekka, le rembourrage épais (2,5 à 3 cm) absorbe la pression et répartit le contact sur une surface plus large. La fermeture côté gauche évite les protubérances sous le cuir qui pourraient créer des points de pression supplémentaires.",
+        heading: "Une muserolle conçue pour plus de confort",
+        body: "La muserolle repose sur le chanfrein, une zone directement exposée à la pression. Sur les modèles Elekka, le rembourrage permet d'amortir le contact et de mieux répartir la pression. L'objectif n'est pas de bloquer, mais d'accompagner. Une muserolle bien pensée doit rester stable, confortable et précise, sans créer de points durs inutiles.",
       },
       {
-        heading: "Un cheval plus décontracté, des aides plus précises",
-        body: "Quand le cheval ne souffre pas, il se concentre. Un équipement confortable favorise la décontraction de la mâchoire, du cou et du dos — ce qui se traduit directement par une meilleure réactivité aux aides et une posture plus juste. Nombreux sont les cavaliers qui constatent une amélioration notable dès les premières séances avec un filet anatomique.",
+        heading: "Moins de contraintes, plus de sensations",
+        body: "Un cheval confortable est souvent un cheval plus disponible. Lorsqu'il n'est pas gêné par son équipement, il peut mieux se concentrer sur le travail, le contact et les demandes du cavalier. La mâchoire se relâche plus facilement, la nuque devient plus mobile, et la communication peut devenir plus fine. Le filet anatomique ne remplace pas le travail du cavalier. Mais il permet de partir sur une base plus juste.",
+      },
+      {
+        heading: "Conclusion",
+        body: "Un filet anatomique n'est pas seulement une question de forme. C'est une manière de penser l'équipement autrement. Respecter la morphologie du cheval. Limiter les pressions inutiles. Améliorer le confort sans perdre en précision. Chez Elekka, chaque détail est pensé dans cette logique : créer un matériel discret, confortable et durable, au service du cheval comme du cavalier.",
       },
     ],
   },
