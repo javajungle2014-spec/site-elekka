@@ -31,12 +31,22 @@ export const metadata: Metadata = {
   },
   description:
     "Bridons en cuir conçus par des cavaliers, pour des cavaliers. Même exigence que les grandes maisons, à prix juste.",
+  metadataBase: new URL("https://elekka-sellier.fr"),
   openGraph: {
-    title: "Elekka",
+    title: "Elekka — Bridons en cuir pour chevaux",
     description:
       "Bridons en cuir conçus par des cavaliers, pour des cavaliers. Même exigence que les grandes maisons, à prix juste.",
     locale: "fr_FR",
     type: "website",
+    url: "https://elekka-sellier.fr",
+    siteName: "Elekka",
+    images: [{ url: "/brand/hero.jpg", width: 1200, height: 630, alt: "Elekka — Bridons en cuir" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Elekka — Bridons en cuir pour chevaux",
+    description: "Bridons en cuir conçus par des cavaliers, pour des cavaliers.",
+    images: ["/brand/hero.jpg"],
   },
 };
 

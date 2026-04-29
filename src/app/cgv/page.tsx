@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Conditions générales de vente" };
+export const metadata: Metadata = {
+  title: "Conditions générales de vente",
+  description: "Conditions générales de vente d'Elekka : commandes, livraison, droit de rétractation, garanties. Site elekka-sellier.fr.",
+};
 
 export default function CGVPage() {
   return (

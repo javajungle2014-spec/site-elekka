@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = { title: "À propos" };
+export const metadata: Metadata = {
+  title: "À propos — Notre histoire",
+  description: "Elekka est née d'un constat simple : un bon filet ne devrait pas forcément coûter aussi cher. Issue d'une famille de cavaliers, la marque met le produit au centre.",
+  openGraph: {
+    title: "À propos — Elekka",
+    description: "Elekka est née d'un constat simple : un bon filet ne devrait pas forcément coûter aussi cher.",
+    url: "https://elekka-sellier.fr/a-propos",
+  },
+};
 
 export default function AProposPage() {
   return (

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Politique de confidentialité" };
+export const metadata: Metadata = {
+  title: "Politique de confidentialité",
+  description: "Politique de confidentialité d'Elekka : données collectées, finalités, durée de conservation, vos droits RGPD.",
+};
 
 export default function ConfidentialitePage() {
   return (
