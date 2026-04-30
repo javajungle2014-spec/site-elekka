@@ -902,45 +902,6 @@ export function ProductDetailClient({ product }: { product: Product }) {
           </div>
         </section>
 
-        {/* ── /06 Autres modèles ── */}
-        <section className="px-6 md:px-12 mt-32 md:mt-40">
-          <div className="grid grid-cols-12 gap-8 mb-12">
-            <div className="col-span-12 md:col-span-2">
-              <p className="kicker-tight text-muted">/06</p>
-            </div>
-            <div className="col-span-12 md:col-span-10 flex items-end justify-between">
-              <p className="display text-[2rem] md:text-[2.75rem]" style={{ lineHeight: 1.05 }}>
-                Autres pièces de la <em className="italic font-light text-muted">gamme</em>.
-              </p>
-              <Link href="/boutique" className="press text-sm text-ink border-b border-ink pb-1 whitespace-nowrap inline-flex items-center gap-2 hover:text-muted transition-colors">
-                Voir tout <IcoArrowUpRight size={13} />
-              </Link>
-            </div>
-          </div>
-          <div className="grid grid-cols-12 gap-6">
-            {otherProducts.map(p => (
-              <Link key={p.slug} href={`/boutique/${p.slug}`} className="col-span-12 sm:col-span-6 md:col-span-4 group">
-                <div className={`relative aspect-[4/5] overflow-hidden ${LEATHER[p.defaultColour] ?? "bg-paper-2"}`}>
-                  <div className="absolute inset-0 ring-1 ring-inset ring-ink/5 pointer-events-none" />
-                  <span className="absolute top-4 right-4 text-muted/60 group-hover:text-on-ink/80 transition-colors">
-                    <IcoArrowUpRight size={14} />
-                  </span>
-                </div>
-                <div className="mt-5 flex items-baseline justify-between">
-                  <div>
-                    <p className="display text-xl">
-                      {p.name.replace("Bridon Elekka ", "").replace("Filet Anatomique Elekka ", "")}
-                    </p>
-                    <p className="text-[12px] text-muted italic mt-1.5 leading-snug max-w-[28ch]" style={{ fontWeight: 300 }}>
-                      {p.tagline}
-                    </p>
-                  </div>
-                  <p className="font-mono text-sm tabular-nums">{formatPrice(p.priceEUR)}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
       </div>
 
       {/* ── Sticky cart ── */}
