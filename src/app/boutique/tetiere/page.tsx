@@ -12,8 +12,13 @@ export default function TetierePage() {
       slug: "tetiere",
       name: "Têtière",
       subtitle: "La pièce principale, sur la nuque.",
-      description: "En cuir pleine fleur, la têtière Elekka est disponible en version classique ou anatomique. Compatibles avec tous les bridons de la gamme.",
+      description: "En cuir pleine fleur, compatible avec tous les bridons de la gamme. Choisissez le modèle adapté à votre cheval.",
       priceEUR: 35,
+      models: [
+        { key: "classique",  label: "Classique",            desc: "Têtière standard, conception anglaise traditionnelle",               priceEUR: 30 },
+        { key: "signature",  label: "Anatomique Signature", desc: "Incurvée — soulage la nuque et libère les oreilles",                 priceEUR: 35 },
+        { key: "duo",        label: "Anatomique Duo",       desc: "Double rembourrage — confort maximal sur la nuque",                  priceEUR: 38 },
+      ],
       colours: [
         { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
         { key: "noir",         label: "Noir",          swatch: "#0a0a0a" },

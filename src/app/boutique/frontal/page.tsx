@@ -12,8 +12,13 @@ export default function FrontalPage() {
       slug: "frontal",
       name: "Frontal",
       subtitle: "La pièce qui traverse le front.",
-      description: "En cuir pleine fleur, le frontal Elekka est disponible en version classique ou Signature large 5,5 cm. Compatibles avec tous les bridons de la gamme.",
+      description: "En cuir pleine fleur, compatible avec tous les bridons de la gamme. Choisissez le modèle adapté à votre cheval.",
       priceEUR: 25,
+      models: [
+        { key: "classique",  label: "Classique",   desc: "Frontal rectiligne, sobre et élégant",                              priceEUR: 20 },
+        { key: "anatomique", label: "Anatomique",  desc: "Légèrement incurvé pour suivre la morphologie du front",            priceEUR: 25 },
+        { key: "signature",  label: "Signature",   desc: "Large 5,5 cm — répartit la pression, finitions soignées",           priceEUR: 30 },
+      ],
       colours: [
         { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
         { key: "noir",         label: "Noir",          swatch: "#0a0a0a" },

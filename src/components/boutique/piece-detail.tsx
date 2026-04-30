@@ -2,10 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft } from "@phosphor-icons/react";
+import { ArrowLeft, Check } from "@phosphor-icons/react";
 import { formatPrice } from "@/lib/products";
 import { useCart } from "@/lib/cart-store";
 import type { ColourKey, Size } from "@/lib/products";
+
+export type PieceModel = {
+  key: string;
+  label: string;
+  desc: string;
+  priceEUR?: number;
+};
 
 export type Piece = {
   slug: string;
@@ -13,6 +20,7 @@ export type Piece = {
   subtitle: string;
   description: string;
   priceEUR: number;
+  models: PieceModel[];
   colours: { key: ColourKey; label: string; swatch: string }[];
   sizes: Size[];
   specs: [string, string][];
@@ -25,18 +33,21 @@ const leatherClass: Record<ColourKey, string> = {
 };
 
 export function PieceDetail({ piece }: { piece: Piece }) {
+  const [model, setModel]   = useState<string>(piece.models[0]?.key ?? "");
   const [colour, setColour] = useState<ColourKey>(piece.colours[0].key);
   const [size, setSize]     = useState<Size>(piece.sizes[0]);
   const [added, setAdded]   = useState(false);
   const { addItem }         = useCart();
 
   const activeColour = piece.colours.find(c => c.key === colour) ?? piece.colours[0];
+  const activeModel  = piece.models.find(m => m.key === model) ?? piece.models[0];
+  const price        = activeModel?.priceEUR ?? piece.priceEUR;
 
   function handleAdd() {
     addItem({
       slug: piece.slug,
-      name: piece.name,
-      priceEUR: piece.priceEUR,
+      name: `${piece.name} — ${activeModel?.label ?? ""}`,
+      priceEUR: price,
       colour,
       colourLabel: activeColour.label,
       colourSwatch: activeColour.swatch,
@@ -69,7 +80,7 @@ export function PieceDetail({ piece }: { piece: Piece }) {
           <div className={`aspect-square w-full ${leatherClass[colour]}`}>
             <div className="w-full h-full flex items-end p-6">
               <span className="font-mono text-[10px] text-white/30 tracking-widest uppercase">
-                {piece.name} · {activeColour.label}
+                {piece.name} · {activeModel?.label} · {activeColour.label}
               </span>
             </div>
           </div>
@@ -81,6 +92,40 @@ export function PieceDetail({ piece }: { piece: Piece }) {
               <p className="kicker text-muted mb-3">Pièces détachées</p>
               <h1 className="display text-5xl md:text-6xl leading-[0.92]">{piece.name}</h1>
               <p className="mt-4 text-base text-muted leading-relaxed max-w-[44ch]">{piece.description}</p>
+            </div>
+
+            {/* Modèle */}
+            <div>
+              <p className="kicker-tight text-muted mb-3">Modèle</p>
+              <div className="flex flex-col gap-2">
+                {piece.models.map(m => {
+                  const isActive = model === m.key;
+                  return (
+                    <button key={m.key} type="button"
+                      onClick={() => setModel(m.key)}
+                      className={`press text-left p-4 border transition-all duration-200 flex items-start justify-between gap-4 ${
+                        isActive ? "border-ink bg-ink/[0.03]" : "border-line hover:border-ink/30"
+                      }`}>
+                      <div className="flex-1">
+                        <p className={`text-sm font-semibold ${isActive ? "text-ink" : "text-ink/70"}`}>{m.label}</p>
+                        <p className="text-xs text-muted mt-0.5 leading-snug">{m.desc}</p>
+                      </div>
+                      <div className="flex items-center gap-3 shrink-0">
+                        {m.priceEUR !== undefined && (
+                          <span className={`font-mono text-sm ${isActive ? "text-ink" : "text-muted"}`}>
+                            {formatPrice(m.priceEUR)}
+                          </span>
+                        )}
+                        <span className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 transition-colors ${
+                          isActive ? "border-ink bg-ink" : "border-line"
+                        }`}>
+                          {isActive && <Check size={8} weight="bold" className="text-on-ink" />}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Couleur */}
@@ -120,7 +165,7 @@ export function PieceDetail({ piece }: { piece: Piece }) {
             <div className="border-t border-line pt-6 flex items-center justify-between gap-6">
               <div>
                 <p className="kicker-tight text-muted mb-1">Prix</p>
-                <p className="font-mono text-2xl font-semibold">{formatPrice(piece.priceEUR)}</p>
+                <p className="font-mono text-2xl font-semibold">{formatPrice(price)}</p>
               </div>
               <button type="button" onClick={handleAdd}
                 className="cta-shine press h-12 bg-ink text-on-ink px-8 text-xs font-bold uppercase tracking-[0.18em] hover:bg-ink-soft transition-colors">
