@@ -13,11 +13,11 @@ export default function FrontalPage() {
       name: "Frontal",
       subtitle: "La pièce qui traverse le front.",
       description: "En cuir pleine fleur, compatible avec tous les bridons de la gamme. Choisissez le modèle adapté à votre cheval.",
-      priceEUR: 25,
+      priceEUR: 19.99,
       models: [
-        { key: "classique",  label: "Classique",   desc: "Frontal rectiligne, sobre et élégant",                              priceEUR: 20 },
-        { key: "anatomique", label: "Anatomique",  desc: "Légèrement incurvé pour suivre la morphologie du front",            priceEUR: 25 },
-        { key: "signature",  label: "Signature",   desc: "Large 5,5 cm — répartit la pression, finitions soignées",           priceEUR: 30 },
+        { key: "classique",  label: "Classique",   desc: "Frontal rectiligne, sobre et élégant",                              priceEUR: 19.99 },
+        { key: "anatomique", label: "Anatomique",  desc: "Légèrement incurvé pour suivre la morphologie du front",            priceEUR: 24.99 },
+        { key: "signature",  label: "Signature",   desc: "Large 5,5 cm — répartit la pression, finitions soignées",           priceEUR: 29.99 },
       ],
       colours: [
         { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },

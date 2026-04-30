@@ -13,11 +13,11 @@ export default function TetierePage() {
       name: "Têtière",
       subtitle: "La pièce principale, sur la nuque.",
       description: "En cuir pleine fleur, compatible avec tous les bridons de la gamme. Choisissez le modèle adapté à votre cheval.",
-      priceEUR: 35,
+      priceEUR: 31.99,
       models: [
-        { key: "classique",  label: "Classique",            desc: "Têtière standard, conception anglaise traditionnelle",               priceEUR: 30 },
-        { key: "signature",  label: "Anatomique Signature", desc: "Incurvée — soulage la nuque et libère les oreilles",                 priceEUR: 35 },
-        { key: "duo",        label: "Anatomique Duo",       desc: "Double rembourrage — confort maximal sur la nuque",                  priceEUR: 38 },
+        { key: "classique",  label: "Classique",            desc: "Têtière standard, conception anglaise traditionnelle",               priceEUR: 31.99 },
+        { key: "signature",  label: "Anatomique Signature", desc: "Incurvée — soulage la nuque et libère les oreilles",                 priceEUR: 36.99 },
+        { key: "duo",        label: "Anatomique Duo",       desc: "Double rembourrage — confort maximal sur la nuque",                  priceEUR: 41.99 },
       ],
       colours: [
         { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
