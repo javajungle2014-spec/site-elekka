@@ -336,6 +336,8 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
   const [selectedReins, setSelectedReins]   = useState<string | null>(null);
   const [selectedEquip, setSelectedEquip]   = useState<string | null>(null);
+  const [equipColour, setEquipColour]       = useState<import("@/lib/products").ColourKey>(product.defaultColour);
+  const [equipSize, setEquipSize]           = useState<import("@/lib/products").Size>(product.defaultSize);
   const { addItem } = useCart();
   const { isFavorite, toggle, userId } = useFavorites();
   const [authOpen, setAuthOpen]   = useState(false);
@@ -349,6 +351,8 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const otherProducts = products.filter(p => p.slug !== product.slug);
 
   useEffect(() => { setFavoriteState(isFavorite(product.slug)); }, [isFavorite, product.slug]);
+  useEffect(() => { setEquipColour(selectedColour); }, [selectedColour]);
+  useEffect(() => { if (selectedSize) setEquipSize(selectedSize as import("@/lib/products").Size); }, [selectedSize]);
 
   // Sticky cart
   useEffect(() => {
@@ -398,6 +402,21 @@ export function ProductDetailClient({ product }: { product: Product }) {
       colour: selectedColour, colourLabel: currentColour.label,
       colourSwatch: currentColour.swatch, size: (selectedSize ?? product.defaultSize) as import("@/lib/products").Size,
     });
+    if (selectedEquip && selectedEquip !== "aucun") {
+      const equip = equipOptions.find(e => e.key === selectedEquip);
+      const equipColourData = product.colours.find(c => c.key === equipColour) ?? product.colours[0];
+      if (equip) {
+        addItem({
+          slug: selectedEquip === "tylman" ? "enrenement-1" : "enrenement-2",
+          name: equip.label,
+          priceEUR: equip.deltaEUR,
+          colour: equipColour,
+          colourLabel: equipColourData.label,
+          colourSwatch: equipColourData.swatch,
+          size: equipSize,
+        });
+      }
+    }
     setAdded(true);
     setTimeout(() => setAdded(false), 1800);
   }
@@ -728,6 +747,60 @@ export function ProductDetailClient({ product }: { product: Product }) {
                   );
                 })}
               </div>
+
+              {/* Panneau couleur + taille pour l'enrênement sélectionné */}
+              {selectedEquip && selectedEquip !== "aucun" && (
+                <div className="mt-6 border border-line p-5 space-y-5">
+                  <p className="kicker-tight text-muted">Personnaliser l&apos;enrênement</p>
+
+                  {/* Visuel */}
+                  <div className="flex gap-4 items-center">
+                    <div className={`w-16 h-10 shrink-0 ${LEATHER[equipColour] ?? "bg-paper-2"}`} />
+                    <div>
+                      <p className="text-sm font-medium">{equipOptions.find(e => e.key === selectedEquip)?.label}</p>
+                      <p className="text-xs text-muted mt-0.5">
+                        {product.colours.find(c => c.key === equipColour)?.label} · {equipSize}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Couleur */}
+                  <div>
+                    <p className="kicker-tight text-muted mb-3">Coloris</p>
+                    <div className="flex gap-2">
+                      {product.colours.map(c => (
+                        <button key={c.key} type="button"
+                          onClick={() => setEquipColour(c.key as import("@/lib/products").ColourKey)}
+                          className={`press w-8 h-8 rounded-full border-2 transition-all ${
+                            equipColour === c.key ? "border-ink scale-110" : "border-transparent hover:border-line"
+                          }`}
+                          style={{ background: c.swatch }}
+                          aria-label={c.label}
+                        />
+                      ))}
+                    </div>
+                    <p className="text-xs text-muted mt-2">
+                      {product.colours.find(c => c.key === equipColour)?.label}
+                    </p>
+                  </div>
+
+                  {/* Taille */}
+                  <div>
+                    <p className="kicker-tight text-muted mb-3">Taille</p>
+                    <div className="flex gap-2">
+                      {product.sizes.map(s => (
+                        <button key={s} type="button"
+                          onClick={() => setEquipSize(s)}
+                          className={`press h-9 px-5 border text-sm font-bold transition-colors ${
+                            equipSize === s ? "border-ink bg-ink text-on-ink" : "border-line hover:border-ink/40"
+                          }`}>
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -745,7 +818,9 @@ export function ProductDetailClient({ product }: { product: Product }) {
                     { label: "Coloris",      value: selectedColour ? currentColour.label : null },
                     { label: "Taille",       value: selectedSize },
                     { label: "Rênes",        value: selectedReins ? reinsOptions.find(r => r.key === selectedReins)?.label : null },
-                    { label: "Équipement",   value: selectedEquip ? equipOptions.find(e => e.key === selectedEquip)?.label : null },
+                    { label: "Équipement",   value: selectedEquip && selectedEquip !== "aucun"
+                      ? `${equipOptions.find(e => e.key === selectedEquip)?.label} · ${product.colours.find(c => c.key === equipColour)?.label} · ${equipSize}`
+                      : selectedEquip === "aucun" ? "Sans équipement" : null },
                   ].map(it => (
                     <div key={it.label} className="flex items-baseline justify-between border-b border-line pb-3">
                       <dt className="kicker-tight text-muted">{it.label}</dt>
