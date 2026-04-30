@@ -352,6 +352,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const otherProducts = products.filter(p => p.slug !== product.slug);
 
   useEffect(() => { setFavoriteState(isFavorite(product.slug)); }, [isFavorite, product.slug]);
+  useEffect(() => { setSelectedImageIdx(0); }, [selectedColour]);
 
   // Vérification du stock dès que couleur ou taille change
   useEffect(() => {
