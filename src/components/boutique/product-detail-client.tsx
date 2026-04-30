@@ -780,15 +780,28 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 <div className="mt-6 border border-line p-5 space-y-5">
                   <p className="kicker-tight text-muted">Personnaliser l&apos;enrênement</p>
 
-                  {/* Visuel */}
-                  <div className="flex gap-4 items-center">
-                    <div className={`w-16 h-10 shrink-0 ${LEATHER[equipColour] ?? "bg-paper-2"}`} />
-                    <div>
+                  {/* Visuels × 3 */}
+                  <div className="space-y-2">
+                    <div className="flex items-baseline justify-between">
                       <p className="text-sm font-medium">{equipOptions.find(e => e.key === selectedEquip)?.label}</p>
-                      <p className="text-xs text-muted mt-0.5">
-                        {product.colours.find(c => c.key === equipColour)?.label} · {equipSize}
-                      </p>
+                      <p className="text-xs text-muted">{product.colours.find(c => c.key === equipColour)?.label} · {equipSize}</p>
                     </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      {[
+                        { label: "Vue principale" },
+                        { label: "Détail attache" },
+                        { label: "Vue d'ensemble" },
+                      ].map((view, i) => (
+                        <div key={i} className="relative overflow-hidden" style={{ aspectRatio: "4/5" }}>
+                          <div className={`w-full h-full ${LEATHER[equipColour] ?? "bg-paper-2"}`} />
+                          <div className="absolute inset-0 flex flex-col justify-between p-2 pointer-events-none">
+                            <span className="font-mono text-[8px] tracking-widest text-white/30 uppercase">0{i + 1}</span>
+                            <span className="font-mono text-[8px] tracking-widest text-white/30 uppercase">{view.label}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-muted-soft italic">Photos à venir — emplacement réservé</p>
                   </div>
 
                   {/* Couleur */}
