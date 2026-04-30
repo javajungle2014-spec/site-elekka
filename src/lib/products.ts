@@ -22,6 +22,7 @@ export type Product = {
   sizes: Size[];
   defaultColour: ColourKey;
   defaultSize: Size;
+  hidden?: boolean;
 };
 
 export const products: Product[] = [
@@ -31,7 +32,7 @@ export const products: Product[] = [
     category: "Bridons",
     family: "Classique",
     tagline: "Le classique, sans compromis.",
-    priceEUR: 90,
+    priceEUR: 99.99,
     description:
       "Cuir pleine fleur, muserolle simple, quincaillerie argentée. La ligne épurée d'un bridon anglais, travaillée avec rigueur.",
     longDescription:
@@ -70,7 +71,7 @@ export const products: Product[] = [
     category: "Bridons",
     family: "Anatomique",
     tagline: "Conçu par le fondateur.",
-    priceEUR: 110,
+    priceEUR: 175,
     description:
       "Têtière anatomique incurvée, muserolle rembourrée 2,5 – 3 cm, rênes caoutchouc incluses. Pensé pour la nuque du cheval.",
     longDescription:
@@ -96,7 +97,7 @@ export const products: Product[] = [
     category: "Bridons",
     family: "Anatomique",
     tagline: "Trois muserolles, un seul bridon.",
-    priceEUR: 110,
+    priceEUR: 175,
     description:
       "Browband anatomique large 5,5 cm, muserolle à triple attache — épaisse, ovale, rectangulaire. Un bridon, trois configurations.",
     longDescription:
@@ -122,7 +123,7 @@ export const products: Product[] = [
     category: "Licoles",
     family: "Classique",
     tagline: "Le licol en cuir, sans superflu.",
-    priceEUR: 50,
+    priceEUR: 49.99,
     description:
       "Licol en cuir pleine fleur, quincaillerie inox. Sobre, solide, pensé pour le quotidien.",
     longDescription:
@@ -144,6 +145,7 @@ export const products: Product[] = [
   {
     slug: "licol-2",
     name: "Licol Elekka N°2",
+    hidden: true,
     category: "Licoles",
     family: "Classique",
     tagline: "Cuir et rembourrage, pour le confort.",
@@ -172,7 +174,7 @@ export const products: Product[] = [
     category: "Rênes",
     family: "Classique",
     tagline: "Rênes en cuir, prise en main assurée.",
-    priceEUR: 50,
+    priceEUR: 39.99,
     description:
       "Rênes en cuir pleine fleur avec grip caoutchouc. Légères, résistantes, adaptées à toutes les disciplines.",
     longDescription:
@@ -194,6 +196,7 @@ export const products: Product[] = [
   {
     slug: "renes-2",
     name: "Rênes Elekka N°2",
+    hidden: true,
     category: "Rênes",
     family: "Classique",
     tagline: "Rênes lisses, pour les mains expertes.",
@@ -219,6 +222,7 @@ export const products: Product[] = [
   {
     slug: "enrenement-1",
     name: "Enrênement Elekka N°1",
+    hidden: true,
     category: "Enrênements",
     family: "Classique",
     tagline: "Un appui juste, sans forcer.",
@@ -244,6 +248,7 @@ export const products: Product[] = [
   {
     slug: "enrenement-2",
     name: "Enrênement Elekka N°2",
+    hidden: true,
     category: "Enrênements",
     family: "Classique",
     tagline: "Pour un travail en souplesse.",

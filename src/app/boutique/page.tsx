@@ -36,14 +36,6 @@ const categories = [
     description:
       "Des rênes pensées pour une prise en main précise et un contact constant. Légères, équilibrées, sans compromis sur le ressenti.",
   },
-  {
-    key: "Enrênements",
-    label: "Enrênements",
-    title: "Nos enrênements.",
-    subtitle: "Guider sans contraindre.",
-    description:
-      "Des enrênements conçus pour accompagner le travail dans le respect du cheval. Ajustement précis, action juste, utilisation maîtrisée.",
-  },
 ];
 
 export default function BoutiquePage() {
@@ -67,7 +59,7 @@ export default function BoutiquePage() {
 
       <div className="mx-auto max-w-[1400px] px-5 md:px-10 pt-16 pb-24 space-y-24 md:space-y-32">
         {categories.map((cat, catIndex) => {
-          const items = products.filter((p) => p.category === cat.key);
+          const items = products.filter((p) => p.category === cat.key && !p.hidden);
           if (items.length === 0) return null;
           return (
             <section key={cat.key} id={cat.key} className="scroll-mt-28">
