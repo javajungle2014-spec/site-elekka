@@ -345,12 +345,24 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [added, setAdded]         = useState(false);
   const [favorite, setFavoriteState] = useState(false);
+  const [stockQty, setStockQty]   = useState<number | null>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
 
   const currentColour = product.colours.find(c => c.key === selectedColour)!;
   const otherProducts = products.filter(p => p.slug !== product.slug);
 
   useEffect(() => { setFavoriteState(isFavorite(product.slug)); }, [isFavorite, product.slug]);
+
+  // Vérification du stock dès que couleur ou taille change
+  useEffect(() => {
+    if (!selectedSize || !selectedColour) return;
+    const colour = product.colours.find(c => c.key === selectedColour)?.label;
+    if (!colour) return;
+    fetch(`/api/stock/check?slug=${product.slug}&colour=${encodeURIComponent(colour)}&size=${selectedSize}`)
+      .then(r => r.json())
+      .then(d => setStockQty(d.quantity ?? null))
+      .catch(() => setStockQty(null));
+  }, [selectedColour, selectedSize, product.slug, product.colours]);
   useEffect(() => { setEquipColour(selectedColour); }, [selectedColour]);
   useEffect(() => { if (selectedSize) setEquipSize(selectedSize as import("@/lib/products").Size); }, [selectedSize]);
 
@@ -387,7 +399,8 @@ export function ProductDetailClient({ product }: { product: Product }) {
     return product.priceEUR + (r?.deltaEUR ?? 0) + (e?.deltaEUR ?? 0);
   }, [selectedReins, selectedEquip, product.priceEUR]);
 
-  const complete = !!(selectedDiscipline && selectedColour && selectedSize && selectedReins && selectedEquip);
+  const outOfStock = stockQty === 0;
+  const complete = !!(selectedDiscipline && selectedColour && selectedSize && selectedReins && selectedEquip) && !outOfStock;
 
   function handleFavorite() {
     if (!userId) { setAuthOpen(true); return; }
@@ -453,8 +466,22 @@ export function ProductDetailClient({ product }: { product: Product }) {
               <span className="kicker-tight">Cuir pleine fleur</span>
             </div>
             <div className="flex items-center gap-2 text-muted">
-              <span className="w-1.5 h-1.5 rounded-full bg-ink pulse-dot" />
-              <span className="kicker-tight">Disponible</span>
+              {stockQty === 0 ? (
+                <>
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                  <span className="kicker-tight text-red-400">Rupture de stock</span>
+                </>
+              ) : stockQty !== null && stockQty <= 3 ? (
+                <>
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 pulse-dot" />
+                  <span className="kicker-tight text-amber-500">Plus que {stockQty} en stock</span>
+                </>
+              ) : (
+                <>
+                  <span className="w-1.5 h-1.5 rounded-full bg-ink pulse-dot" />
+                  <span className="kicker-tight">Disponible</span>
+                </>
+              )}
             </div>
           </div>
 
@@ -833,13 +860,16 @@ export function ProductDetailClient({ product }: { product: Product }) {
                   <p className="display text-3xl tabular-nums">{formatPrice(total)}</p>
                 </div>
                 <div className="mt-6 flex gap-2">
-                  <button type="button" onClick={handleAdd} disabled={!complete}
+                  <button type="button" onClick={handleAdd} disabled={!complete || outOfStock}
                     className={`cta-shine press flex-1 inline-flex items-center justify-between pl-6 pr-5 h-14 text-sm tracking-wider transition-colors ${
+                      outOfStock ? "bg-red-50 text-red-400 cursor-not-allowed border border-red-200" :
                       complete ? "bg-ink text-on-ink hover:bg-ink-soft" : "bg-ink/30 text-on-ink/60 cursor-not-allowed"
                     }`}>
                     <span className="inline-flex items-center gap-3">
                       <IcoBag size={16} />
-                      <span className="font-medium uppercase">{added ? "Ajouté !" : complete ? "Ajouter au panier" : "Composez votre filet"}</span>
+                      <span className="font-medium uppercase">
+                        {added ? "Ajouté !" : outOfStock ? "Rupture de stock" : complete ? "Ajouter au panier" : "Composez votre filet"}
+                      </span>
                     </span>
                     {added ? <IcoCheck size={14} stroke={2.5} /> : <IcoArrowRight size={14} />}
                   </button>
