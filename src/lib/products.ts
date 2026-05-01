@@ -278,9 +278,11 @@ export function getProduct(slug: string): Product | undefined {
 }
 
 export function formatPrice(n: number): string {
+  const hasCents = n % 1 !== 0;
   return new Intl.NumberFormat("fr-FR", {
     style: "currency",
     currency: "EUR",
-    maximumFractionDigits: 0,
+    minimumFractionDigits: hasCents ? 2 : 0,
+    maximumFractionDigits: hasCents ? 2 : 0,
   }).format(n);
 }
