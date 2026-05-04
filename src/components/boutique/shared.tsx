@@ -13,7 +13,7 @@ export const leatherClassByColour: Record<ColourKey, string> = {
 export function Price({ value, light = false }: { value: number; light?: boolean }) {
   return (
     <span className={`shrink-0 font-mono text-sm tabular-nums ${light ? "text-on-ink" : "text-ink"}`}>
-      {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(value)}
+      {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: value % 1 !== 0 ? 2 : 0, maximumFractionDigits: value % 1 !== 0 ? 2 : 0 }).format(value)}
     </span>
   );
 }

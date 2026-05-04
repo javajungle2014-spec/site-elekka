@@ -35,25 +35,25 @@ const STEPS = [
   {
     key: "tetiere", label: "Têtière", sub: "La pièce principale, sur la nuque",
     options: [
-      { key: "classique", label: "Classique",            desc: "Conception anglaise traditionnelle" },
-      { key: "signature", label: "Anatomique Signature", desc: "Incurvée — soulage la nuque" },
-      { key: "duo",       label: "Anatomique Duo",       desc: "Double rembourrage, confort maximal" },
+      { key: "classique", label: "Classique",            desc: "Têtière standard, conception anglaise traditionnelle",     delta: 0  },
+      { key: "signature", label: "Anatomique Signature", desc: "Incurvée — soulage la nuque et libère les oreilles",       delta: 30 },
+      { key: "fusion",    label: "Anatomique Fusion",    desc: "Double rembourrage — confort maximal sur la nuque",        delta: 30 },
     ],
   },
   {
     key: "frontal", label: "Frontal", sub: "La pièce qui traverse le front",
     options: [
-      { key: "classique",  label: "Classique",   desc: "Rectiligne, sobre et élégant" },
-      { key: "anatomique", label: "Anatomique",  desc: "Incurvé, suit la morphologie" },
-      { key: "signature",  label: "Signature",   desc: "Large 5,5 cm, répartit la pression" },
+      { key: "classique",  label: "Classique",   desc: "Frontal rectiligne, sobre et élégant",                           delta: 0  },
+      { key: "anatomique", label: "Anatomique",  desc: "Légèrement incurvé pour suivre la morphologie du front",         delta: 19 },
+      { key: "signature",  label: "Signature",   desc: "Large 5,5 cm — répartit la pression, finitions soignées",        delta: 19 },
     ],
   },
   {
     key: "muserolle", label: "Muserolle", sub: "Le contact sur le chanfrein",
     options: [
-      { key: "simple",     label: "Simple",         desc: "Française classique, fermeture standard" },
-      { key: "rembourree", label: "Rembourrée",     desc: "2,5 à 3 cm — protège le contact" },
-      { key: "triple",     label: "Triple attache", desc: "Interchangeable : épaisse, ovale, rect." },
+      { key: "simple",     label: "Simple",         desc: "Muserolle française classique, fermeture standard",            delta: 0  },
+      { key: "rembourree", label: "Rembourrée",     desc: "2,5 à 3 cm d'épaisseur — protège et adoucit le contact",      delta: 26 },
+      { key: "triple",     label: "Triple attache", desc: "Interchangeable : épaisse, ovale, rectangulaire",              delta: 26 },
     ],
   },
   {
@@ -257,9 +257,15 @@ export default function PersonnaliserPage() {
     setConfig(prev => ({ ...prev, [key]: val }));
   }
 
-  const reinsDelta = (STEPS.find(s => s.key === "reins")?.options.find(o => o.key === config.reins) as { delta?: number } | undefined)?.delta ?? 0;
-  const enrDelta   = (STEPS.find(s => s.key === "enrenement")?.options.find(o => o.key === config.enrenement) as { delta?: number } | undefined)?.delta ?? 0;
-  const total      = BASE_PRICE + reinsDelta + enrDelta;
+  const getDelta = (key: string, value: string | null) =>
+    (STEPS.find(s => s.key === key)?.options.find(o => o.key === value) as { delta?: number } | undefined)?.delta ?? 0;
+
+  const reinsDelta     = getDelta("reins",      config.reins);
+  const enrDelta       = getDelta("enrenement", config.enrenement);
+  const tetiereDelta   = getDelta("tetiere",    config.tetiere);
+  const frontalDelta   = getDelta("frontal",    config.frontal);
+  const muserolleDelta = getDelta("muserolle",  config.muserolle);
+  const total          = BASE_PRICE + reinsDelta + enrDelta + tetiereDelta + frontalDelta + muserolleDelta;
   const filled     = REQUIRED.filter(k => config[k as keyof Config]).length;
   const complete   = filled === REQUIRED.length;
 

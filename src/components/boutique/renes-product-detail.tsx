@@ -38,7 +38,7 @@ const specs = [
 function Price({ value }: { value: number }) {
   return (
     <span className="font-mono text-sm tabular-nums">
-      {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(value)}
+      {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: value % 1 !== 0 ? 2 : 0, maximumFractionDigits: value % 1 !== 0 ? 2 : 0 }).format(value)}
     </span>
   );
 }
