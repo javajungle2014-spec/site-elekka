@@ -103,7 +103,6 @@ export default function BoutiquePage() {
             title: "Muserolles.",
             subtitle: "Choisissez, remplacez, adaptez.",
             description: "Une muserolle pensée pour s'intégrer parfaitement à votre filet, selon vos besoins et ceux de votre cheval.",
-            price: "30 €",
           },
           {
             key: "pieces-frontal",
@@ -112,7 +111,6 @@ export default function BoutiquePage() {
             title: "Frontaux.",
             subtitle: "Changez de style, en un geste.",
             description: "Une pièce simple à remplacer, pour ajuster l'équilibre et l'allure de votre filet.",
-            price: "25 €",
           },
           {
             key: "pieces-tetiere",
@@ -121,7 +119,6 @@ export default function BoutiquePage() {
             title: "Têtières.",
             subtitle: "Adaptez votre filet, sans compromis.",
             description: "Remplacez facilement la têtière pour plus de confort, selon votre cheval et votre équitation.",
-            price: "35 €",
           },
         ].map((piece) => (
           <section key={piece.key} id={piece.key} className="scroll-mt-28">
@@ -143,7 +140,6 @@ export default function BoutiquePage() {
                 </div>
               </div>
               <div className="flex items-center gap-6 shrink-0">
-                <p className="font-mono text-xl font-semibold">{piece.price}</p>
                 <span className="press text-xs font-bold uppercase tracking-widest border border-ink px-5 py-2.5 group-hover:bg-ink group-hover:text-on-ink transition-colors">
                   Voir →
                 </span>

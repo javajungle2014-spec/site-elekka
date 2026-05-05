@@ -43,17 +43,19 @@ const STEPS = [
   {
     key: "frontal", label: "Frontal", sub: "La pièce qui traverse le front",
     options: [
-      { key: "classique",  label: "Classique",   desc: "Frontal rectiligne, sobre et élégant",                           delta: 0  },
-      { key: "anatomique", label: "Anatomique",  desc: "Légèrement incurvé pour suivre la morphologie du front",         delta: 19 },
-      { key: "signature",  label: "Signature",   desc: "Large 5,5 cm — répartit la pression, finitions soignées",        delta: 19 },
+      { key: "aucun",      label: "Sans frontal", desc: "Configuration sans frontal",                                    delta: 0  },
+      { key: "classique",  label: "Classique",    desc: "Frontal rectiligne, sobre et élégant",                          delta: 0  },
+      { key: "anatomique", label: "Anatomique",   desc: "Légèrement incurvé pour suivre la morphologie du front",        delta: 19 },
+      { key: "signature",  label: "Signature",    desc: "Large 5,5 cm — répartit la pression, finitions soignées",       delta: 19 },
     ],
   },
   {
     key: "muserolle", label: "Muserolle", sub: "Le contact sur le chanfrein",
     options: [
-      { key: "simple",     label: "Simple",         desc: "Muserolle française classique, fermeture standard",            delta: 0  },
-      { key: "rembourree", label: "Rembourrée",     desc: "2,5 à 3 cm d'épaisseur — protège et adoucit le contact",      delta: 26 },
-      { key: "triple",     label: "Triple attache", desc: "Interchangeable : épaisse, ovale, rectangulaire",              delta: 26 },
+      { key: "aucun",      label: "Sans muserolle", desc: "Configuration sans muserolle",                                delta: 0  },
+      { key: "simple",     label: "Simple",         desc: "Muserolle française classique, fermeture standard",           delta: 0  },
+      { key: "rembourree", label: "Rembourrée",     desc: "2,5 à 3 cm d'épaisseur — protège et adoucit le contact",     delta: 26 },
+      { key: "triple",     label: "Triple attache", desc: "Interchangeable : épaisse, ovale, rectangulaire",             delta: 26 },
     ],
   },
   {
