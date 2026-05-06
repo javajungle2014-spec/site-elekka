@@ -10,7 +10,6 @@ export interface BridleState {
   enrenementOn: boolean;
   enrenement: number;
   cuir: CuirOption["id"] | null;
-  fil: string | null;
   taille: string | null;
   grav: string;
 }
@@ -24,7 +23,6 @@ export function emptyState(): BridleState {
     enrenementOn: false,
     enrenement: 0,
     cuir: null,
-    fil: null,
     taille: null,
     grav: "",
   };
@@ -56,7 +54,6 @@ export function encodeConfig(s: BridleState): string {
     t: s.tetiere,
     r: s.rene,
     c: s.cuir,
-    fi: s.fil,
     ta: s.taille,
     g: s.grav || "",
     e: s.enrenementOn ? 1 : 0,

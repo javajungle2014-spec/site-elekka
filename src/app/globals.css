@@ -93,6 +93,23 @@ body {
   animation: marquee 42s linear infinite;
 }
 
+@keyframes spin-once {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.spin-once {
+  animation: spin-once 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes step-pop {
+  0%   { transform: scale(0.8); }
+  60%  { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+.step-pop {
+  animation: step-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 /* Textures cuir CSS */
 .leather-havana-brown {
   background:

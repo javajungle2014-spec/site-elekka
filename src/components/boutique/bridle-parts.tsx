@@ -245,7 +245,25 @@ export function ReneC({ color = "noir", stitch = "#efe6cf" }: PartProps) {
   );
 }
 
-export const MUSEROLE_COMPONENTS = [MuseroleA, MuseroleB, MuseroleC];
-export const FRONTAL_COMPONENTS = [FrontalA, FrontalB, FrontalC];
+function NoneA(_: PartProps) {
+  return (
+    <svg viewBox="0 0 320 200" width="100%" height="100%">
+      <rect x="10" y="10" width="300" height="180" rx="8" fill="none" stroke="#d8d3c7" strokeWidth="1.5" strokeDasharray="6 4" />
+      <text x="160" y="108" textAnchor="middle" fill="#8a8a92" fontSize="13" fontFamily="sans-serif">—</text>
+    </svg>
+  );
+}
+
+function NoneB(_: PartProps) {
+  return (
+    <svg viewBox="0 0 320 80" width="100%" height="100%">
+      <rect x="10" y="10" width="300" height="60" rx="6" fill="none" stroke="#d8d3c7" strokeWidth="1.5" strokeDasharray="6 4" />
+      <text x="160" y="46" textAnchor="middle" fill="#8a8a92" fontSize="13" fontFamily="sans-serif">—</text>
+    </svg>
+  );
+}
+
+export const MUSEROLE_COMPONENTS = [NoneA, MuseroleA, MuseroleB, MuseroleC];
+export const FRONTAL_COMPONENTS = [NoneB, FrontalA, FrontalB, FrontalC];
 export const TETIERE_COMPONENTS = [TetiereA, TetiereB, TetiereC];
 export const RENE_COMPONENTS = [ReneA, ReneB, ReneC];

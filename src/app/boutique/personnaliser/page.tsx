@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { ArrowLeft, ShoppingBag, Shuffle, ArrowCounterClockwise, MagnifyingGlassPlus, X, Star, FloppyDisk, Scales, ArrowLeft as ArrowL, ArrowRight as ArrowR } from "@phosphor-icons/react";
+import { ArrowLeft, ShoppingBag, Shuffle, ArrowCounterClockwise, MagnifyingGlassPlus, X, FloppyDisk, Scales, ArrowLeft as ArrowL, ArrowRight as ArrowR, ArrowSquareOut } from "@phosphor-icons/react";
 import { useCart } from "@/lib/cart-store";
 import { BRIDLE_CATALOG, STOCK_LABEL, BASE_PRICE } from "@/lib/bridle-catalog";
 import type { BridlePart, CuirOption } from "@/lib/bridle-catalog";
@@ -239,7 +239,9 @@ function DetailedRecap({
         <span style={{ fontFamily: "var(--font-geist-mono)", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5a5a63" }}>
           Récap · {completedCount}/{totalSteps}
         </span>
-        <span style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em" }}>{total} €</span>
+        <span style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em" }}>
+          {total === 0 ? "— €" : `${total} €`}
+        </span>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px 14px", fontSize: 12 }}>
         {[
@@ -247,8 +249,7 @@ function DetailedRecap({
           ["Frontal", v(C.frontal, s.frontal)],
           ["Têtière", v(C.tetiere, s.tetiere)],
           ["Rênes", v(C.rene, s.rene)],
-          ["Cuir", s.cuir ? C.cuir.find((c) => c.id === s.cuir)?.name : <span style={{ color: "#5a5a63", fontStyle: "italic" }}>à choisir</span>],
-          ["Fil", s.fil ? C.fil.find((f) => f.id === s.fil)?.name : <span style={{ color: "#5a5a63", fontStyle: "italic" }}>à choisir</span>],
+          ["Coloris", s.cuir ? C.cuir.find((c) => c.id === s.cuir)?.name : <span style={{ color: "#5a5a63", fontStyle: "italic" }}>à choisir</span>],
           ["Taille", s.taille || <span style={{ color: "#5a5a63", fontStyle: "italic" }}>à choisir</span>],
           ["Gravure", s.grav || "—"],
         ].map(([label, val]) => (
@@ -294,6 +295,21 @@ function DetailedRecap({
   );
 }
 
+function FicheLink({ href }: { href: string }) {
+  return (
+    <Link href={href} target="_blank"
+      style={{
+        display: "inline-flex", alignItems: "center", gap: 5,
+        fontSize: 11, color: "#5a5a63", textDecoration: "none",
+        fontFamily: "var(--font-geist-mono)", letterSpacing: "0.08em",
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      Voir la pièce <ArrowSquareOut size={11} />
+    </Link>
+  );
+}
+
 /* ─── Page principale ──────────────────────────────────────── */
 
 export default function PersonnaliserPage() {
@@ -307,6 +323,9 @@ export default function PersonnaliserPage() {
   const [saveName, setSaveName] = useState("");
   const [savedConfigs, setSavedConfigs] = useState<SavedConfig[]>([]);
   const [added, setAdded] = useState(false);
+  const [spinning, setSpinning] = useState(false);
+  const prevDone = useRef<Partial<Record<StepKey, boolean>>>({});
+  const [poppedSteps, setPoppedSteps] = useState<Partial<Record<StepKey, boolean>>>({});
 
   // Comparateur
   const [compareOn, setCompareOn] = useState(false);
@@ -328,12 +347,12 @@ export default function PersonnaliserPage() {
   const { addItem, open: openCart } = useCart();
   const C = BRIDLE_CATALOG;
   const total = priceOf(s);
-  const stitchHex = s.fil ? C.fil.find((f) => f.id === s.fil)?.hex ?? "#efe6cf" : "#efe6cf";
+  const stitchHex = "#efe6cf";
   const cuirId = (s.cuir ?? "noir") as CuirOption["id"];
 
   useEffect(() => {
     setFadeKey((k) => k + 1);
-  }, [s.muserole, s.frontal, s.tetiere, s.cuir, s.fil]);
+  }, [s.muserole, s.frontal, s.tetiere, s.cuir]);
 
   const scrollToNextEmpty = useCallback(
     (currentDone: Partial<Record<StepKey, boolean>>) => {
@@ -379,7 +398,21 @@ export default function PersonnaliserPage() {
     setView(VIEWS[(i + dir + VIEWS.length) % VIEWS.length]);
   };
 
+  // Animation pop quand une étape passe à done
+  useEffect(() => {
+    const newlyDone = STEP_KEYS.filter((k) => done[k] && !prevDone.current[k]);
+    if (newlyDone.length > 0) {
+      const popped: Partial<Record<StepKey, boolean>> = {};
+      newlyDone.forEach((k) => (popped[k] = true));
+      setPoppedSteps(popped);
+      setTimeout(() => setPoppedSteps({}), 400);
+    }
+    prevDone.current = { ...done };
+  }, [done]);
+
   const handleRandomize = () => {
+    setSpinning(true);
+    setTimeout(() => setSpinning(false), 600);
     randomize(set, s);
     setDone((d) => ({ ...d, muserole: true, frontal: true, tetiere: true, finitions: true }));
     setFadeKey((k) => k + 1);
@@ -550,7 +583,10 @@ export default function PersonnaliserPage() {
                 display: "flex", alignItems: "center", gap: 6,
               }}
             >
-              <Shuffle size={13} /> Aléatoire
+              <span className={spinning ? "spin-once" : ""} style={{ display: "flex" }}>
+                <Shuffle size={13} />
+              </span>
+              Aléatoire
             </button>
             <button
               onClick={handleReset}
@@ -752,7 +788,8 @@ export default function PersonnaliserPage() {
 
           {/* Muserolle */}
           <div ref={refs.muserole} onMouseEnter={() => setHoverPart("muserole")} onMouseLeave={() => setHoverPart(null)}>
-            <Panel n="01" title="Muserolle" status={done.muserole ? "done" : "active"} highlighted={hoverPart === "muserole"}>
+            <Panel n="01" title="Muserolle" status={done.muserole ? "done" : "active"} highlighted={hoverPart === "muserole"}
+              right={<FicheLink href="/boutique/muserolle" />}>
               <OptionGrid
                 items={C.muserole} selected={s.muserole}
                 onSelect={(i) => { set("muserole", i); completeAndAdvance("muserole"); }}
@@ -764,7 +801,8 @@ export default function PersonnaliserPage() {
 
           {/* Frontal */}
           <div ref={refs.frontal} onMouseEnter={() => setHoverPart("frontal")} onMouseLeave={() => setHoverPart(null)}>
-            <Panel n="02" title="Frontal" status={done.frontal ? "done" : done.muserole ? "active" : "idle"} highlighted={hoverPart === "frontal"}>
+            <Panel n="02" title="Frontal" status={done.frontal ? "done" : done.muserole ? "active" : "idle"} highlighted={hoverPart === "frontal"}
+              right={<FicheLink href="/boutique/frontal" />}>
               <OptionGrid
                 items={C.frontal} selected={s.frontal}
                 onSelect={(i) => { set("frontal", i); completeAndAdvance("frontal"); }}
@@ -776,7 +814,8 @@ export default function PersonnaliserPage() {
 
           {/* Têtière */}
           <div ref={refs.tetiere} onMouseEnter={() => setHoverPart("tetiere")} onMouseLeave={() => setHoverPart(null)}>
-            <Panel n="03" title="Têtière" status={done.tetiere ? "done" : done.frontal ? "active" : "idle"} highlighted={hoverPart === "tetiere"}>
+            <Panel n="03" title="Têtière" status={done.tetiere ? "done" : done.frontal ? "active" : "idle"} highlighted={hoverPart === "tetiere"}
+              right={<FicheLink href="/boutique/tetiere" />}>
               <OptionGrid
                 items={C.tetiere} selected={s.tetiere}
                 onSelect={(i) => { set("tetiere", i); completeAndAdvance("tetiere"); }}
@@ -898,34 +937,59 @@ export default function PersonnaliserPage() {
           </div>
 
           {/* CTA */}
-          <div ref={refs.cart} style={{ display: "flex", gap: 12, marginTop: 8 }}>
-            <button
-              onClick={openSave}
-              style={{
-                height: 52, padding: "0 20px", borderRadius: 99, border: "1px solid #d8d3c7",
-                background: "transparent", fontSize: 14, fontWeight: 500, cursor: "pointer",
-                display: "flex", alignItems: "center", gap: 8,
-              }}
-            >
-              <FloppyDisk size={16} /> Sauvegarder
-            </button>
-            <button
-              onClick={handleAdd}
-              style={{
-                flex: 1, height: 52, borderRadius: 99, border: "none",
-                background: allDone ? "#14141a" : "#5a5a63",
-                color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer",
-                display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                transition: "background .15s",
-              }}
-            >
-              <ShoppingBag size={16} />
-              {added
-                ? "Ajouté au panier !"
-                : allDone
-                ? `Ajouter au panier — ${total} €`
-                : `Composer votre filet (${completedCount}/${STEP_KEYS.length})`}
-            </button>
+          <div ref={refs.cart} style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 8 }}>
+            {/* Indicateur d'étapes */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+              {STEP_KEYS.map((k, i) => (
+                <div
+                  key={k}
+                  title={STEP_LABELS[k]}
+                  className={poppedSteps[k] ? "step-pop" : ""}
+                  style={{
+                    width: 30, height: 30, borderRadius: 99,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    background: done[k] ? "#14141a" : "#fff",
+                    border: `1px solid ${done[k] ? "#14141a" : "#d8d3c7"}`,
+                    color: done[k] ? "#fff" : "#8a8a92",
+                    fontSize: 9, fontFamily: "var(--font-geist-mono)",
+                    fontWeight: 600, letterSpacing: "0.05em",
+                    transition: "background .25s, border-color .25s, color .25s",
+                    cursor: "default",
+                  }}
+                >
+                  {done[k] ? "✓" : `0${i + 1}`}
+                </div>
+              ))}
+            </div>
+            <div style={{ display: "flex", gap: 10 }}>
+              <button
+                onClick={openSave}
+                style={{
+                  height: 52, padding: "0 20px", borderRadius: 99, border: "1px solid #d8d3c7",
+                  background: "transparent", fontSize: 14, fontWeight: 500, cursor: "pointer",
+                  display: "flex", alignItems: "center", gap: 8,
+                }}
+              >
+                <FloppyDisk size={16} /> Sauvegarder
+              </button>
+              <button
+                onClick={handleAdd}
+                style={{
+                  flex: 1, height: 52, borderRadius: 99, border: "none",
+                  background: allDone ? "#14141a" : "#5a5a63",
+                  color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  transition: "background .15s",
+                }}
+              >
+                <ShoppingBag size={16} />
+                {added
+                  ? "Ajouté au panier !"
+                  : allDone
+                  ? `Ajouter au panier — ${total.toFixed(2).replace(".", ",")} €`
+                  : `Composer votre filet (${completedCount}/${STEP_KEYS.length})`}
+              </button>
+            </div>
           </div>
 
           {/* Configs sauvegardées */}
@@ -1077,7 +1141,7 @@ function CompareSideBySide({
       </div>
       <div style={{ display: "grid", gridTemplateColumns: `repeat(${creations.length}, 1fr)`, flex: 1 }}>
         {creations.map((c, idx) => {
-          const stitch = c.snapshot.fil ? C.fil.find((f) => f.id === c.snapshot.fil)?.hex ?? "#efe6cf" : "#efe6cf";
+          const stitch = "#efe6cf";
           const total = priceOf(c.snapshot);
           return (
             <div key={idx} style={{

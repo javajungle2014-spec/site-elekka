@@ -27,6 +27,15 @@ export interface FilOption {
 export const BRIDLE_CATALOG = {
   muserole: [
     {
+      id: "mu0",
+      name: "Sans muserolle",
+      desc: "Configuration sans muserolle.",
+      price: 0,
+      stock: "in" as StockStatus,
+      rating: 0,
+      reviews: 0,
+    },
+    {
       id: "mu1",
       name: "Simple",
       desc: "Muserolle française classique, fermeture standard.",
@@ -56,6 +65,15 @@ export const BRIDLE_CATALOG = {
   ] as BridlePart[],
 
   frontal: [
+    {
+      id: "fr0",
+      name: "Sans frontal",
+      desc: "Configuration sans frontal.",
+      price: 0,
+      stock: "in" as StockStatus,
+      rating: 0,
+      reviews: 0,
+    },
     {
       id: "fr1",
       name: "Classique",
