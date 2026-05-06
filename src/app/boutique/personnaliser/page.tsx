@@ -834,47 +834,28 @@ export default function PersonnaliserPage() {
             </Panel>
           </div>
 
-          {/* Cuir & finitions */}
+          {/* Coloris */}
           <div ref={refs.finitions}>
-            <Panel n="05" title="Cuir & fil" status={done.finitions ? "done" : done.rene ? "active" : "idle"} highlighted={false}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 16 }}>
+            <Panel n="05" title="Coloris" status={done.finitions ? "done" : done.rene ? "active" : "idle"} highlighted={false}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                 {C.cuir.map((c) => (
                   <div
                     key={c.id}
-                    onClick={() => { set("cuir", c.id); if (s.fil) completeAndAdvance("finitions"); }}
+                    onClick={() => { set("cuir", c.id); completeAndAdvance("finitions"); }}
                     style={{
-                      display: "flex", alignItems: "center", gap: 12, padding: "10px 12px",
+                      display: "flex", alignItems: "center", gap: 14, padding: "14px 16px",
                       border: `1px solid ${s.cuir === c.id ? "#14141a" : "#d8d3c7"}`,
                       borderRadius: 10, background: "#fff", cursor: "pointer",
                       boxShadow: s.cuir === c.id ? "0 0 0 3px rgba(20,20,26,.06)" : "none",
                       transition: "all .15s",
                     }}
                   >
-                    <div style={{ width: 28, height: 28, borderRadius: 99, background: c.hex, border: "1px solid rgba(0,0,0,.18)", flexShrink: 0 }} />
+                    <div style={{ width: 36, height: 36, borderRadius: 99, background: c.hex, border: "1px solid rgba(0,0,0,.18)", flexShrink: 0 }} />
                     <div>
-                      <div style={{ fontSize: 13, fontWeight: 500 }}>{c.name}</div>
-                      <div style={{ fontFamily: "var(--font-geist-mono)", fontSize: 10, color: "#5a5a63", letterSpacing: "0.08em", textTransform: "uppercase" }}>{c.sub}</div>
+                      <div style={{ fontSize: 14, fontWeight: 600 }}>{c.name}</div>
+                      <div style={{ fontFamily: "var(--font-geist-mono)", fontSize: 10, color: "#5a5a63", letterSpacing: "0.08em", textTransform: "uppercase", marginTop: 2 }}>{c.sub}</div>
                     </div>
                   </div>
-                ))}
-              </div>
-              <div style={{ fontFamily: "var(--font-geist-mono)", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5a5a63", marginBottom: 8 }}>
-                Couleur du fil
-              </div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                {C.fil.map((f) => (
-                  <button
-                    key={f.id}
-                    title={f.name}
-                    onClick={() => { set("fil", f.id); if (s.cuir) completeAndAdvance("finitions"); }}
-                    style={{
-                      width: 32, height: 32, borderRadius: 99,
-                      background: f.hex, border: "1px solid rgba(0,0,0,.15)", cursor: "pointer",
-                      transform: s.fil === f.id ? "scale(1.1)" : "scale(1)",
-                      boxShadow: s.fil === f.id ? `0 0 0 2px #f5f2ec, 0 0 0 4px #14141a` : "none",
-                      transition: "all .15s",
-                    }}
-                  />
                 ))}
               </div>
             </Panel>

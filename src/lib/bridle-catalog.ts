@@ -172,22 +172,9 @@ export const BRIDLE_CATALOG = {
       hex: "#6b3a1f",
       sub: "Cuir pleine fleur",
     },
-    {
-      id: "dark-brown" as const,
-      name: "Dark Brown",
-      hex: "#3f2110",
-      sub: "Cuir pleine fleur",
-    },
   ] as CuirOption[],
 
-  fil: [
-    { id: "creme", name: "Crème", hex: "#efe6cf" },
-    { id: "blanc", name: "Blanc", hex: "#f5f1e6" },
-    { id: "tan", name: "Tan", hex: "#c79a5b" },
-    { id: "bordeaux", name: "Bordeaux", hex: "#8a2a25" },
-    { id: "marine", name: "Marine", hex: "#1c2a47" },
-    { id: "noir-fil", name: "Noir", hex: "#1a1714" },
-  ] as FilOption[],
+  fil: [] as FilOption[],
 };
 
 export const STOCK_LABEL: Record<StockStatus, { dot: string; txt: string }> = {
