@@ -266,4 +266,4 @@ function NoneB(_: PartProps) {
 export const MUSEROLE_COMPONENTS = [NoneA, MuseroleA, MuseroleB, MuseroleC];
 export const FRONTAL_COMPONENTS = [NoneB, FrontalA, FrontalB, FrontalC];
 export const TETIERE_COMPONENTS = [TetiereA, TetiereB, TetiereC];
-export const RENE_COMPONENTS = [ReneA, ReneB, ReneC];
+export const RENE_COMPONENTS = [NoneB, ReneA, ReneB];

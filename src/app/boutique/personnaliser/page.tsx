@@ -367,28 +367,33 @@ export default function PersonnaliserPage() {
   }, []);
 
 
+  const scrollToStep = useCallback((key: StepKey | "cart") => {
+    requestAnimationFrame(() => {
+      const target = refs[key]?.current;
+      const container = scrollRef.current;
+      if (!target || !container) return;
+      const containerRect = container.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+      const top = container.scrollTop + targetRect.top - containerRect.top - 24;
+      container.scrollTo({ top, behavior: "smooth" });
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const scrollToNextEmpty = useCallback(
     (currentDone: Partial<Record<StepKey, boolean>>) => {
-      const allDone = STEP_KEYS.every((k) => currentDone[k]);
-      if (allDone) return;
+      if (STEP_KEYS.every((k) => currentDone[k])) return;
       const next = STEP_KEYS.find((k) => !currentDone[k]) ?? "cart";
-      requestAnimationFrame(() => {
-        const target = refs[next]?.current;
-        const container = scrollRef.current;
-        if (target && container) {
-          const top = target.offsetTop - 24;
-          container.scrollTo({ top, behavior: "smooth" });
-        }
-      });
+      scrollToStep(next);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [scrollToStep]
   );
 
   const completeAndAdvance = (key: StepKey) => {
     setDone((d) => {
+      const wasAllDone = STEP_KEYS.every((k) => d[k]);
       const nd = { ...d, [key]: true };
-      scrollToNextEmpty(nd);
+      if (!wasAllDone) scrollToNextEmpty(nd);
       return nd;
     });
   };
@@ -589,11 +594,7 @@ export default function PersonnaliserPage() {
               <div
                 key={k}
                 title={STEP_LABELS[k]}
-                onClick={() => {
-                  const t = refs[k]?.current;
-                  const c = scrollRef.current;
-                  if (t && c) c.scrollTo({ top: t.offsetTop - 24, behavior: "smooth" });
-                }}
+                onClick={() => scrollToStep(k)}
                 style={{
                   width: 8, height: 8, borderRadius: 99, cursor: "pointer",
                   background: done[k] ? "#d75f2a" : "#d8d3c7",

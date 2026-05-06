@@ -135,6 +135,15 @@ export const BRIDLE_CATALOG = {
 
   rene: [
     {
+      id: "re0",
+      name: "Sans rênes",
+      desc: "Configuration sans rênes.",
+      price: 0,
+      stock: "in" as StockStatus,
+      rating: 0,
+      reviews: 0,
+    },
+    {
       id: "re1",
       name: "Rênes N°1",
       desc: "Cuir pleine fleur, grip caoutchouc intégré. Prise en main assurée par tous temps.",
