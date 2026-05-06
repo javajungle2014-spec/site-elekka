@@ -1280,14 +1280,8 @@ export default function PersonnaliserPage() {
                       Créer un compte et sauvegarder
                     </Link>
                     <button
-                      onClick={() => { setExitOpen(false); openSave(); }}
-                      style={{ height: 46, borderRadius: 99, border: "1px solid #d8d3c7", background: "transparent", fontSize: 13, cursor: "pointer" }}
-                    >
-                      Sauvegarder localement (sans compte)
-                    </button>
-                    <button
                       onClick={() => { window.location.href = "/boutique"; }}
-                      style={{ height: 40, background: "transparent", border: "none", fontSize: 12, color: "#8a8a92", cursor: "pointer" }}
+                      style={{ height: 46, borderRadius: 99, border: "1px solid #d8d3c7", background: "transparent", fontSize: 13, cursor: "pointer" }}
                     >
                       Quitter sans sauvegarder
                     </button>
