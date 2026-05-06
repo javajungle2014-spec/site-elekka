@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { ArrowLeft, ShoppingBag, Shuffle, ArrowCounterClockwise, MagnifyingGlassPlus, X, FloppyDisk, Scales, ArrowLeft as ArrowL, ArrowRight as ArrowR, ArrowSquareOut } from "@phosphor-icons/react";
 import { useCart } from "@/lib/cart-store";
+import { createClient } from "@/lib/supabase";
 import { BRIDLE_CATALOG, STOCK_LABEL, BASE_PRICE } from "@/lib/bridle-catalog";
 import type { BridlePart, CuirOption } from "@/lib/bridle-catalog";
 import { useBridleState, priceOf, encodeConfig, randomize, emptyState } from "@/lib/bridle-store";
@@ -324,6 +325,10 @@ export default function PersonnaliserPage() {
   const [savedConfigs, setSavedConfigs] = useState<SavedConfig[]>([]);
   const [added, setAdded] = useState(false);
   const [spinning, setSpinning] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [exitOpen, setExitOpen] = useState(false);
+  const [exitSaveName, setExitSaveName] = useState("");
+  const [exitSaved, setExitSaved] = useState(false);
   const prevDone = useRef<Partial<Record<StepKey, boolean>>>({});
   const [poppedSteps, setPoppedSteps] = useState<Partial<Record<StepKey, boolean>>>({});
 
@@ -354,6 +359,14 @@ export default function PersonnaliserPage() {
     setFadeKey((k) => k + 1);
   }, [s.muserole, s.frontal, s.tetiere, s.cuir]);
 
+  // Récupère l'email de l'utilisateur connecté
+  useEffect(() => {
+    createClient().auth.getSession().then(({ data }) => {
+      setUserEmail(data.session?.user?.email ?? null);
+    });
+  }, []);
+
+
   const scrollToNextEmpty = useCallback(
     (currentDone: Partial<Record<StepKey, boolean>>) => {
       const allDone = STEP_KEYS.every((k) => currentDone[k]);
@@ -382,6 +395,17 @@ export default function PersonnaliserPage() {
 
   const completedCount = STEP_KEYS.filter((k) => done[k]).length;
   const allDone = completedCount === STEP_KEYS.length;
+
+  // Pop-up navigateur (fermeture onglet)
+  useEffect(() => {
+    if (completedCount === 0) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [completedCount]);
 
   // Comparateur — persiste l'état actif
   useEffect(() => {
@@ -535,12 +559,19 @@ export default function PersonnaliserPage() {
         background: "#f5f2ec", position: "sticky", top: 0, zIndex: 30,
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <Link href="/boutique" style={{
-            display: "flex", alignItems: "center", gap: 6,
-            fontSize: 12, color: "#5a5a63", textDecoration: "none",
-          }}>
+          <button
+            onClick={() => {
+              if (completedCount > 0) { setExitOpen(true); }
+              else { window.location.href = "/boutique"; }
+            }}
+            style={{
+              display: "flex", alignItems: "center", gap: 6,
+              fontSize: 12, color: "#5a5a63", background: "none",
+              border: "none", cursor: "pointer", padding: 0,
+            }}
+          >
             <ArrowLeft size={13} /> Boutique
-          </Link>
+          </button>
           <span style={{ color: "#d8d3c7" }}>|</span>
           <div>
             <div style={{ fontFamily: "var(--font-geist-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5a5a63" }}>
@@ -1101,6 +1132,167 @@ export default function PersonnaliserPage() {
               }}>
                 <ArrowR size={18} />
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bandeau flottant quand config complète */}
+      <div style={{
+        position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50,
+        transform: allDone ? "translateY(0)" : "translateY(100%)",
+        transition: "transform .4s cubic-bezier(0.16,1,0.3,1)",
+        background: "#14141a", color: "#fff",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "16px 28px", gap: 16,
+        boxShadow: "0 -4px 32px rgba(0,0,0,.25)",
+      }}>
+        <div>
+          <div style={{ fontFamily: "var(--font-geist-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,.5)", marginBottom: 2 }}>
+            Votre configuration est prête
+          </div>
+          <div style={{ fontSize: 18, fontWeight: 700, letterSpacing: "-0.02em" }}>
+            {total.toFixed(2).replace(".", ",")} €
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 10 }}>
+          <button onClick={openSave} style={{
+            height: 46, padding: "0 18px", borderRadius: 99,
+            border: "1px solid rgba(255,255,255,.25)", background: "transparent",
+            color: "#fff", fontSize: 13, fontWeight: 500, cursor: "pointer",
+            display: "flex", alignItems: "center", gap: 7,
+          }}>
+            <FloppyDisk size={14} /> Sauvegarder
+          </button>
+          <button onClick={handleAdd} style={{
+            height: 46, padding: "0 24px", borderRadius: 99,
+            border: "none", background: "#fff",
+            color: "#14141a", fontSize: 13, fontWeight: 700, cursor: "pointer",
+            display: "flex", alignItems: "center", gap: 7,
+          }}>
+            <ShoppingBag size={14} />
+            {added ? "Ajouté !" : "Ajouter au panier"}
+          </button>
+        </div>
+      </div>
+
+      {/* Modale de sortie */}
+      {exitOpen && (
+        <div
+          onClick={() => setExitOpen(false)}
+          style={{
+            position: "fixed", inset: 0, background: "rgba(20,20,26,.6)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            zIndex: 99, padding: 20,
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "#fff", borderRadius: 16, width: 460, maxWidth: "100%",
+              overflow: "hidden",
+            }}
+          >
+            {/* En-tête */}
+            <div style={{ background: "#14141a", padding: "24px 28px 20px" }}>
+              <div style={{ fontFamily: "var(--font-geist-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,.5)", marginBottom: 6 }}>
+                Votre configuration
+              </div>
+              <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", color: "#fff", lineHeight: 1.2 }}>
+                Vous êtes sur le point de quitter
+              </div>
+              <div style={{ fontSize: 13, color: "rgba(255,255,255,.6)", marginTop: 6 }}>
+                {completedCount}/{STEP_KEYS.length} étapes complétées · {total > 0 ? `${total.toFixed(2).replace(".", ",")} €` : "— €"}
+              </div>
+            </div>
+
+            <div style={{ padding: "24px 28px 28px" }}>
+              {userEmail ? (
+                /* Connecté → proposer de sauvegarder */
+                exitSaved ? (
+                  <div style={{ textAlign: "center", padding: "16px 0" }}>
+                    <div style={{ fontSize: 28, marginBottom: 8 }}>✓</div>
+                    <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>Création sauvegardée</div>
+                    <div style={{ fontSize: 13, color: "#5a5a63" }}>Retrouvez-la dans votre compte Elekka.</div>
+                    <button
+                      onClick={() => { window.location.href = "/boutique"; }}
+                      style={{ marginTop: 18, height: 44, padding: "0 20px", borderRadius: 99, border: "1px solid #d8d3c7", background: "transparent", fontSize: 13, cursor: "pointer" }}
+                    >
+                      Retour à la boutique
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <div style={{ fontSize: 13, color: "#5a5a63", marginBottom: 16, lineHeight: 1.5 }}>
+                      Connecté en tant que <strong style={{ color: "#14141a" }}>{userEmail}</strong>.<br />
+                      Donnez un nom à votre création pour la retrouver plus tard.
+                    </div>
+                    <input
+                      autoFocus
+                      placeholder="Ex. Filet Ulysse · obstacle"
+                      value={exitSaveName}
+                      onChange={(e) => setExitSaveName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          const name = exitSaveName.trim() || `Création ${savedConfigs.length + 1}`;
+                          setSavedConfigs([{ id: `cfg_${Date.now()}`, name, snapshot: { ...s }, total, code: encodeConfig(s) }, ...savedConfigs].slice(0, 8));
+                          setExitSaved(true);
+                        }
+                      }}
+                      style={{ width: "100%", height: 44, padding: "0 14px", border: "1px solid #d8d3c7", borderRadius: 6, fontSize: 15, fontStyle: "italic", outline: "none", marginBottom: 12, fontFamily: "var(--font-geist-sans)" }}
+                    />
+                    <div style={{ display: "flex", gap: 10 }}>
+                      <button
+                        onClick={() => { window.location.href = "/boutique"; }}
+                        style={{ flex: 1, height: 46, borderRadius: 99, border: "1px solid #d8d3c7", background: "transparent", fontSize: 13, cursor: "pointer" }}
+                      >
+                        Quitter sans sauvegarder
+                      </button>
+                      <button
+                        onClick={() => {
+                          const name = exitSaveName.trim() || `Création ${savedConfigs.length + 1}`;
+                          setSavedConfigs([{ id: `cfg_${Date.now()}`, name, snapshot: { ...s }, total, code: encodeConfig(s) }, ...savedConfigs].slice(0, 8));
+                          setExitSaved(true);
+                        }}
+                        style={{ flex: 1, height: 46, borderRadius: 99, border: "none", background: "#14141a", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+                      >
+                        Sauvegarder
+                      </button>
+                    </div>
+                  </>
+                )
+              ) : (
+                /* Non connecté → proposer de créer un compte */
+                <>
+                  <div style={{ fontSize: 13, color: "#5a5a63", marginBottom: 20, lineHeight: 1.6 }}>
+                    Créez un compte Elekka gratuit pour sauvegarder votre configuration et la retrouver à tout moment depuis votre espace personnel.
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    <Link
+                      href="/compte"
+                      style={{
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        height: 46, borderRadius: 99, background: "#14141a", color: "#fff",
+                        fontSize: 13, fontWeight: 600, textDecoration: "none",
+                      }}
+                    >
+                      Créer un compte et sauvegarder
+                    </Link>
+                    <button
+                      onClick={() => { setExitOpen(false); openSave(); }}
+                      style={{ height: 46, borderRadius: 99, border: "1px solid #d8d3c7", background: "transparent", fontSize: 13, cursor: "pointer" }}
+                    >
+                      Sauvegarder localement (sans compte)
+                    </button>
+                    <button
+                      onClick={() => { window.location.href = "/boutique"; }}
+                      style={{ height: 40, background: "transparent", border: "none", fontSize: 12, color: "#8a8a92", cursor: "pointer" }}
+                    >
+                      Quitter sans sauvegarder
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

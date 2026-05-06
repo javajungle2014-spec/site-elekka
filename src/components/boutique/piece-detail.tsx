@@ -173,6 +173,12 @@ export function PieceDetail({ piece }: { piece: Piece }) {
               </button>
             </div>
 
+            {/* Lien configurateur */}
+            <Link href="/boutique/personnaliser"
+              className="press inline-flex items-center justify-center gap-2 border border-line py-3 px-5 text-sm text-muted hover:border-ink hover:text-ink transition-all duration-200">
+              Composer votre filet sur-mesure avec cette pièce →
+            </Link>
+
             {/* Specs */}
             <div className="border-t border-line pt-6 grid grid-cols-2 gap-4">
               {piece.specs.map(([label, value]) => (
