@@ -9,24 +9,34 @@ const messages = [
 
 export function AnnouncementBar() {
   const [index, setIndex] = useState(0);
-  const [visible, setVisible] = useState(true);
+  const [state, setState] = useState<"visible" | "exit" | "enter">("visible");
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setVisible(false);
+      setState("exit");
       setTimeout(() => {
         setIndex((i) => (i + 1) % messages.length);
-        setVisible(true);
-      }, 400);
+        setState("enter");
+        setTimeout(() => setState("visible"), 350);
+      }, 350);
     }, 4000);
     return () => clearInterval(interval);
   }, []);
 
+  const transform =
+    state === "exit" ? "translateX(-100%)" :
+    state === "enter" ? "translateX(100%)" :
+    "translateX(0)";
+
   return (
-    <div className="bg-ink text-on-ink text-center py-2.5 px-5">
+    <div className="bg-ink text-on-ink text-center py-2.5 px-5 overflow-hidden">
       <p
-        className="text-xs tracking-wide transition-opacity duration-300"
-        style={{ opacity: visible ? 1 : 0 }}
+        className="text-xs tracking-wide"
+        style={{
+          transform,
+          opacity: state === "visible" ? 1 : 0,
+          transition: "transform 350ms ease, opacity 350ms ease",
+        }}
       >
         {messages[index]}
       </p>
