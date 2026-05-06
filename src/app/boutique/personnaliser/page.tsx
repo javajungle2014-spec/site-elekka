@@ -322,7 +322,13 @@ export default function PersonnaliserPage() {
   const [fadeKey, setFadeKey] = useState(0);
   const [shareOpen, setShareOpen] = useState(false);
   const [saveName, setSaveName] = useState("");
-  const [savedConfigs, setSavedConfigs] = useState<SavedConfig[]>([]);
+  const [savedConfigs, setSavedConfigs] = useState<SavedConfig[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const stored = localStorage.getItem("elekka_saved_configs");
+      return stored ? JSON.parse(stored) : [];
+    } catch { return []; }
+  });
   const [added, setAdded] = useState(false);
   const [spinning, setSpinning] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
@@ -358,6 +364,12 @@ export default function PersonnaliserPage() {
   useEffect(() => {
     setFadeKey((k) => k + 1);
   }, [s.muserole, s.frontal, s.tetiere, s.cuir]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("elekka_saved_configs", JSON.stringify(savedConfigs));
+    } catch {}
+  }, [savedConfigs]);
 
   // Récupère l'email de l'utilisateur connecté
   useEffect(() => {
