@@ -61,6 +61,23 @@ export function encodeConfig(s: BridleState): string {
   return btoa(JSON.stringify(o)).replace(/=+$/, "");
 }
 
+export function decodeConfig(code: string): BridleState | null {
+  try {
+    const o = JSON.parse(atob(code));
+    return {
+      muserole: o.m ?? null,
+      frontal: o.f ?? null,
+      tetiere: o.t ?? null,
+      rene: o.r ?? null,
+      cuir: o.c ?? null,
+      taille: o.ta ?? null,
+      grav: o.g ?? "",
+      enrenementOn: o.e === 1,
+      enrenement: 0,
+    };
+  } catch { return null; }
+}
+
 export function randomize(
   set: <K extends keyof BridleState>(k: K, v: BridleState[K]) => void,
   current: BridleState
