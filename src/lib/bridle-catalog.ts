@@ -28,8 +28,8 @@ export const BRIDLE_CATALOG = {
   muserole: [
     {
       id: "mu1",
-      name: "Simple",
-      desc: "Muserolle française classique, fermeture standard.",
+      name: "Muserolle Simple",
+      desc: "Muserolle française classique, fermeture standard. Montée sur le Bridon Essentiel.",
       price: 0,
       stock: "in" as StockStatus,
       rating: 4.5,
@@ -37,8 +37,8 @@ export const BRIDLE_CATALOG = {
     },
     {
       id: "mu2",
-      name: "Rembourrée",
-      desc: "2,5 à 3 cm d'épaisseur — protège et adoucit le contact.",
+      name: "Muserolle Rembourrée",
+      desc: "2,5 à 3 cm d'épaisseur, fermeture côté gauche. Montée sur le Bridon Signature.",
       price: 26,
       stock: "in" as StockStatus,
       rating: 4.8,
@@ -46,8 +46,8 @@ export const BRIDLE_CATALOG = {
     },
     {
       id: "mu3",
-      name: "Triple attache",
-      desc: "Interchangeable : épaisse, ovale, rectangulaire.",
+      name: "Muserolle Triple attache",
+      desc: "Interchangeable : épaisse, ovale, rectangulaire. Montée sur le Bridon Fusion.",
       price: 26,
       stock: "in" as StockStatus,
       rating: 4.9,
@@ -58,8 +58,8 @@ export const BRIDLE_CATALOG = {
   frontal: [
     {
       id: "fr1",
-      name: "Classique",
-      desc: "Frontal rectiligne, sobre et élégant.",
+      name: "Frontal Classique",
+      desc: "Frontal rectiligne, sobre et élégant. Standard sur l'Essentiel et le Signature.",
       price: 0,
       stock: "in" as StockStatus,
       rating: 4.4,
@@ -67,7 +67,7 @@ export const BRIDLE_CATALOG = {
     },
     {
       id: "fr2",
-      name: "Anatomique",
+      name: "Frontal Anatomique",
       desc: "Légèrement incurvé pour suivre la morphologie du front.",
       price: 19,
       stock: "in" as StockStatus,
@@ -76,8 +76,8 @@ export const BRIDLE_CATALOG = {
     },
     {
       id: "fr3",
-      name: "Signature 5,5 cm",
-      desc: "Large 5,5 cm — répartit la pression, finitions soignées.",
+      name: "Browband Anatomique 5,5 cm",
+      desc: "Large 5,5 cm — répartit la pression sur le front. Monté sur le Bridon Fusion.",
       price: 19,
       stock: "in" as StockStatus,
       rating: 4.9,
@@ -88,8 +88,8 @@ export const BRIDLE_CATALOG = {
   tetiere: [
     {
       id: "te1",
-      name: "Classique",
-      desc: "Têtière standard, conception anglaise traditionnelle.",
+      name: "Têtière Classique",
+      desc: "Têtière standard, conception anglaise traditionnelle. Montée sur le Bridon Essentiel.",
       price: 0,
       stock: "in" as StockStatus,
       rating: 4.4,
@@ -97,8 +97,8 @@ export const BRIDLE_CATALOG = {
     },
     {
       id: "te2",
-      name: "Anatomique Signature",
-      desc: "Incurvée — soulage la nuque et libère les oreilles.",
+      name: "Têtière Anatomique Signature",
+      desc: "Incurvée — soulage la nuque et libère les oreilles. Montée sur le Bridon Signature.",
       price: 30,
       stock: "in" as StockStatus,
       rating: 4.8,
@@ -106,8 +106,8 @@ export const BRIDLE_CATALOG = {
     },
     {
       id: "te3",
-      name: "Anatomique Fusion",
-      desc: "Double rembourrage — confort maximal sur la nuque.",
+      name: "Têtière Anatomique Fusion",
+      desc: "Double rembourrage, confort maximal sur la nuque. Montée sur le Bridon Fusion.",
       price: 30,
       stock: "in" as StockStatus,
       rating: 4.9,
@@ -118,56 +118,42 @@ export const BRIDLE_CATALOG = {
   rene: [
     {
       id: "re1",
-      name: "Classiques",
-      desc: "Cuir pleine fleur assorti, 145 cm.",
-      price: 0,
-      stock: "in" as StockStatus,
-      rating: 4.5,
-      reviews: 312,
-      note: "Offertes",
-    },
-    {
-      id: "re2",
-      name: "Anatomique",
-      desc: "Grip intégré, prise assurée par tous temps.",
-      price: 42,
+      name: "Rênes Elekka N°1",
+      desc: "Cuir pleine fleur, grip caoutchouc intégré. Prise en main assurée par tous temps.",
+      price: 40,
       stock: "in" as StockStatus,
       rating: 4.7,
       reviews: 188,
-      note: "−15 %",
     },
     {
-      id: "re3",
-      name: "Signature",
-      desc: "Cuir souple surpiqué, finition premium.",
-      price: 55,
+      id: "re2",
+      name: "Rênes Elekka N°2",
+      desc: "Cuir pleine fleur lisse. Pour les cavaliers qui privilégient la sensation directe.",
+      price: 50,
       stock: "in" as StockStatus,
-      rating: 4.8,
+      rating: 4.6,
       reviews: 98,
-      note: "−15 %",
     },
   ] as BridlePart[],
 
   enrenement: [
     {
       id: "en1",
-      name: "Tylman",
-      desc: "Aide à la décontraction.",
-      price: 51,
+      name: "Enrênement Elekka N°1",
+      desc: "Cuir pleine fleur, réglage précis. Compatible tous bridons Elekka.",
+      price: 50,
       stock: "in" as StockStatus,
       rating: 4.8,
       reviews: 54,
-      note: "−15 %",
     },
     {
       id: "en2",
-      name: "Martingale",
-      desc: "Fixe réglable, sécurité renforcée.",
-      price: 51,
+      name: "Enrênement Elekka N°2",
+      desc: "Cuir pleine fleur, rembourrage aux points de contact. Pour les longues séances.",
+      price: 50,
       stock: "in" as StockStatus,
       rating: 4.7,
       reviews: 38,
-      note: "−15 %",
     },
   ] as BridlePart[],
 
@@ -216,4 +202,4 @@ export const ES_PALETTE = {
   "dark-brown": { surface: "#3f2110", highlight: "#6b3a1f", edge: "#1f0c06" },
 } as const;
 
-export const BASE_PRICE = 95;
+export const BASE_PRICE = 99.99;
