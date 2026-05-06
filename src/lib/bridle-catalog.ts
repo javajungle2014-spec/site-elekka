@@ -29,8 +29,8 @@ export const BRIDLE_CATALOG = {
     {
       id: "mu1",
       name: "Muserolle Simple",
-      desc: "Muserolle française classique, fermeture standard. Montée sur le Bridon Essentiel.",
-      price: 0,
+      desc: "Muserolle française classique, fermeture standard.",
+      price: 25,
       stock: "in" as StockStatus,
       rating: 4.5,
       reviews: 214,
@@ -38,8 +38,8 @@ export const BRIDLE_CATALOG = {
     {
       id: "mu2",
       name: "Muserolle Rembourrée",
-      desc: "2,5 à 3 cm d'épaisseur, fermeture côté gauche. Montée sur le Bridon Signature.",
-      price: 26,
+      desc: "2,5 à 3 cm d'épaisseur, fermeture côté gauche.",
+      price: 40,
       stock: "in" as StockStatus,
       rating: 4.8,
       reviews: 86,
@@ -47,8 +47,8 @@ export const BRIDLE_CATALOG = {
     {
       id: "mu3",
       name: "Muserolle Triple attache",
-      desc: "Interchangeable : épaisse, ovale, rectangulaire. Montée sur le Bridon Fusion.",
-      price: 26,
+      desc: "Interchangeable : épaisse, ovale, rectangulaire.",
+      price: 45,
       stock: "in" as StockStatus,
       rating: 4.9,
       reviews: 54,
@@ -59,8 +59,8 @@ export const BRIDLE_CATALOG = {
     {
       id: "fr1",
       name: "Frontal Classique",
-      desc: "Frontal rectiligne, sobre et élégant. Standard sur l'Essentiel et le Signature.",
-      price: 0,
+      desc: "Frontal rectiligne, sobre et élégant.",
+      price: 20,
       stock: "in" as StockStatus,
       rating: 4.4,
       reviews: 142,
@@ -69,7 +69,7 @@ export const BRIDLE_CATALOG = {
       id: "fr2",
       name: "Frontal Anatomique",
       desc: "Légèrement incurvé pour suivre la morphologie du front.",
-      price: 19,
+      price: 28,
       stock: "in" as StockStatus,
       rating: 4.7,
       reviews: 92,
@@ -77,8 +77,8 @@ export const BRIDLE_CATALOG = {
     {
       id: "fr3",
       name: "Browband Anatomique 5,5 cm",
-      desc: "Large 5,5 cm — répartit la pression sur le front. Monté sur le Bridon Fusion.",
-      price: 19,
+      desc: "Large 5,5 cm — répartit la pression sur le front.",
+      price: 28,
       stock: "in" as StockStatus,
       rating: 4.9,
       reviews: 47,
@@ -89,8 +89,8 @@ export const BRIDLE_CATALOG = {
     {
       id: "te1",
       name: "Têtière Classique",
-      desc: "Têtière standard, conception anglaise traditionnelle. Montée sur le Bridon Essentiel.",
-      price: 0,
+      desc: "Têtière standard, conception anglaise traditionnelle.",
+      price: 35,
       stock: "in" as StockStatus,
       rating: 4.4,
       reviews: 198,
@@ -98,8 +98,8 @@ export const BRIDLE_CATALOG = {
     {
       id: "te2",
       name: "Têtière Anatomique Signature",
-      desc: "Incurvée — soulage la nuque et libère les oreilles. Montée sur le Bridon Signature.",
-      price: 30,
+      desc: "Incurvée — soulage la nuque et libère les oreilles.",
+      price: 55,
       stock: "in" as StockStatus,
       rating: 4.8,
       reviews: 128,
@@ -107,8 +107,8 @@ export const BRIDLE_CATALOG = {
     {
       id: "te3",
       name: "Têtière Anatomique Fusion",
-      desc: "Double rembourrage, confort maximal sur la nuque. Montée sur le Bridon Fusion.",
-      price: 30,
+      desc: "Double rembourrage, confort maximal sur la nuque.",
+      price: 55,
       stock: "in" as StockStatus,
       rating: 4.9,
       reviews: 76,
@@ -120,7 +120,7 @@ export const BRIDLE_CATALOG = {
       id: "re1",
       name: "Rênes Elekka N°1",
       desc: "Cuir pleine fleur, grip caoutchouc intégré. Prise en main assurée par tous temps.",
-      price: 40,
+      price: 39.99,
       stock: "in" as StockStatus,
       rating: 4.7,
       reviews: 188,
@@ -202,4 +202,4 @@ export const ES_PALETTE = {
   "dark-brown": { surface: "#3f2110", highlight: "#6b3a1f", edge: "#1f0c06" },
 } as const;
 
-export const BASE_PRICE = 99.99;
+export const BASE_PRICE = 0;

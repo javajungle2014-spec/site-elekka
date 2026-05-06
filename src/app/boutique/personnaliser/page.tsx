@@ -147,8 +147,7 @@ function OptionGrid({
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>
               <span style={{ fontSize: 13, fontWeight: 500, letterSpacing: "-0.01em" }}>{it.name}</span>
               <span style={{ fontFamily: "var(--font-geist-mono)", fontSize: 11, color: "#5a5a63", whiteSpace: "nowrap" }}>
-                {it.price === 0 ? "Inclus" : `+${it.price} €`}
-                {it.note ? ` · ${it.note}` : ""}
+                {it.price} €
               </span>
             </div>
             <div style={{ fontSize: 11.5, color: "#5a5a63", lineHeight: 1.45 }}>{it.desc}</div>
