@@ -371,10 +371,23 @@ export default function PersonnaliserPage() {
     } catch {}
   }, [savedConfigs]);
 
-  // Récupère l'email de l'utilisateur connecté
+  // Récupère l'email + charge les créations depuis Supabase si connecté
   useEffect(() => {
-    createClient().auth.getSession().then(({ data }) => {
-      setUserEmail(data.session?.user?.email ?? null);
+    createClient().auth.getSession().then(async ({ data }) => {
+      const session = data.session;
+      setUserEmail(session?.user?.email ?? null);
+      if (!session?.access_token) return;
+      try {
+        const res = await fetch("/api/saved-bridles", {
+          headers: { authorization: `Bearer ${session.access_token}` },
+        });
+        const json = await res.json();
+        if (json.bridles?.length) {
+          setSavedConfigs(json.bridles.map((b: { id: string; name: string; snapshot: BridleState; total: number; code: string }) => ({
+            id: b.id, name: b.name, snapshot: b.snapshot, total: b.total, code: b.code ?? "",
+          })));
+        }
+      } catch {}
     });
   }, []);
 
@@ -481,13 +494,29 @@ export default function PersonnaliserPage() {
     openCart();
   };
 
+  const doSave = async (name: string) => {
+    const code = encodeConfig(s);
+    const entry: SavedConfig = { id: `cfg_${Date.now()}`, name, snapshot: { ...s }, total, code };
+    const { data: sd } = await createClient().auth.getSession();
+    const token = sd.session?.access_token;
+    if (token) {
+      try {
+        const res = await fetch("/api/saved-bridles", {
+          method: "POST",
+          headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
+          body: JSON.stringify({ name, snapshot: s, total, code }),
+        });
+        const json = await res.json();
+        if (json.id) entry.id = json.id;
+      } catch {}
+    }
+    setSavedConfigs((prev) => [entry, ...prev].slice(0, 8));
+  };
+
   const openSave = () => { setSaveName(""); setShareOpen(true); };
-  const confirmSave = () => {
+  const confirmSave = async () => {
     const name = saveName.trim() || `Création ${savedConfigs.length + 1}`;
-    setSavedConfigs([
-      { id: `cfg_${Date.now()}`, name, snapshot: { ...s }, total, code: encodeConfig(s) },
-      ...savedConfigs,
-    ].slice(0, 8));
+    await doSave(name);
     setShareOpen(false);
   };
 
@@ -1244,9 +1273,7 @@ export default function PersonnaliserPage() {
                       onChange={(e) => setExitSaveName(e.target.value)}
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
-                          const name = exitSaveName.trim() || `Création ${savedConfigs.length + 1}`;
-                          setSavedConfigs([{ id: `cfg_${Date.now()}`, name, snapshot: { ...s }, total, code: encodeConfig(s) }, ...savedConfigs].slice(0, 8));
-                          setExitSaved(true);
+                          doSave(exitSaveName.trim() || `Création ${savedConfigs.length + 1}`).then(() => setExitSaved(true));
                         }
                       }}
                       style={{ width: "100%", height: 44, padding: "0 14px", border: "1px solid #d8d3c7", borderRadius: 6, fontSize: 15, fontStyle: "italic", outline: "none", marginBottom: 12, fontFamily: "var(--font-geist-sans)" }}
@@ -1259,11 +1286,7 @@ export default function PersonnaliserPage() {
                         Quitter sans sauvegarder
                       </button>
                       <button
-                        onClick={() => {
-                          const name = exitSaveName.trim() || `Création ${savedConfigs.length + 1}`;
-                          setSavedConfigs([{ id: `cfg_${Date.now()}`, name, snapshot: { ...s }, total, code: encodeConfig(s) }, ...savedConfigs].slice(0, 8));
-                          setExitSaved(true);
-                        }}
+                        onClick={() => doSave(exitSaveName.trim() || `Création ${savedConfigs.length + 1}`).then(() => setExitSaved(true))}
                         style={{ flex: 1, height: 46, borderRadius: 99, border: "none", background: "#14141a", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
                       >
                         Sauvegarder
