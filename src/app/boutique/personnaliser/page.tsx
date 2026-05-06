@@ -370,12 +370,9 @@ export default function PersonnaliserPage() {
   const scrollToStep = useCallback((key: StepKey | "cart") => {
     requestAnimationFrame(() => {
       const target = refs[key]?.current;
-      const container = scrollRef.current;
-      if (!target || !container) return;
-      const containerRect = container.getBoundingClientRect();
-      const targetRect = target.getBoundingClientRect();
-      const top = container.scrollTop + targetRect.top - containerRect.top - 24;
-      container.scrollTo({ top, behavior: "smooth" });
+      if (!target) return;
+      const y = target.getBoundingClientRect().top + window.scrollY - 120;
+      window.scrollTo({ top: y, behavior: "smooth" });
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -699,7 +696,7 @@ export default function PersonnaliserPage() {
         <div style={{
           borderRight: "1px solid #d8d3c7", padding: "20px 24px",
           display: "flex", flexDirection: "column", gap: 14, position: "sticky", top: 80,
-          height: "calc(100vh - 80px)", overflow: "hidden",
+          height: "calc(100vh - 80px)", overflowY: "auto",
         }}>
           {/* Sélecteur de vue */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -816,7 +813,7 @@ export default function PersonnaliserPage() {
         </div>
 
         {/* RIGHT — scrollable */}
-        <div ref={scrollRef} style={{ overflowY: "auto", overflowX: "hidden", padding: "20px 24px 100px" }}>
+        <div ref={scrollRef} style={{ padding: "20px 24px 100px" }}>
 
           {/* Muserolle */}
           <div ref={refs.muserole} onMouseEnter={() => setHoverPart("muserole")} onMouseLeave={() => setHoverPart(null)}>
