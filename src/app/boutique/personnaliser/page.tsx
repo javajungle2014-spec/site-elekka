@@ -241,7 +241,7 @@ function DetailedRecap({
           Récap · {completedCount}/{totalSteps}
         </span>
         <span style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em" }}>
-          {total === 0 ? "— €" : `${total} €`}
+          {total === 0 ? "— €" : fmt(total)}
         </span>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px 14px", fontSize: 12 }}>
@@ -294,6 +294,10 @@ function DetailedRecap({
       </div>
     </div>
   );
+}
+
+function fmt(n: number): string {
+  return n.toFixed(2).replace(".", ",") + " €";
 }
 
 function FicheLink({ href }: { href: string }) {
@@ -950,7 +954,7 @@ export default function PersonnaliserPage() {
                 {C.cuir.map((c) => (
                   <div
                     key={c.id}
-                    onClick={() => { set("cuir", c.id); completeAndAdvance("finitions"); }}
+                    onClick={() => { set("cuir", c.id); setDone((d) => ({ ...d, finitions: true })); }}
                     style={{
                       display: "flex", alignItems: "center", gap: 14, padding: "14px 16px",
                       border: `1px solid ${s.cuir === c.id ? "#14141a" : "#d8d3c7"}`,
@@ -977,7 +981,7 @@ export default function PersonnaliserPage() {
                 {C.taille.map((t) => (
                   <div
                     key={t}
-                    onClick={() => { set("taille", t); completeAndAdvance("taille"); }}
+                    onClick={() => { set("taille", t); setDone((d) => ({ ...d, taille: true })); }}
                     style={{
                       flex: 1, textAlign: "center", padding: "11px 0",
                       border: `1px solid ${s.taille === t ? "#14141a" : "#d8d3c7"}`,
@@ -1056,7 +1060,7 @@ export default function PersonnaliserPage() {
                 {added
                   ? "Ajouté au panier !"
                   : allDone
-                  ? `Ajouter au panier — ${total.toFixed(2).replace(".", ",")} €`
+                  ? `Ajouter au panier — ${fmt(total)}`
                   : `Composer votre filet (${completedCount}/${STEP_KEYS.length})`}
               </button>
             </div>
@@ -1072,7 +1076,7 @@ export default function PersonnaliserPage() {
                 {savedConfigs.map((cfg) => (
                   <div key={cfg.id} style={{ padding: 10, border: "1px solid #d8d3c7", borderRadius: 8, fontSize: 12 }}>
                     <div style={{ fontWeight: 500 }}>{cfg.name}</div>
-                    <div style={{ color: "#5a5a63", fontSize: 11 }}>{cfg.total} €</div>
+                    <div style={{ color: "#5a5a63", fontSize: 11 }}>{fmt(cfg.total)}</div>
                     <button
                       onClick={() => { setAll({ ...cfg.snapshot }); const d: Partial<Record<StepKey, boolean>> = {}; STEP_KEYS.forEach((k) => (d[k] = true)); setDone(d); }}
                       style={{
@@ -1191,7 +1195,7 @@ export default function PersonnaliserPage() {
             Votre configuration est prête
           </div>
           <div style={{ fontSize: 18, fontWeight: 700, letterSpacing: "-0.02em" }}>
-            {total.toFixed(2).replace(".", ",")} €
+            {total === 0 ? "— €" : fmt(total)}
           </div>
         </div>
         <div style={{ display: "flex", gap: 10 }}>
@@ -1241,7 +1245,7 @@ export default function PersonnaliserPage() {
                 Vous êtes sur le point de quitter
               </div>
               <div style={{ fontSize: 13, color: "rgba(255,255,255,.6)", marginTop: 6 }}>
-                {completedCount}/{STEP_KEYS.length} étapes complétées · {total > 0 ? `${total.toFixed(2).replace(".", ",")} €` : "— €"}
+                {completedCount}/{STEP_KEYS.length} étapes complétées · {total > 0 ? fmt(total) : "— €"}
               </div>
             </div>
 
@@ -1373,7 +1377,7 @@ function CompareSideBySide({
                   <div style={{ fontFamily: "var(--font-geist-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5a5a63" }}>Création {idx + 1}</div>
                   <div style={{ fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em" }}>{c.name}</div>
                 </div>
-                <div style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em" }}>{total} €</div>
+                <div style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em" }}>{fmt(total)}</div>
               </div>
               <div style={{ position: "relative", background: "#fff", border: "1px solid #d8d3c7", borderRadius: 16, overflow: "hidden", aspectRatio: "1/1" }}>
                 <HorsePreview s={c.snapshot} view="profil" stitch={stitch} />
@@ -1400,7 +1404,7 @@ function CompareSideBySide({
                   background: "#14141a", color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer",
                 }}
               >
-                Choisir cette création — {total} €
+                Choisir cette création — {fmt(total)}
               </button>
             </div>
           );
