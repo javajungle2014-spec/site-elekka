@@ -31,7 +31,7 @@ function generateReferralCode(firstName: string): string {
 
 export async function POST(req: Request) {
   try {
-    const { email, firstName, userId } = await req.json();
+    const { email, firstName, lastName, phone, userId } = await req.json();
 
     if (!email) {
       return NextResponse.json({ error: "Email manquant" }, { status: 400 });
@@ -39,10 +39,18 @@ export async function POST(req: Request) {
 
     const supabase = supabaseAdmin();
 
-    // Générer et sauvegarder le code de parrainage
-    if (userId && firstName) {
-      const referralCode = generateReferralCode(firstName);
-      await supabase.from("profiles").update({ referral_code: referralCode }).eq("id", userId);
+    // Sauvegarder téléphone + code de parrainage avec le client admin (bypasse RLS)
+    if (userId) {
+      const updates: Record<string, string> = {};
+      if (phone) updates.phone = phone;
+      if (lastName) updates.last_name = lastName;
+      if (firstName) {
+        updates.first_name = firstName;
+        updates.referral_code = generateReferralCode(firstName);
+      }
+      if (Object.keys(updates).length > 0) {
+        await supabase.from("profiles").update(updates).eq("id", userId);
+      }
     }
 
     // Générer un code unique

@@ -182,7 +182,7 @@ function RegisterForm({ onSwitch, onSuccess }: { onSwitch: () => void; onSuccess
       await fetch("/api/welcome", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, firstName, userId: data.user.id }),
+        body: JSON.stringify({ email, firstName, lastName, phone, userId: data.user.id }),
       });
     }
     setLoading(false);
