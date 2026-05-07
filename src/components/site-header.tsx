@@ -212,7 +212,7 @@ export function SiteHeader() {
         <div className="flex lg:hidden items-center justify-between h-20">
           <button
             type="button"
-            className={`p-2 -ml-2 press ${scrolled || open ? "text-ink" : "text-white"}`}
+            className="p-2 -ml-2 press text-ink"
             aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
@@ -233,7 +233,7 @@ export function SiteHeader() {
             type="button"
             aria-label="Mon panier"
             onClick={openCart}
-            className={`relative p-2 -mr-2 press ${scrolled || open ? "text-ink" : "text-white"}`}
+            className="relative p-2 -mr-2 press text-ink"
           >
             <ShoppingBag size={24} weight="regular" />
             {totalItems > 0 && (
