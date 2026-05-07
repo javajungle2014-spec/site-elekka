@@ -198,7 +198,30 @@ function RegisterForm({ onSwitch, onSuccess }: { onSwitch: () => void; onSuccess
         </div>
         <InputField label="Email" type="email" value={email} onChange={setEmail} placeholder="votre@email.fr" icon={EnvelopeSimple} />
         <InputField label="Téléphone" type="tel" value={phone} onChange={setPhone} placeholder="+33 6 00 00 00 00" icon={Phone} />
-        <InputField label="Mot de passe" type="password" value={password} onChange={setPassword} placeholder="8 caractères minimum" icon={Lock} />
+        <div className="flex flex-col gap-2">
+          <InputField label="Mot de passe" type="password" value={password} onChange={setPassword} placeholder="8 caractères minimum" icon={Lock} />
+          {password.length > 0 && (
+            <div className="flex items-center gap-2">
+              {[1, 2, 3].map((level) => {
+                const strength = password.length >= 12 && /[A-Z]/.test(password) && /[0-9]/.test(password) ? 3
+                  : password.length >= 8 && (/[A-Z]/.test(password) || /[0-9]/.test(password)) ? 2
+                  : 1;
+                return (
+                  <div key={level} className={`h-0.5 flex-1 transition-colors duration-200 ${
+                    level <= strength
+                      ? strength === 1 ? "bg-red-400" : strength === 2 ? "bg-amber-400" : "bg-green-500"
+                      : "bg-line"
+                  }`} />
+                );
+              })}
+              <span className="text-[10px] text-muted shrink-0">
+                {password.length >= 12 && /[A-Z]/.test(password) && /[0-9]/.test(password) ? "Fort"
+                  : password.length >= 8 && (/[A-Z]/.test(password) || /[0-9]/.test(password)) ? "Moyen"
+                  : "Faible"}
+              </span>
+            </div>
+          )}
+        </div>
         <InputField label="Confirmer" type="password" value={confirm} onChange={setConfirm} placeholder="••••••••" icon={Lock} />
       </div>
       {error && <p className="text-xs text-red-500">{error}</p>}

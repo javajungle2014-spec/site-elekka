@@ -39,7 +39,7 @@ Vous n'êtes pas sûr ? Écrivez-nous à elekka.sellier@gmail.com avec la race e
 
   composition: `**Matières**
 
-Cuir : pleine fleur, tannage végétal, pleine épaisseur. Sélectionné pour sa souplesse native, sa résistance dans la durée et le respect de la peau du cheval.
+Cuir : pleine fleur, pleine épaisseur. Sélectionné pour sa souplesse native, sa résistance dans la durée et le respect de la peau du cheval.
 
 Rembourrage (modèles Signature et Fusion) : mousse haute densité gainée cuir, 2,5 à 3 cm d'épaisseur.
 

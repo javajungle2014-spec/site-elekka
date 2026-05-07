@@ -42,7 +42,7 @@ export const BRIDLE_CATALOG = {
       price: 27.99,
       stock: "in" as StockStatus,
       rating: 4.5,
-      reviews: 214,
+      reviews: 7,
     },
     {
       id: "mu2",
@@ -51,7 +51,7 @@ export const BRIDLE_CATALOG = {
       price: 54.25,
       stock: "in" as StockStatus,
       rating: 4.8,
-      reviews: 86,
+      reviews: 4,
     },
     {
       id: "mu3",
@@ -60,7 +60,7 @@ export const BRIDLE_CATALOG = {
       price: 54.25,
       stock: "in" as StockStatus,
       rating: 4.9,
-      reviews: 54,
+      reviews: 3,
     },
   ] as BridlePart[],
 
@@ -81,7 +81,7 @@ export const BRIDLE_CATALOG = {
       price: 19.99,
       stock: "in" as StockStatus,
       rating: 4.4,
-      reviews: 142,
+      reviews: 9,
     },
     {
       id: "fr2",
@@ -90,7 +90,7 @@ export const BRIDLE_CATALOG = {
       price: 38.75,
       stock: "in" as StockStatus,
       rating: 4.7,
-      reviews: 92,
+      reviews: 6,
     },
     {
       id: "fr3",
@@ -99,7 +99,7 @@ export const BRIDLE_CATALOG = {
       price: 38.75,
       stock: "in" as StockStatus,
       rating: 4.9,
-      reviews: 47,
+      reviews: 3,
     },
   ] as BridlePart[],
 
@@ -111,7 +111,7 @@ export const BRIDLE_CATALOG = {
       price: 31.99,
       stock: "in" as StockStatus,
       rating: 4.4,
-      reviews: 198,
+      reviews: 11,
     },
     {
       id: "te2",
@@ -120,7 +120,7 @@ export const BRIDLE_CATALOG = {
       price: 62,
       stock: "in" as StockStatus,
       rating: 4.8,
-      reviews: 128,
+      reviews: 8,
     },
     {
       id: "te3",
@@ -129,7 +129,7 @@ export const BRIDLE_CATALOG = {
       price: 62,
       stock: "in" as StockStatus,
       rating: 4.9,
-      reviews: 76,
+      reviews: 5,
     },
   ] as BridlePart[],
 
@@ -150,7 +150,7 @@ export const BRIDLE_CATALOG = {
       price: 39.99,
       stock: "in" as StockStatus,
       rating: 4.7,
-      reviews: 188,
+      reviews: 9,
     },
     {
       id: "re2",
@@ -159,7 +159,7 @@ export const BRIDLE_CATALOG = {
       price: 50,
       stock: "in" as StockStatus,
       rating: 4.6,
-      reviews: 98,
+      reviews: 4,
     },
   ] as BridlePart[],
 
@@ -171,7 +171,7 @@ export const BRIDLE_CATALOG = {
       price: 50,
       stock: "in" as StockStatus,
       rating: 4.8,
-      reviews: 54,
+      reviews: 5,
     },
     {
       id: "en2",
@@ -180,7 +180,7 @@ export const BRIDLE_CATALOG = {
       price: 50,
       stock: "in" as StockStatus,
       rating: 4.7,
-      reviews: 38,
+      reviews: 3,
     },
   ] as BridlePart[],
 

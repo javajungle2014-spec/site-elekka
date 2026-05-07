@@ -115,7 +115,6 @@ function PerksMarquee() {
     "Livraison offerte",
     "Rênes plates offertes",
     "Cuir pleine fleur",
-    "Retours 14 jours",
     "Paiement sécurisé",
     "Conçu par des cavaliers",
   ];
@@ -634,7 +633,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
           {/* Étape II — Coloris */}
           <div className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
             <div className="col-span-12 md:col-span-4">
-              <StepHeader index={2} total={5} label="Coloris" sub="Cuir pleine fleur — tannage sélectionné."
+              <StepHeader index={2} total={5} label="Coloris" sub="Cuir pleine fleur."
                 done={!!selectedColour} value={selectedColour ? currentColour.label : null} />
             </div>
             <div className="col-span-12 md:col-span-8">

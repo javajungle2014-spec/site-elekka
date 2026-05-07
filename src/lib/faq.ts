@@ -65,10 +65,6 @@ export const faqCategories: FaqCategory[] = [
         a: "Elekka est conçu par des cavaliers, pour des cavaliers. Nos produits utilisent les mêmes matières et techniques que les grandes maisons du secteur, à un prix significativement plus accessible. Notre engagement : qualité réelle, sans marge excessive.",
       },
       {
-        q: "Quelle garantie qualité proposez-vous ?",
-        a: "Chaque filet Elekka est contrôlé avant expédition. En cas de défaut de fabrication constaté à la réception, nous prenons en charge l'échange ou le remboursement sans condition.",
-      },
-      {
         q: "Que faire en cas de défaut sur mon filet ?",
         a: "Contactez-nous à elekka.sellier@gmail.com avec votre numéro de commande et des photos du défaut constaté. Nous traitons chaque situation rapidement et avec soin.",
       },

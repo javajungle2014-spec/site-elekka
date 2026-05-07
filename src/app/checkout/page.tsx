@@ -238,7 +238,7 @@ export default function CheckoutPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <Field label="Email *" type="email" value={address.email} onChange={set("email")} error={errors.email} autoComplete="email" />
-                    <Field label="Téléphone" type="tel" value={address.phone} onChange={set("phone")} autoComplete="tel" placeholder="+33 6 00 00 00 00" />
+                    <Field label="Téléphone *" type="tel" value={address.phone} onChange={set("phone")} autoComplete="tel" placeholder="+33 6 00 00 00 00" />
                   </div>
                 </div>
               </div>
