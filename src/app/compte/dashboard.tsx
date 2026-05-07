@@ -753,58 +753,97 @@ function PromotionsTab({ promotions }: { promotions: UserPromotion[] }) {
   }
 
   const now = new Date();
+  const active = promotions.filter(isPromoActive);
+  const inactive = promotions.filter((p) => !isPromoActive(p));
+
+  function StatusBadge({ promo }: { promo: UserPromotion }) {
+    if (promo.used) {
+      return <span className="inline-flex items-center gap-1 text-[10px] tracking-[0.18em] uppercase font-medium text-muted-soft border border-line px-2 py-0.5">Utilisé</span>;
+    }
+    if (promo.validUntil && new Date(promo.validUntil) < now) {
+      return <span className="inline-flex items-center gap-1 text-[10px] tracking-[0.18em] uppercase font-medium text-muted-soft border border-line px-2 py-0.5">Expiré</span>;
+    }
+    return <span className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.18em] uppercase font-medium text-green-700 border border-green-200 bg-green-50 px-2 py-0.5"><span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />Actif</span>;
+  }
+
+  function ExpiryInfo({ promo }: { promo: UserPromotion }) {
+    if (promo.used) return <span className="text-xs text-muted-soft">Code déjà utilisé</span>;
+    if (promo.validUntil && new Date(promo.validUntil) < now) {
+      return <span className="text-xs text-muted-soft">Expiré le {new Date(promo.validUntil).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}</span>;
+    }
+    if (promo.validUntil) {
+      return <span className="text-xs text-muted">Valable jusqu'au {new Date(promo.validUntil).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}</span>;
+    }
+    return <span className="text-xs text-muted">Sans date d'expiration</span>;
+  }
+
+  function PromoCard({ promo }: { promo: UserPromotion }) {
+    const [copied, setCopied] = useState(false);
+    const isActive = isPromoActive(promo);
+
+    function handleCopy() {
+      navigator.clipboard.writeText(promo.code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+
+    return (
+      <li className={`border p-5 md:p-6 ${isActive ? "border-line" : "border-line opacity-50"}`}>
+        {/* Header */}
+        <div className="flex items-start justify-between gap-4 mb-4">
+          <div className="flex items-center gap-3 flex-wrap">
+            <StatusBadge promo={promo} />
+            {promo.label && <span className="text-xs text-muted">{promo.label}</span>}
+          </div>
+          <p className="shrink-0 font-mono font-bold text-xl text-ink">
+            {promo.discountType === "percent" ? `−${promo.discountValue} %` : `−${formatPrice(promo.discountValue)}`}
+          </p>
+        </div>
+
+        {/* Code + bouton copier */}
+        <div className="flex items-center justify-between gap-4 py-3 px-4 bg-paper-2 mb-3">
+          <span className="font-mono text-lg md:text-xl tracking-widest text-ink font-semibold">
+            {promo.code}
+          </span>
+          <button
+            type="button"
+            onClick={handleCopy}
+            disabled={!isActive}
+            className={`press shrink-0 flex items-center gap-2 text-xs px-3 py-2 border transition-colors ${
+              isActive
+                ? "border-line hover:border-ink hover:text-ink text-muted"
+                : "border-line text-muted-soft cursor-not-allowed"
+            }`}
+          >
+            {copied ? <Check size={12} weight="bold" className="text-green-600" /> : <Copy size={12} />}
+            {copied ? "Copié !" : "Copier"}
+          </button>
+        </div>
+
+        {/* Date expiration */}
+        <ExpiryInfo promo={promo} />
+      </li>
+    );
+  }
 
   return (
-    <div>
-      <SectionTitle>{promotions.filter(isPromoActive).length} code{promotions.filter(isPromoActive).length > 1 ? "s" : ""} actif{promotions.filter(isPromoActive).length > 1 ? "s" : ""}</SectionTitle>
-      <ul className="space-y-4">
-        {promotions.map((promo) => {
-          const expired = promo.validUntil ? new Date(promo.validUntil) < now : false;
-          const inactive = promo.used || expired;
-          return (
-            <li
-              key={promo.id}
-              className={`border p-5 md:p-6 transition-colors ${inactive ? "border-line opacity-50" : "border-line hover:border-ink"}`}
-            >
-              <div className="flex items-start justify-between gap-6">
-                <div className="flex-1 min-w-0">
-                  {promo.label && (
-                    <p className="text-xs text-muted mb-2">{promo.label}</p>
-                  )}
-                  <div className="flex items-center gap-4 flex-wrap">
-                    <span className="font-mono text-xl md:text-2xl tracking-widest text-ink">
-                      {promo.code}
-                    </span>
-                    {!inactive && <CopyButton text={promo.code} />}
-                  </div>
-                  <div className="mt-3 text-xs text-muted space-y-0.5">
-                    {promo.used && <p>Déjà utilisé</p>}
-                    {expired && !promo.used && <p>Expiré</p>}
-                    {!inactive && promo.validUntil && (
-                      <p>
-                        Valable jusqu'au{" "}
-                        {new Date(promo.validUntil).toLocaleDateString("fr-FR", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        })}
-                      </p>
-                    )}
-                    {!inactive && !promo.validUntil && <p>Sans date d'expiration</p>}
-                  </div>
-                </div>
-                <div className="shrink-0 text-right">
-                  <p className="font-semibold text-ink text-lg">
-                    {promo.discountType === "percent"
-                      ? `-${promo.discountValue}%`
-                      : `-${formatPrice(promo.discountValue)}`}
-                  </p>
-                </div>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
+    <div className="space-y-8">
+      {active.length > 0 && (
+        <div>
+          <SectionTitle>{active.length} code{active.length > 1 ? "s" : ""} actif{active.length > 1 ? "s" : ""}</SectionTitle>
+          <ul className="space-y-3">
+            {active.map((promo) => <PromoCard key={promo.id} promo={promo} />)}
+          </ul>
+        </div>
+      )}
+      {inactive.length > 0 && (
+        <div>
+          <SectionTitle>Historique</SectionTitle>
+          <ul className="space-y-3">
+            {inactive.map((promo) => <PromoCard key={promo.id} promo={promo} />)}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
