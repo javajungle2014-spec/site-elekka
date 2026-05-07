@@ -345,7 +345,20 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const [added, setAdded]         = useState(false);
   const [favorite, setFavoriteState] = useState(false);
   const [stockQty, setStockQty]   = useState<number | null>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
+  const ctaRef        = useRef<HTMLDivElement>(null);
+  const disciplineRef = useRef<HTMLDivElement>(null);
+  const colourRef     = useRef<HTMLDivElement>(null);
+  const sizeRef       = useRef<HTMLDivElement>(null);
+  const reinsRef      = useRef<HTMLDivElement>(null);
+  const equipRef      = useRef<HTMLDivElement>(null);
+
+  function scrollToNext(
+    next: React.RefObject<HTMLDivElement | null>,
+    wouldBeComplete: boolean
+  ) {
+    if (wouldBeComplete) return;
+    setTimeout(() => next.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+  }
 
   const currentColour = product.colours.find(c => c.key === selectedColour)!;
   const otherProducts = products.filter(p => p.slug !== product.slug);
@@ -607,7 +620,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
           </div>
 
           {/* Étape I — Discipline */}
-          <div className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
+          <div ref={disciplineRef} className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
             <div className="col-span-12 md:col-span-4">
               <StepHeader index={1} total={5} label="Discipline"
                 sub="Pour personnaliser votre expérience."
@@ -619,7 +632,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 {disciplines.map(d => {
                   const isActive = selectedDiscipline === d.key;
                   return (
-                    <button key={d.key} type="button" onClick={() => setSelectedDiscipline(d.key)}
+                    <button key={d.key} type="button" onClick={() => { setSelectedDiscipline(d.key); scrollToNext(colourRef, !!(d.key && selectedColour && selectedSize && selectedReins && selectedEquip)); }}
                       className={`choice press text-left p-5 ${isActive ? "choice--active" : ""}`}>
                       <p className="display text-lg">{d.label}</p>
                       <p className="text-[11px] text-muted mt-2 leading-snug">{d.sub}</p>
@@ -631,7 +644,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
           </div>
 
           {/* Étape II — Coloris */}
-          <div className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
+          <div ref={colourRef} className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
             <div className="col-span-12 md:col-span-4">
               <StepHeader index={2} total={5} label="Coloris" sub="Cuir pleine fleur."
                 done={!!selectedColour} value={selectedColour ? currentColour.label : null} />
@@ -641,7 +654,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 {product.colours.map(c => {
                   const isActive = selectedColour === c.key;
                   return (
-                    <button key={c.key} type="button" onClick={() => setSelectedColour(c.key)}
+                    <button key={c.key} type="button" onClick={() => { setSelectedColour(c.key); scrollToNext(sizeRef, !!(selectedDiscipline && c.key && selectedSize && selectedReins && selectedEquip)); }}
                       className={`choice press text-left ${isActive ? "choice--active" : ""}`}>
                       {/* Grande image filet + deux petits carrés couleur unie */}
                       <div className="flex gap-1.5 p-1.5">
@@ -666,7 +679,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
           </div>
 
           {/* Étape III — Taille */}
-          <div className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
+          <div ref={sizeRef} className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
             <div className="col-span-12 md:col-span-4">
               <StepHeader index={3} total={5} label="Taille" sub="Mesures prises au-dessus du chanfrein."
                 done={!!selectedSize} value={selectedSize} />
@@ -681,7 +694,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                   const isActive = selectedSize === size;
                   const isStd = size === "Full";
                   return (
-                    <button key={size} type="button" onClick={() => setSelectedSize(size)}
+                    <button key={size} type="button" onClick={() => { setSelectedSize(size); scrollToNext(reinsRef, !!(selectedDiscipline && selectedColour && size && selectedReins && selectedEquip)); }}
                       className={`choice press text-left p-6 relative ${isActive ? "choice--active" : ""}`}>
                       {isStd && !isActive && (
                         <span className="absolute -top-2 left-4 bg-paper px-2 text-[9px] tracking-widest uppercase text-muted font-medium">Recommandé</span>
@@ -698,7 +711,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
           </div>
 
           {/* Étape IV — Rênes */}
-          <div className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
+          <div ref={reinsRef} className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
             <div className="col-span-12 md:col-span-4">
               <StepHeader index={4} total={5} label="Rênes" sub="Les rênes caoutchouc sont offertes."
                 done={!!selectedReins} value={selectedReins ? reinsOptions.find(r => r.key === selectedReins)?.label ?? null : null} />
@@ -708,7 +721,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 {reinsOptions.map((r, idx) => {
                   const isActive = selectedReins === r.key;
                   return (
-                    <button key={r.key} type="button" onClick={() => setSelectedReins(r.key)}
+                    <button key={r.key} type="button" onClick={() => { setSelectedReins(r.key); scrollToNext(equipRef, !!(selectedDiscipline && selectedColour && selectedSize && r.key && selectedEquip)); }}
                       className={`choice press w-full text-left p-5 flex items-center justify-between gap-4 ${isActive ? "choice--active" : ""}`}>
                       <div className="flex items-baseline gap-5 min-w-0">
                         <span className={`font-mono text-[10px] tracking-wider mt-1 ${isActive ? "text-ink" : "text-muted-soft"}`}>0{idx + 1}</span>
@@ -738,7 +751,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
           </div>
 
           {/* Étape V — Équipement */}
-          <div className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
+          <div ref={equipRef} className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
             <div className="col-span-12 md:col-span-4">
               <StepHeader index={5} total={5} label="Équipement" sub="Optionnel — chaque accessoire est interchangeable."
                 done={!!selectedEquip} value={selectedEquip ? equipOptions.find(e => e.key === selectedEquip)?.label ?? null : null} />
@@ -748,7 +761,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 {equipOptions.map((e, idx) => {
                   const isActive = selectedEquip === e.key;
                   return (
-                    <button key={e.key} type="button" onClick={() => setSelectedEquip(e.key)}
+                    <button key={e.key} type="button" onClick={() => { setSelectedEquip(e.key); const done = !!(selectedDiscipline && selectedColour && selectedSize && selectedReins && e.key); if (done) setTimeout(() => ctaRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 60); }}
                       className={`choice press w-full text-left p-5 flex items-center justify-between gap-4 ${isActive ? "choice--active" : ""}`}>
                       <div className="flex items-baseline gap-5 min-w-0">
                         <span className={`font-mono text-[10px] tracking-wider mt-1 ${isActive ? "text-ink" : "text-muted-soft"}`}>0{idx + 1}</span>
