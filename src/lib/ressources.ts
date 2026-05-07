@@ -13,11 +13,20 @@ export const conseils: Article[] = [
   {
     slug: "choisir-filet-bridon",
     title: "Comment choisir son filet de bridon : guide complet",
-    description: "Taille, matière, anatomique ou classique — tout ce qu'il faut savoir pour choisir le bon filet pour votre cheval.",
+    description: "Cuir ou synthétique, Full ou Cob, classique ou anatomique — tout ce qu'il faut savoir pour choisir le bon filet de bridon pour votre cheval, quelle que soit votre discipline.",
     date: "2026-04-01",
     readTime: "5 min",
     category: "Conseils",
-    keywords: ["filet bridon", "choisir filet cheval", "bridon cuir", "filet anatomique", "Full Cob"],
+    keywords: [
+      "choisir filet de bridon",
+      "filet bridon cuir cheval",
+      "bridon anatomique ou classique",
+      "taille filet Full Cob cheval",
+      "filet équitation débutant",
+      "bridon cuir pleine fleur",
+      "choisir bridon équitation",
+      "filet cheval discipline",
+    ],
     content: [
       {
         body: "Choisir un filet de bridon ne s'improvise pas. Entre les matières, les tailles, les formes anatomiques et les styles de monte, les critères sont nombreux. Ce guide vous accompagne pas à pas.",
@@ -39,11 +48,20 @@ export const conseils: Article[] = [
   {
     slug: "entretien-cuir-equestre",
     title: "Entretien du cuir : les gestes essentiels",
-    description: "Comment nettoyer, nourrir et conserver votre filet en cuir. Les conseils d'entretien pour prolonger la vie de votre équipement équestre.",
+    description: "Comment nettoyer, nourrir et conserver votre filet en cuir pour qu'il dure des années. Savon glycériné, graisse nourrissante, séchage — les bons gestes pas à pas.",
     date: "2026-04-05",
     readTime: "4 min",
     category: "Conseils",
-    keywords: ["entretien cuir équestre", "graisser filet cheval", "cuir selle entretien", "nettoyer bridon cuir"],
+    keywords: [
+      "entretien cuir équestre",
+      "nettoyer bridon cuir",
+      "graisser filet cheval",
+      "savon glycériné cuir cheval",
+      "huile cuir équipement équestre",
+      "conserver filet bridon cuir",
+      "entretien selle bridon cuir",
+      "comment entretenir cuir cheval",
+    ],
     content: [
       {
         body: "Un cuir de qualité se reconnaît aussi à sa capacité à durer. Avec un entretien régulier, votre filet conserve sa souplesse, sa tenue et son élégance au fil du temps. Le cuir est une matière vivante. Il évolue, se patine, s'assouplit et réagit à l'humidité, à la chaleur, à la sueur et à l'usage. Pour préserver ses qualités naturelles, quelques gestes simples suffisent.",
@@ -76,11 +94,21 @@ export const conseils: Article[] = [
   {
     slug: "filet-anatomique-bienfaits",
     title: "Filet anatomique : pourquoi le confort change tout",
-    description: "Nuque soulagée, chanfrein protégé, décontraction améliorée — pourquoi le filet anatomique change vraiment quelque chose pour votre cheval.",
+    description: "Têtière incurvée, muserolle rembourrée, nuque soulagée — pourquoi le filet anatomique change vraiment quelque chose pour votre cheval et comment choisir le bon modèle.",
     date: "2026-04-10",
     readTime: "6 min",
     category: "Conseils",
-    keywords: ["filet anatomique cheval", "pression nuque cheval", "bien-être cheval équipement", "bridon anatomique bienfaits", "équipement équestre bien-être"],
+    keywords: [
+      "filet anatomique cheval",
+      "bridon anatomique bienfaits",
+      "têtière anatomique incurvée",
+      "muserolle rembourrée cheval",
+      "pression nuque cheval équipement",
+      "bien-être cheval filet",
+      "bridon anatomique ou classique",
+      "filet anatomique équitation",
+      "confort cheval travail bridé",
+    ],
     content: [
       {
         body: "De plus en plus utilisé par les cavaliers professionnels comme amateurs, le filet anatomique répond à une exigence simple : mieux respecter la morphologie du cheval pendant le travail. Contrairement à un filet classique, il ne se contente pas de maintenir le mors en place. Il cherche à limiter les points de pression, améliorer le confort et permettre au cheval de se déplacer avec plus de liberté. Chez Elekka, nous pensons qu'un bon filet doit se faire oublier. Il doit accompagner le cheval, jamais le gêner.",
@@ -110,11 +138,18 @@ export const conseils: Article[] = [
   {
     slug: "programme-parrainage",
     title: "Parrainez un ami et gagnez tous les deux",
-    description: "Comment fonctionne le programme de parrainage Elekka — et comment obtenir votre lien personnel pour faire profiter vos amis cavaliers.",
+    description: "Partagez votre lien Elekka, votre ami reçoit -20% sur sa première commande, vous gagnez -30€ sur votre prochain filet. Simple, automatique, sans limite.",
     date: "2026-04-20",
     readTime: "2 min",
     category: "Bons plans",
-    keywords: ["parrainage équestre", "réduction filet cheval", "code parrainage Elekka", "bons plans équitation"],
+    keywords: [
+      "parrainage équestre Elekka",
+      "code parrainage filet cheval",
+      "réduction filet bridon",
+      "programme parrainage équitation",
+      "bons plans cavalier",
+      "réduction première commande équestre",
+    ],
     content: [
       {
         body: "Chez Elekka, nous croyons que la meilleure publicité vient des cavaliers eux-mêmes. C'est pourquoi nous avons mis en place un programme de parrainage simple et avantageux pour vous et vos amis.",
@@ -136,11 +171,19 @@ export const conseils: Article[] = [
   {
     slug: "mesurer-tete-cheval-taille-filet",
     title: "Full ou Cob : comment mesurer la tête de son cheval",
-    description: "Guide pratique pour mesurer correctement la tête de son cheval et choisir la bonne taille de filet entre Full et Cob.",
+    description: "Guide pratique pour mesurer le tour de tête de son cheval avec un mètre souple et choisir sans erreur entre les tailles Full et Cob pour son filet de bridon.",
     date: "2026-04-15",
     readTime: "3 min",
     category: "Conseils",
-    keywords: ["taille filet cheval", "mesurer tête cheval", "Full Cob filet", "guide taille bridon"],
+    keywords: [
+      "mesurer tête cheval filet",
+      "taille bridon Full ou Cob",
+      "tour de tête cheval mesure",
+      "guide taille filet équitation",
+      "Full Cob quelle taille choisir",
+      "taille bridon cheval poney",
+      "mesurer chanfrein cheval",
+    ],
     content: [
       {
         body: "Le choix entre Full et Cob est souvent source d'hésitation. Voici comment procéder méthodiquement pour ne pas se tromper.",
@@ -169,11 +212,20 @@ export const blog: Article[] = [
   {
     slug: "naissance-elekka",
     title: "Elekka : une marque née sur le terrain",
-    description: "Une conviction simple : replacer le produit au centre. Comment Elekka est née d'un constat partagé par beaucoup de cavaliers.",
+    description: "Elekka est née d'un constat simple : un bon filet ne devrait pas forcément coûter aussi cher. L'histoire d'une marque équestre construite par des cavaliers, pour des cavaliers.",
     date: "2026-03-15",
     readTime: "4 min",
     category: "La marque",
-    keywords: ["marque équestre française", "bridon cuir qualité prix", "équipement équestre abordable", "Elekka sellerie"],
+    keywords: [
+      "marque équestre française",
+      "bridon cuir qualité prix",
+      "équipement équestre abordable",
+      "Elekka sellerie",
+      "alternative grandes marques équitation",
+      "filet bridon pas cher qualité",
+      "sellerie équestre direct fabricant",
+      "marque bridon cuir abordable",
+    ],
     content: [
       {
         body: "Elekka est née d'un constat partagé par beaucoup de cavaliers : pourquoi un bon filet devrait-il forcément coûter aussi cher ? Issue d'une famille de cavaliers, la marque s'inscrit dans une pratique réelle. Celle du terrain, des chevaux au travail, du matériel utilisé, observé, ajusté et parfois remis en question.",
@@ -199,25 +251,33 @@ export const blog: Article[] = [
   {
     slug: "collection-2026",
     title: "Collection 2026 : trois modèles, trois approches",
-    description: "Essentiel, Signature, Fusion : trouvez le filet adapté à votre cheval. Présentation complète de la collection Elekka 2026.",
+    description: "Essentiel, Signature, Fusion — trois filets en cuir pleine fleur pour trois profils de cavaliers. Découvrez lequel correspond à votre cheval et à votre pratique.",
     date: "2026-03-20",
     readTime: "5 min",
     category: "Produits",
-    keywords: ["filet Elekka", "bridon cuir 2026", "filet Signature Fusion Essentiel", "gamme filets équitation"],
+    keywords: [
+      "filet Elekka collection 2026",
+      "bridon cuir Signature Fusion Essentiel",
+      "gamme filets équitation cuir",
+      "filet anatomique Elekka",
+      "bridon cuir pleine fleur prix",
+      "quel filet choisir cavalier",
+      "filet équitation qualité abordable",
+    ],
     content: [
       {
         body: "La collection Elekka 2026 se compose de trois modèles, chacun pensé pour répondre à une attente différente : la simplicité, le confort anatomique ou l'adaptabilité maximale. Chaque filet conserve la même exigence : un cuir sélectionné avec soin, une conception précise, des finitions propres et un prix cohérent avec le produit.",
       },
       {
-        heading: "Le Filet Essentiel — 90 €",
+        heading: "Le Filet Essentiel — 99,99 €",
         body: "Le modèle le plus épuré de la collection. Simple, élégant et polyvalent, l'Essentiel répond aux besoins du quotidien sans superflu. Il s'adresse aux cavaliers qui recherchent un filet fiable et durable, avec une ligne sobre et classique. Cuir pleine fleur, muserolle simple, finitions soignées : l'Essentiel va droit au but. Disponible en Havana Brown et Noir, en tailles Full et Cob.",
       },
       {
-        heading: "Le Filet Anatomique Signature — 110 €",
+        heading: "Le Filet Anatomique Signature — 175 €",
         body: "Le modèle pensé pour le confort et la précision. Le Signature a été développé pour les chevaux qui demandent plus d'attention au niveau de la nuque, du chanfrein et du contact. Sa têtière anatomique incurvée permet de mieux répartir les pressions, tandis que sa muserolle rembourrée apporte davantage de confort pendant le travail. La fermeture côté gauche limite les surépaisseurs sous la tête du cheval et participe à une meilleure stabilité de l'ensemble.",
       },
       {
-        heading: "Le Filet Anatomique Fusion — 110 €",
+        heading: "Le Filet Anatomique Fusion — 175 €",
         body: "Le modèle le plus complet de la collection. Le Fusion a été conçu pour les cavaliers qui veulent aller plus loin dans l'ajustement. Sa conception permet d'adapter le filet selon la morphologie du cheval et les préférences du cavalier. Plus modulable, plus travaillé, plus affirmé, il conserve l'essentiel : confort, stabilité et précision. C'est le modèle idéal pour ceux qui veulent un filet anatomique plus abouti, capable de s'adapter à différents chevaux et différentes utilisations.",
       },
       {
@@ -229,11 +289,18 @@ export const blog: Article[] = [
   {
     slug: "parrainez-vos-amis",
     title: "Parrainez vos amis — et gagnez -30€ sur votre prochain filet",
-    description: "Elekka lance son programme de parrainage. Partagez votre lien, votre ami profite de -20%, vous gagnez -30€. Simple, automatique, sans limite.",
+    description: "Elekka lance son programme de parrainage. Partagez votre lien personnel, votre ami profite de -20% sur sa première commande, vous recevez -30€. Automatique, sans limite.",
     date: "2026-04-18",
     readTime: "2 min",
     category: "Nouveauté",
-    keywords: ["parrainage Elekka", "code parrainage filet cheval", "réduction équitation", "programme fidélité équestre"],
+    keywords: [
+      "parrainage Elekka",
+      "programme parrainage équestre",
+      "réduction filet cheval ami",
+      "code parrainage bridon",
+      "programme fidélité équitation",
+      "réduction -20% première commande équestre",
+    ],
     content: [
       {
         body: "Nous lançons aujourd'hui le programme de parrainage Elekka. Une façon simple de récompenser ceux qui parlent de nous autour d'eux.",
@@ -255,11 +322,19 @@ export const blog: Article[] = [
   {
     slug: "cuir-pleine-fleur-difference",
     title: "Pourquoi le cuir pleine fleur fait la différence",
-    description: "Qu'est-ce que le cuir pleine fleur et pourquoi est-il supérieur aux autres types de cuir pour l'équipement équestre ? Explications claires.",
+    description: "Cuir pleine fleur vs cuir corrigé : ce que ça change concrètement pour votre filet, pour votre cheval, et pour la durée de vie de votre équipement équestre.",
     date: "2026-04-02",
     readTime: "4 min",
     category: "Matières",
-    keywords: ["cuir pleine fleur", "qualité cuir équestre", "cuir briderie sellerie", "cuir cheval équipement"],
+    keywords: [
+      "cuir pleine fleur équitation",
+      "différence cuir pleine fleur corrigé",
+      "qualité cuir bridon sellerie",
+      "cuir pleine fleur cheval filet",
+      "bridon cuir pleine fleur avantages",
+      "cuir équestre durable souple",
+      "choisir cuir équipement cheval",
+    ],
     content: [
       {
         body: "Tous les cuirs ne se valent pas. Dans l'équipement équestre, le cuir pleine fleur est la référence — mais encore faut-il comprendre pourquoi.",
