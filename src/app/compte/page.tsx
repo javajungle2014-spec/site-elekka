@@ -160,6 +160,7 @@ function RegisterForm({ onSwitch, onSuccess }: { onSwitch: () => void; onSuccess
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -173,7 +174,6 @@ function RegisterForm({ onSwitch, onSuccess }: { onSwitch: () => void; onSuccess
       options: { data: { first_name: firstName, last_name: lastName } },
     });
     if (error) { setLoading(false); setError(error.message); return; }
-    // Sauvegarde le téléphone dans profiles dès l'inscription
     if (data.user) {
       await upsertProfile(data.user.id, {
         firstName, lastName, phone,
@@ -186,7 +186,36 @@ function RegisterForm({ onSwitch, onSuccess }: { onSwitch: () => void; onSuccess
       });
     }
     setLoading(false);
-    onSuccess();
+    setDone(true);
+  }
+
+  if (done) {
+    return (
+      <div className="space-y-8">
+        <div className="space-y-3">
+          <div className="w-10 h-10 bg-ink text-on-ink flex items-center justify-center text-lg">✓</div>
+          <h2 className="text-xl font-semibold tracking-tight">Compte créé — vérifiez votre boîte mail</h2>
+          <p className="text-sm text-muted leading-relaxed">
+            Un email a été envoyé à <strong className="text-ink">{email}</strong>.<br />
+            Cliquez sur le lien de confirmation pour activer votre compte.
+          </p>
+        </div>
+        <div className="border border-line p-5 space-y-2">
+          <p className="text-xs tracking-widest uppercase text-muted font-medium">Cadeau de bienvenue</p>
+          <p className="text-sm text-ink leading-relaxed">
+            Votre email de bienvenue contient un <strong>code de réduction de −15 %</strong> sur votre première commande. Pensez à vérifier vos spams si vous ne le recevez pas dans les 5 minutes.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={onSwitch}
+          className="press group w-full flex items-center justify-between bg-ink text-on-ink px-6 py-4 text-sm font-medium hover:bg-ink-soft transition-colors"
+        >
+          Aller à la connexion
+          <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-200" />
+        </button>
+      </div>
+    );
   }
 
   return (
