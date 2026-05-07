@@ -69,6 +69,15 @@ export async function POST(req: Request) {
       product_restriction: "filets",
     });
 
+    // Ajouter le code dans user_promotions du parrain
+    await supabase.from("user_promotions").insert({
+      user_id: profile.id,
+      code,
+      label: "Récompense parrainage",
+      discount_type: "eur",
+      discount_value: 30,
+    });
+
     // Envoyer l'email au parrain
     const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({

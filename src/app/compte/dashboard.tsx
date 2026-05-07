@@ -1082,6 +1082,70 @@ type DashboardProps = {
   firstName: string;
 };
 
+function RewardModal({ promos, onClose }: { promos: UserPromotion[]; onClose: () => void }) {
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  function handleCopy(code: string, id: string) {
+    navigator.clipboard.writeText(code);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  }
+
+  return (
+    <div className="fixed inset-0 z-[90] flex items-center justify-center px-5" onClick={onClose}>
+      <div className="absolute inset-0 bg-ink/50 backdrop-blur-sm" />
+      <div className="relative w-full max-w-[460px] bg-paper shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+        <div className="bg-ink px-8 py-7 relative">
+          <button type="button" onClick={onClose} className="absolute top-4 right-4 text-on-ink-muted hover:text-on-ink transition-colors press" aria-label="Fermer">
+            <X size={16} />
+          </button>
+          <p className="kicker-tight text-on-ink-muted mb-2">Parrainage</p>
+          <h2 className="display text-2xl text-on-ink leading-snug">
+            Votre filleul vient de commander.<br />
+            <span className="font-light italic text-on-ink-muted">Merci pour votre confiance.</span>
+          </h2>
+        </div>
+        <div className="px-8 py-7 space-y-5">
+          <p className="text-sm text-muted leading-relaxed">
+            En récompense, voici {promos.length > 1 ? "vos codes" : "votre code"} de <strong className="text-ink">−30 € sur votre prochain filet</strong>. Retrouvez-{promos.length > 1 ? "les" : "le"} à tout moment dans la section <strong className="text-ink">Promotions</strong> de votre compte.
+          </p>
+
+          {promos.map((promo) => (
+            <div key={promo.id} className="border border-line p-4 space-y-3">
+              <p className="text-[10px] tracking-[0.2em] uppercase text-muted font-medium">{promo.label}</p>
+              <div className="flex items-center justify-between gap-3 py-2 px-3 bg-paper-2">
+                <span className="font-mono text-lg font-semibold tracking-wider text-ink">{promo.code}</span>
+                <button
+                  type="button"
+                  onClick={() => handleCopy(promo.code, promo.id)}
+                  className="press shrink-0 flex items-center gap-2 text-xs border border-line px-3 py-1.5 hover:border-ink hover:text-ink transition-colors"
+                >
+                  {copiedId === promo.id ? <Check size={12} weight="bold" className="text-green-600" /> : <Copy size={12} />}
+                  {copiedId === promo.id ? "Copié !" : "Copier"}
+                </button>
+              </div>
+              <p className="text-[11px] text-muted">−30 € · Usage unique · Sur les filets Elekka</p>
+            </div>
+          ))}
+
+          <p className="text-xs text-muted leading-relaxed">
+            Un email de confirmation vous a également été envoyé avec ce code.
+          </p>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="press w-full flex items-center justify-between bg-ink text-on-ink px-6 py-3.5 text-sm font-medium hover:bg-ink-soft transition-colors"
+          >
+            Accéder à mes promotions
+            <ArrowSquareOut size={14} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PromoWelcomeModal({ promotions, onClose }: { promotions: UserPromotion[]; onClose: () => void }) {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const active = promotions.filter((p) => isPromoActive(p) && p.discountValue === 20);
@@ -1155,6 +1219,7 @@ export function Dashboard({ userId, email, firstName }: DashboardProps) {
   const [promotions, setPromotions] = useState<UserPromotion[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
   const [showPromoModal, setShowPromoModal] = useState(false);
+  const [rewardPromos, setRewardPromos] = useState<UserPromotion[]>([]);
   const { slugs } = useFavorites();
 
   const activePromoCount = promotions.filter(isPromoActive).length;
@@ -1164,12 +1229,26 @@ export function Dashboard({ userId, email, firstName }: DashboardProps) {
       setOrders(o);
       setPromotions(p);
       setDataLoading(false);
-      // Affiche la modale une seule fois si l'utilisateur a un code parrainage -20%
-      const key = `promo_modal_seen_${userId}`;
+
+      // Modale première connexion — code parrainage -20%
+      const welcomeKey = `promo_modal_seen_${userId}`;
       const hasReferralCode = p.some((promo) => isPromoActive(promo) && promo.discountValue === 20);
-      if (hasReferralCode && !localStorage.getItem(key)) {
+      if (hasReferralCode && !localStorage.getItem(welcomeKey)) {
         setShowPromoModal(true);
-        localStorage.setItem(key, "1");
+        localStorage.setItem(welcomeKey, "1");
+      }
+
+      // Modale récompense parrain — nouveaux codes -30€ non vus
+      const newRewards = p.filter((promo) => {
+        if (!isPromoActive(promo) || promo.discountValue !== 30) return false;
+        const seenKey = `reward_seen_${userId}_${promo.id}`;
+        return !localStorage.getItem(seenKey);
+      });
+      if (newRewards.length > 0) {
+        setRewardPromos(newRewards);
+        newRewards.forEach((promo) => {
+          localStorage.setItem(`reward_seen_${userId}_${promo.id}`, "1");
+        });
       }
     });
   }, [userId]);
@@ -1217,7 +1296,13 @@ export function Dashboard({ userId, email, firstName }: DashboardProps) {
 
   return (
     <div className="min-h-[calc(100vh-80px)] flex flex-col md:flex-row">
-      {showPromoModal && (
+      {rewardPromos.length > 0 && (
+        <RewardModal
+          promos={rewardPromos}
+          onClose={() => setRewardPromos([])}
+        />
+      )}
+      {showPromoModal && rewardPromos.length === 0 && (
         <PromoWelcomeModal
           promotions={promotions}
           onClose={() => setShowPromoModal(false)}
