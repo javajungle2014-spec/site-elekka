@@ -754,17 +754,16 @@ function SavedBridlesTab({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getSession().then(async ({ data }) => {
-      const token = data.session?.access_token;
-      if (!token) { setLoading(false); return; }
-      const res = await fetch("/api/saved-bridles", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (res.ok) {
+    createClient().auth.getSession().then(async ({ data }) => {
+      const session = data.session;
+      if (!session?.access_token) { setLoading(false); return; }
+      try {
+        const res = await fetch("/api/saved-bridles", {
+          headers: { authorization: `Bearer ${session.access_token}` },
+        });
         const json = await res.json();
         setBridles(json.bridles ?? []);
-      }
+      } catch {}
       setLoading(false);
     });
   }, [userId]);
