@@ -290,13 +290,12 @@ type FormTab = "login" | "register";
 export default function ComptePage() {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [checking, setChecking] = useState(true);
-  const [formTab, setFormTab] = useState<FormTab>(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("mode") === "register") return "register";
-    }
-    return "login";
-  });
+  const [formTab, setFormTab] = useState<FormTab>("login");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("mode") === "register") setFormTab("register");
+  }, []);
 
   useEffect(() => {
     const supabase = createClient();
