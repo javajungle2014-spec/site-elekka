@@ -1045,7 +1045,7 @@ type DashboardProps = {
 
 function PromoWelcomeModal({ promotions, onClose }: { promotions: UserPromotion[]; onClose: () => void }) {
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const active = promotions.filter(isPromoActive);
+  const active = promotions.filter((p) => isPromoActive(p) && p.discountValue === 20);
 
   function handleCopy(code: string, id: string) {
     navigator.clipboard.writeText(code);
@@ -1125,9 +1125,10 @@ export function Dashboard({ userId, email, firstName }: DashboardProps) {
       setOrders(o);
       setPromotions(p);
       setDataLoading(false);
-      // Affiche la modale une seule fois à la première connexion
+      // Affiche la modale une seule fois si l'utilisateur a un code parrainage -20%
       const key = `promo_modal_seen_${userId}`;
-      if (p.filter(isPromoActive).length > 0 && !localStorage.getItem(key)) {
+      const hasReferralCode = p.some((promo) => isPromoActive(promo) && promo.discountValue === 20);
+      if (hasReferralCode && !localStorage.getItem(key)) {
         setShowPromoModal(true);
         localStorage.setItem(key, "1");
       }

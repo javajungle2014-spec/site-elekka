@@ -102,14 +102,14 @@ export async function POST(req: Request) {
       });
     }
 
-    // Email de bienvenue simple (sans codes — ils sont dans le compte)
+    // Email de bienvenue avec le code -15%
     const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({
       from: "Elekka <contact@elekka-sellier.fr>",
       replyTo: "elekka.sellier@gmail.com",
       to: email,
-      subject: "Bienvenue chez Elekka",
-      html: welcomeEmail({ firstName: firstName || "vous", hasReferral: !!parrainCode }),
+      subject: "Bienvenue chez Elekka — votre cadeau de bienvenue",
+      html: welcomeEmail({ firstName: firstName || "vous", welcomeCode }),
     });
 
     return NextResponse.json({ success: true });
@@ -120,25 +120,23 @@ export async function POST(req: Request) {
   }
 }
 
-function welcomeEmail({ firstName, hasReferral }: { firstName: string; hasReferral: boolean }) {
+function welcomeEmail({ firstName, welcomeCode }: { firstName: string; welcomeCode: string }) {
   const date = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
   return `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#0a0a0a">
     <div style="background:#0a0a0a;padding:32px 40px">
       <p style="color:#fafaf9;font-size:11px;letter-spacing:.18em;text-transform:uppercase;margin:0">Elekka — Bienvenue</p>
     </div>
     <div style="padding:40px;border:1px solid #e5e5e5;border-top:none">
-      <h2 style="font-size:26px;font-weight:700;letter-spacing:-.02em;margin:0 0 12px">Bienvenue, ${firstName}.</h2>
-      <p style="color:#737373;font-size:14px;line-height:1.7;margin:0 0 24px">
-        Votre compte Elekka est créé.
-        ${hasReferral
-          ? "Vos codes de réduction (−20 % parrainage et −15 % bienvenue) sont disponibles dans votre espace compte, section <strong style=\"color:#0a0a0a\">Promotions</strong>."
-          : "Votre code de bienvenue −15 % est disponible dans votre espace compte, section <strong style=\"color:#0a0a0a\">Promotions</strong>."}
+      <h2 style="font-size:26px;font-weight:700;letter-spacing:-.02em;margin:0 0 8px">Bienvenue, ${firstName}.</h2>
+      <p style="color:#737373;font-size:14px;margin:0 0 32px;line-height:1.7">
+        Votre compte Elekka est créé. Pour vous accueillir, voici un code de réduction de <strong>−15 %</strong> sur votre première commande.
       </p>
-      <a href="https://elekka-sellier.fr/compte"
-        style="display:inline-block;background:#0a0a0a;color:#fafaf9;text-decoration:none;padding:14px 28px;font-size:13px;font-weight:600;letter-spacing:.05em">
-        Accéder à mon compte
-      </a>
-      <p style="font-size:14px;color:#737373;line-height:1.7;margin:32px 0 0">
+      <div style="background:#f2f1ef;padding:24px;text-align:center;margin-bottom:32px">
+        <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#737373;margin:0 0 12px">Votre code de bienvenue</p>
+        <p style="font-size:28px;font-weight:700;font-family:monospace;letter-spacing:.08em;margin:0">${welcomeCode}</p>
+        <p style="font-size:12px;color:#737373;margin:12px 0 0">−15 % · Valable une fois · À saisir au moment du paiement</p>
+      </div>
+      <p style="font-size:14px;color:#737373;line-height:1.7;margin:0">
         Pour toute question : <a href="mailto:elekka.sellier@gmail.com" style="color:#0a0a0a">elekka.sellier@gmail.com</a>
       </p>
     </div>
