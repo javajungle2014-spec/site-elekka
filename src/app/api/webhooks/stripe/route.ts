@@ -3,9 +3,10 @@ import { NextResponse } from "next/server";
 import { createOrderAndGetNumber, sendOrderEmails, incrementPromoUsage } from "@/lib/order-emails";
 import type { OrderItem, OrderAddress } from "@/lib/order-emails";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
   const body = await req.text();
   const signature = req.headers.get("stripe-signature") ?? "";
 
