@@ -752,6 +752,20 @@ type SavedBridle = {
 function SavedBridlesTab({ userId }: { userId: string }) {
   const [bridles, setBridles] = useState<SavedBridle[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  async function handleDelete(id: string) {
+    setDeletingId(id);
+    const { data } = await createClient().auth.getSession();
+    if (!data.session?.access_token) { setDeletingId(null); return; }
+    await fetch("/api/saved-bridles", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json", authorization: `Bearer ${data.session.access_token}` },
+      body: JSON.stringify({ id }),
+    });
+    setBridles((prev) => prev.filter((b) => b.id !== id));
+    setDeletingId(null);
+  }
 
   useEffect(() => {
     createClient().auth.getSession().then(async ({ data }) => {
@@ -805,15 +819,24 @@ function SavedBridlesTab({ userId }: { userId: string }) {
         {bridles.map((b) => (
           <li key={b.id} className="border border-line p-5 space-y-4">
             <div className="flex items-start justify-between gap-4">
-              <div>
+              <div className="flex-1 min-w-0">
                 <p className="font-semibold text-ink">{b.name}</p>
                 <p className="text-xs text-muted mt-0.5">
                   Sauvegardé le {new Date(b.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
                 </p>
               </div>
-              <p className="font-mono text-lg font-semibold text-ink shrink-0">
-                {formatPrice(b.total)}
-              </p>
+              <div className="flex items-center gap-3 shrink-0">
+                <p className="font-mono text-lg font-semibold text-ink">{formatPrice(b.total)}</p>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(b.id)}
+                  disabled={deletingId === b.id}
+                  aria-label="Supprimer"
+                  className="press w-7 h-7 flex items-center justify-center text-muted hover:text-red-500 hover:border-red-200 border border-line transition-colors disabled:opacity-40"
+                >
+                  {deletingId === b.id ? <span className="text-[10px]">…</span> : <X size={12} />}
+                </button>
+              </div>
             </div>
             <div className="flex items-center gap-3">
               <Link
