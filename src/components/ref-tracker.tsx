@@ -72,7 +72,7 @@ function ReferralModal({ code, onClose }: { code: string; onClose: () => void })
           {/* CTA */}
           <div className="flex flex-col gap-2 pt-1">
             <Link
-              href="/compte"
+              href="/compte?mode=register"
               onClick={onClose}
               className="press group flex items-center justify-between bg-ink text-on-ink px-6 py-4 text-sm font-medium hover:bg-ink-soft transition-colors"
             >
