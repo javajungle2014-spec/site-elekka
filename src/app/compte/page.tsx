@@ -168,6 +168,9 @@ function RegisterForm({ onSwitch, onSuccess }: { onSwitch: () => void; onSuccess
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!phone.trim()) { setError("Numéro de téléphone requis."); return; }
+    const digitsOnly = phone.replace(/[\s\-\.\(\)]/g, "");
+    const validPhone = /^(\+\d{1,3})?\d{9,12}$/.test(digitsOnly);
+    if (!validPhone) { setError("Format de téléphone invalide. Exemple : 06 12 34 56 78 ou +33 6 12 34 56 78"); return; }
     if (password !== confirm) { setError("Les mots de passe ne correspondent pas."); return; }
     if (password.length < 8) { setError("8 caractères minimum."); return; }
     setError(""); setLoading(true);
