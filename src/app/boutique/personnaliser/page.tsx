@@ -594,8 +594,8 @@ export default function PersonnaliserPage() {
         padding: "8px 24px", display: "flex", justifyContent: "space-between",
         alignItems: "center", fontFamily: "var(--font-geist-mono)", letterSpacing: "0.08em",
       }}>
-        <span>✦ Fait main · Cuir pleine fleur · Garantie 2 ans</span>
-        <span style={{ opacity: 0.6 }}>Retours offerts · Expédition sous 48 h</span>
+        <span>✦ Fait main · Cuir pleine fleur</span>
+        <span style={{ opacity: 0.6 }}>Livraison offerte · Expédition sous 48 h</span>
       </div>
 
       {/* Sub-header */}
