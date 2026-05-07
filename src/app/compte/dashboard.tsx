@@ -1108,8 +1108,8 @@ function PromoWelcomeModal({ promotions, onClose }: { promotions: UserPromotion[
         <div className="px-8 py-7 space-y-4">
           <p className="text-sm text-muted leading-relaxed">
             {active.length > 1
-              ? "Retrouvez ces codes à tout moment dans la section <strong>Promotions</strong> de votre compte."
-              : "Retrouvez ce code à tout moment dans la section <strong>Promotions</strong> de votre compte."}
+              ? <>Retrouvez ces codes à tout moment dans la section <strong className="text-ink">Promotions</strong> de votre compte.</>
+              : <>Retrouvez ce code à tout moment dans la section <strong className="text-ink">Promotions</strong> de votre compte.</>}
           </p>
           {active.map((promo) => (
             <div key={promo.id} className="border border-line p-4 space-y-3">
