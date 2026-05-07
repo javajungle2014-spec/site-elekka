@@ -1219,7 +1219,6 @@ export function Dashboard({ userId, email, firstName }: DashboardProps) {
   const [promotions, setPromotions] = useState<UserPromotion[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
   const [showPromoModal, setShowPromoModal] = useState(false);
-  const [rewardPromos, setRewardPromos] = useState<UserPromotion[]>([]);
   const { slugs } = useFavorites();
 
   const activePromoCount = promotions.filter(isPromoActive).length;
@@ -1238,18 +1237,6 @@ export function Dashboard({ userId, email, firstName }: DashboardProps) {
         localStorage.setItem(welcomeKey, "1");
       }
 
-      // Modale récompense parrain — nouveaux codes -30€ non vus
-      const newRewards = p.filter((promo) => {
-        if (!isPromoActive(promo) || promo.discountValue !== 30) return false;
-        const seenKey = `reward_seen_${userId}_${promo.id}`;
-        return !localStorage.getItem(seenKey);
-      });
-      if (newRewards.length > 0) {
-        setRewardPromos(newRewards);
-        newRewards.forEach((promo) => {
-          localStorage.setItem(`reward_seen_${userId}_${promo.id}`, "1");
-        });
-      }
     });
   }, [userId]);
 
@@ -1296,13 +1283,7 @@ export function Dashboard({ userId, email, firstName }: DashboardProps) {
 
   return (
     <div className="min-h-[calc(100vh-80px)] flex flex-col md:flex-row">
-      {rewardPromos.length > 0 && (
-        <RewardModal
-          promos={rewardPromos}
-          onClose={() => setRewardPromos([])}
-        />
-      )}
-      {showPromoModal && rewardPromos.length === 0 && (
+      {showPromoModal && (
         <PromoWelcomeModal
           promotions={promotions}
           onClose={() => setShowPromoModal(false)}
