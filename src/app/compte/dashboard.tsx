@@ -1043,11 +1043,79 @@ type DashboardProps = {
   firstName: string;
 };
 
+function PromoWelcomeModal({ promotions, onClose }: { promotions: UserPromotion[]; onClose: () => void }) {
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const active = promotions.filter(isPromoActive);
+
+  function handleCopy(code: string, id: string) {
+    navigator.clipboard.writeText(code);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  }
+
+  return (
+    <div className="fixed inset-0 z-[90] flex items-center justify-center px-5" onClick={onClose}>
+      <div className="absolute inset-0 bg-ink/50 backdrop-blur-sm" />
+      <div className="relative w-full max-w-[460px] bg-paper shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+        <div className="bg-ink px-8 py-7 relative">
+          <button type="button" onClick={onClose} className="absolute top-4 right-4 text-on-ink-muted hover:text-on-ink transition-colors press" aria-label="Fermer">
+            <X size={16} />
+          </button>
+          <p className="kicker-tight text-on-ink-muted mb-2">Bienvenue</p>
+          <h2 className="display text-2xl text-on-ink leading-snug">
+            {active.length > 1 ? "Vos codes de réduction sont disponibles." : "Votre code de réduction est disponible."}
+          </h2>
+        </div>
+        <div className="px-8 py-7 space-y-4">
+          <p className="text-sm text-muted leading-relaxed">
+            {active.length > 1
+              ? "Retrouvez ces codes à tout moment dans la section <strong>Promotions</strong> de votre compte."
+              : "Retrouvez ce code à tout moment dans la section <strong>Promotions</strong> de votre compte."}
+          </p>
+          {active.map((promo) => (
+            <div key={promo.id} className="border border-line p-4 space-y-3">
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  {promo.label && <p className="text-[10px] tracking-[0.2em] uppercase text-muted font-medium mb-1">{promo.label}</p>}
+                  <p className="font-mono text-xl font-semibold tracking-wider text-ink">{promo.code}</p>
+                  <p className="text-xs text-muted mt-1">−{promo.discountValue} % · Valable une fois</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleCopy(promo.code, promo.id)}
+                  className="press shrink-0 flex items-center gap-2 text-xs border border-line px-3 py-1.5 hover:border-ink hover:text-ink transition-colors"
+                >
+                  {copiedId === promo.id ? <Check size={12} weight="bold" className="text-green-600" /> : <Copy size={12} />}
+                  {copiedId === promo.id ? "Copié !" : "Copier"}
+                </button>
+              </div>
+              {promo.discountValue === 20 && (
+                <p className="text-[11px] text-muted leading-snug border-t border-line pt-3">
+                  Ce code s'applique automatiquement à votre première commande. En cas de problème, collez-le dans le champ "Code promo" au paiement.
+                </p>
+              )}
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={onClose}
+            className="press w-full flex items-center justify-between bg-ink text-on-ink px-6 py-3.5 text-sm font-medium hover:bg-ink-soft transition-colors mt-2"
+          >
+            Accéder à mon compte
+            <ArrowSquareOut size={14} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function Dashboard({ userId, email, firstName }: DashboardProps) {
   const [activeTab, setActiveTab] = useState<DashTab>("overview");
   const [orders, setOrders] = useState<Order[]>([]);
   const [promotions, setPromotions] = useState<UserPromotion[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
+  const [showPromoModal, setShowPromoModal] = useState(false);
   const { slugs } = useFavorites();
 
   const activePromoCount = promotions.filter(isPromoActive).length;
@@ -1057,6 +1125,12 @@ export function Dashboard({ userId, email, firstName }: DashboardProps) {
       setOrders(o);
       setPromotions(p);
       setDataLoading(false);
+      // Affiche la modale une seule fois à la première connexion
+      const key = `promo_modal_seen_${userId}`;
+      if (p.filter(isPromoActive).length > 0 && !localStorage.getItem(key)) {
+        setShowPromoModal(true);
+        localStorage.setItem(key, "1");
+      }
     });
   }, [userId]);
 
@@ -1103,6 +1177,12 @@ export function Dashboard({ userId, email, firstName }: DashboardProps) {
 
   return (
     <div className="min-h-[calc(100vh-80px)] flex flex-col md:flex-row">
+      {showPromoModal && (
+        <PromoWelcomeModal
+          promotions={promotions}
+          onClose={() => setShowPromoModal(false)}
+        />
+      )}
       {/* ── Sidebar desktop ── */}
       <aside className="md:w-60 lg:w-64 shrink-0 md:sticky md:top-20 md:h-[calc(100vh-80px)] md:border-r md:border-line flex flex-col justify-between">
         <div>

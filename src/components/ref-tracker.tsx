@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, X, Gift, EnvelopeSimple } from "@phosphor-icons/react";
+import { ArrowRight, X, Gift } from "@phosphor-icons/react";
 
 function extractReferrerName(code: string): string {
   const prefix = code.split("-")[0];
@@ -43,18 +43,18 @@ function ReferralModal({ code, onClose }: { code: string; onClose: () => void })
         <div className="px-8 py-7 space-y-6">
 
           <p className="text-sm text-ink leading-relaxed">
-            Pour profiter de cette offre, <strong>créez votre compte Elekka</strong>. La réduction sera appliquée automatiquement à votre première commande — aucune action requise de votre part.
+            Pour profiter de cette offre, <strong>créez votre compte Elekka</strong>. La réduction sera appliquée automatiquement à votre première commande.
           </p>
 
           {/* Ce que vous recevrez */}
           <div className="space-y-3">
             <p className="text-[10px] tracking-[0.2em] uppercase text-muted font-medium">À la création de votre compte</p>
             <div className="flex items-start gap-3 p-4 border border-line">
-              <EnvelopeSimple size={16} className="text-ink shrink-0 mt-0.5" />
+              <Gift size={16} className="text-ink shrink-0 mt-0.5" />
               <div className="space-y-1">
-                <p className="text-sm font-semibold text-ink">Un code −20 % par email</p>
+                <p className="text-sm font-semibold text-ink">Un code −20 % disponible dans votre compte</p>
                 <p className="text-xs text-muted leading-snug">
-                  Votre code de parrainage vous sera envoyé par email. En cas de problème avec l'application automatique, collez-le dans le champ "Code promo" au paiement.
+                  Retrouvez-le dans la section "Promotions" de votre espace personnel, avec un bouton pour le copier. Il s'applique automatiquement à votre première commande.
                 </p>
               </div>
             </div>
@@ -63,7 +63,7 @@ function ReferralModal({ code, onClose }: { code: string; onClose: () => void })
               <div className="space-y-1">
                 <p className="text-sm font-semibold text-ink">Un code −15 % de bienvenue</p>
                 <p className="text-xs text-muted leading-snug">
-                  Offert à tous les nouveaux membres — utilisable sur une prochaine commande.
+                  Offert à tous les nouveaux membres — disponible aussi dans la section "Promotions".
                 </p>
               </div>
             </div>
