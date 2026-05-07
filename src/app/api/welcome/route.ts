@@ -31,7 +31,7 @@ function generateReferralCode(firstName: string): string {
 
 export async function POST(req: Request) {
   try {
-    const { email, firstName, lastName, phone, userId } = await req.json();
+    const { email, firstName, lastName, phone, userId, referralCode } = await req.json();
 
     if (!email) {
       return NextResponse.json({ error: "Email manquant" }, { status: 400 });
@@ -53,7 +53,7 @@ export async function POST(req: Request) {
       }
     }
 
-    // Générer un code unique
+    // Générer le code de bienvenue -15%
     let code = generateCode();
     let attempts = 0;
     while (attempts < 5) {
@@ -62,9 +62,7 @@ export async function POST(req: Request) {
       code = generateCode();
       attempts++;
     }
-
-    // Insérer le code dans la base
-    const { error } = await supabase.from("promo_codes").insert({
+    await supabase.from("promo_codes").insert({
       code,
       discount_type: "percent",
       discount_value: 15,
@@ -73,9 +71,26 @@ export async function POST(req: Request) {
       active: true,
     });
 
-    if (error) {
-      console.error("Promo insert error:", error);
-      return NextResponse.json({ error: "Erreur création code" }, { status: 500 });
+    // Générer le code parrainage -20% si applicable
+    let referralPromoCode: string | null = null;
+    if (referralCode) {
+      let rCode = `PARRAIN-${generateCode().slice(9)}`;
+      let rAttempts = 0;
+      while (rAttempts < 5) {
+        const { data } = await supabase.from("promo_codes").select("code").eq("code", rCode).single();
+        if (!data) break;
+        rCode = `PARRAIN-${generateCode().slice(9)}`;
+        rAttempts++;
+      }
+      const { error: rErr } = await supabase.from("promo_codes").insert({
+        code: rCode,
+        discount_type: "percent",
+        discount_value: 20,
+        max_uses: 1,
+        used_count: 0,
+        active: true,
+      });
+      if (!rErr) referralPromoCode = rCode;
     }
 
     // Envoyer l'email de bienvenue
@@ -84,8 +99,10 @@ export async function POST(req: Request) {
       from: "Elekka <contact@elekka-sellier.fr>",
       replyTo: "elekka.sellier@gmail.com",
       to: email,
-      subject: "Bienvenue chez Elekka — votre cadeau de bienvenue",
-      html: welcomeEmail({ firstName: firstName || "vous", code }),
+      subject: referralPromoCode
+        ? "Bienvenue chez Elekka — vos codes de réduction"
+        : "Bienvenue chez Elekka — votre cadeau de bienvenue",
+      html: welcomeEmail({ firstName: firstName || "vous", code, referralPromoCode }),
     });
 
     return NextResponse.json({ success: true });
@@ -96,7 +113,8 @@ export async function POST(req: Request) {
   }
 }
 
-function welcomeEmail({ firstName, code }: { firstName: string; code: string }) {
+function welcomeEmail({ firstName, code, referralPromoCode }: { firstName: string; code: string; referralPromoCode?: string | null }) {
+  const date = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
   return `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#0a0a0a">
     <div style="background:#0a0a0a;padding:32px 40px">
       <p style="color:#fafaf9;font-size:11px;letter-spacing:.18em;text-transform:uppercase;margin:0">Elekka — Bienvenue</p>
@@ -104,13 +122,24 @@ function welcomeEmail({ firstName, code }: { firstName: string; code: string }) 
     <div style="padding:40px;border:1px solid #e5e5e5;border-top:none">
       <h2 style="font-size:26px;font-weight:700;letter-spacing:-.02em;margin:0 0 8px">Bienvenue, ${firstName}.</h2>
       <p style="color:#737373;font-size:14px;margin:0 0 32px;line-height:1.7">
-        Votre compte Elekka est créé. Pour vous accueillir, voici un code de réduction de <strong>15 %</strong> sur votre première commande.
+        Votre compte Elekka est créé. Voici ${referralPromoCode ? "vos codes de réduction" : "votre cadeau de bienvenue"}.
       </p>
 
+      ${referralPromoCode ? `
+      <div style="background:#0a0a0a;padding:24px;text-align:center;margin-bottom:16px">
+        <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#a3a3a3;margin:0 0 8px">Code parrainage — réduction de bienvenue</p>
+        <p style="font-size:28px;font-weight:700;font-family:monospace;letter-spacing:.08em;margin:0;color:#fafaf9">${referralPromoCode}</p>
+        <p style="font-size:12px;color:#a3a3a3;margin:10px 0 0">−20 % · Valable une fois · S'applique automatiquement à votre première commande</p>
+      </div>
+      <p style="font-size:12px;color:#737373;margin:0 0 24px;line-height:1.6;text-align:center">
+        Si la réduction ne s'applique pas automatiquement, copiez ce code et collez-le dans le champ "Code promo" au moment du paiement.
+      </p>
+      ` : ""}
+
       <div style="background:#f2f1ef;padding:24px;text-align:center;margin-bottom:32px">
-        <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#737373;margin:0 0 12px">Votre code</p>
+        <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#737373;margin:0 0 12px">Code de bienvenue</p>
         <p style="font-size:28px;font-weight:700;font-family:monospace;letter-spacing:.08em;margin:0">${code}</p>
-        <p style="font-size:12px;color:#737373;margin:12px 0 0">Valable une fois — à saisir au moment du paiement</p>
+        <p style="font-size:12px;color:#737373;margin:12px 0 0">−15 % · Valable une fois · À saisir au moment du paiement</p>
       </div>
 
       <p style="font-size:14px;color:#737373;line-height:1.7;margin:0">
@@ -118,7 +147,7 @@ function welcomeEmail({ firstName, code }: { firstName: string; code: string }) 
       </p>
     </div>
     <div style="padding:20px 40px">
-      <p style="font-size:11px;color:#a3a3a3;margin:0">Elekka · ${new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}</p>
+      <p style="font-size:11px;color:#a3a3a3;margin:0">Elekka · ${date}</p>
     </div>
   </div>`;
 }

@@ -179,10 +179,11 @@ function RegisterForm({ onSwitch, onSuccess }: { onSwitch: () => void; onSuccess
         firstName, lastName, phone,
         addressLine1: "", addressLine2: "", city: "", postalCode: "", country: "France", referralCode: null,
       });
+      const referralCode = typeof window !== "undefined" ? localStorage.getItem("referral_code") : null;
       await fetch("/api/welcome", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, firstName, lastName, phone, userId: data.user.id }),
+        body: JSON.stringify({ email, firstName, lastName, phone, userId: data.user.id, referralCode }),
       });
     }
     setLoading(false);
