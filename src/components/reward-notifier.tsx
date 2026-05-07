@@ -58,7 +58,7 @@ function RewardModal({ promos, onClose }: { promos: UserPromotion[]; onClose: ()
           ))}
 
           <p className="text-xs text-muted leading-relaxed">
-            Un email de confirmation vous a également été envoyé avec ce code.
+            Un email de confirmation vous a également été envoyé avec ce code. Si vous ne le recevez pas dans les 5 minutes, vérifiez vos <strong className="text-ink">spams</strong> ou dossier "Promotions".
           </p>
 
           <a

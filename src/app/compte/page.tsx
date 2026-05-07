@@ -93,7 +93,10 @@ function LoginForm({ onSwitch, onSuccess }: { onSwitch: () => void; onSuccess: (
         </div>
         {resetSent ? (
           <div className="space-y-4">
-            <p className="text-sm text-muted border border-line px-4 py-3">Email envoyé à <strong>{email}</strong>. Vérifiez votre boîte mail.</p>
+            <div className="border border-line px-4 py-3 space-y-1">
+              <p className="text-sm text-muted">Email envoyé à <strong className="text-ink">{email}</strong>.</p>
+              <p className="text-xs text-muted-soft">Si vous ne le recevez pas dans les 5 minutes, vérifiez vos <strong className="text-muted">spams</strong> ou dossier "Promotions".</p>
+            </div>
             <button type="button" onClick={() => { setResetMode(false); setResetSent(false); }} className="press text-sm text-muted hover:text-ink underline underline-offset-4 transition-colors">
               Retour à la connexion
             </button>
@@ -200,11 +203,14 @@ function RegisterForm({ onSwitch, onSuccess }: { onSwitch: () => void; onSuccess
             Un email a été envoyé à <strong className="text-ink">{email}</strong>.<br />
             Cliquez sur le lien de confirmation pour activer votre compte.
           </p>
+          <p className="text-xs text-muted-soft">
+            Vous ne le voyez pas ? Vérifiez vos <strong className="text-muted">spams</strong> ou dossier "Promotions" — les emails automatiques y atterrissent parfois.
+          </p>
         </div>
         <div className="border border-line p-5 space-y-2">
           <p className="text-xs tracking-widest uppercase text-muted font-medium">Cadeau de bienvenue</p>
           <p className="text-sm text-ink leading-relaxed">
-            Votre email de bienvenue contient un <strong>code de réduction de −15 %</strong> sur votre première commande. Pensez à vérifier vos spams si vous ne le recevez pas dans les 5 minutes.
+            Un second email de bienvenue avec votre <strong>code −15 %</strong> vous sera envoyé après confirmation. Si vous ne le recevez pas dans les 5 minutes, vérifiez vos <strong>spams</strong>.
           </p>
         </div>
         <button
