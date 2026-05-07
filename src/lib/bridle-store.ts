@@ -43,7 +43,6 @@ export function priceOf(s: BridleState): number {
   if (s.tetiere != null) total += C.tetiere[s.tetiere].price;
   if (s.rene != null) total += C.rene[s.rene].price;
   if (s.enrenementOn) total += C.enrenement[s.enrenement].price;
-  if (s.grav && s.grav.trim().length > 0) total += 25;
   return total;
 }
 

@@ -252,7 +252,6 @@ function DetailedRecap({
           ["Rênes", v(C.rene, s.rene)],
           ["Coloris", s.cuir ? C.cuir.find((c) => c.id === s.cuir)?.name : <span style={{ color: "#5a5a63", fontStyle: "italic" }}>à choisir</span>],
           ["Taille", s.taille || <span style={{ color: "#5a5a63", fontStyle: "italic" }}>à choisir</span>],
-          ["Gravure", s.grav || "—"],
         ].map(([label, val]) => (
           <div key={String(label)} style={{ display: "flex", justifyContent: "space-between", gap: 6, padding: "2px 0" }}>
             <span style={{ fontFamily: "var(--font-geist-mono)", fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "#5a5a63" }}>{label}</span>
@@ -974,10 +973,10 @@ export default function PersonnaliserPage() {
             </Panel>
           </div>
 
-          {/* Taille & gravure */}
+          {/* Taille */}
           <div ref={refs.taille}>
-            <Panel n="06" title="Taille & gravure" status={done.taille ? "done" : done.finitions ? "active" : "idle"} highlighted={false}>
-              <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
+            <Panel n="06" title="Taille" status={done.taille ? "done" : done.finitions ? "active" : "idle"} highlighted={false}>
+              <div style={{ display: "flex", gap: 6 }}>
                 {C.taille.map((t) => (
                   <div
                     key={t}
@@ -994,19 +993,6 @@ export default function PersonnaliserPage() {
                   </div>
                 ))}
               </div>
-              <input
-                placeholder="Initiales ou prénom (optionnel)"
-                value={s.grav}
-                onChange={(e) => set("grav", e.target.value.slice(0, 14))}
-                style={{
-                  width: "100%", height: 44, padding: "0 14px",
-                  border: "1px solid #d8d3c7", borderRadius: 6,
-                  background: "#fff", fontSize: 16, fontStyle: "italic",
-                  color: "#14141a", outline: "none",
-                  fontFamily: "var(--font-geist-sans)",
-                }}
-              />
-              <div style={{ fontSize: 11, color: "#5a5a63", marginTop: 6 }}>+ 25 € · gravure laser sur la têtière</div>
             </Panel>
           </div>
 
