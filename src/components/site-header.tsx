@@ -12,7 +12,7 @@ import { useFavorites } from "@/lib/favorites-store";
 const nav = [
   { href: "/", label: "Accueil" },
   { href: "/boutique", label: "Boutique" },
-  { href: "/boutique/personnaliser", label: "Créez votre filet" },
+  { href: "/boutique/personnaliser", label: "L'Atelier" },
   { href: "/#contact", label: "Contact" },
 ];
 
