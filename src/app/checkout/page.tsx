@@ -8,7 +8,7 @@ import { PayPalButton } from "@/components/paypal-button";
 import { useCart } from "@/lib/cart-store";
 import { formatPrice } from "@/lib/products";
 import { createClient } from "@/lib/supabase";
-import { fetchProfile } from "@/lib/account-store";
+import { fetchProfile, upsertProfile } from "@/lib/account-store";
 
 type Address = {
   firstName: string; lastName: string; email: string; phone: string;
@@ -161,11 +161,29 @@ export default function CheckoutPage() {
     setPromo({ code: "", status: "idle", discountEUR: 0, label: "", error: "" });
   }
 
+  async function saveAddressToProfile() {
+    const supabase = createClient();
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) return;
+    await upsertProfile(data.user.id, {
+      firstName: address.firstName,
+      lastName: address.lastName,
+      phone: address.phone,
+      addressLine1: address.line1,
+      addressLine2: address.line2,
+      city: address.city,
+      postalCode: address.postalCode,
+      country: address.country,
+      referralCode: null,
+    });
+  }
+
   async function handleStripeSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
     setCheckoutError(null);
+    saveAddressToProfile();
     try {
       const supabase = createClient();
       const { data } = await supabase.auth.getUser();
@@ -283,7 +301,7 @@ export default function CheckoutPage() {
                   address={address}
                   promoCode={promo.status === "valid" ? promo.code : null}
                   discountEUR={promo.discountEUR}
-                  onValidate={() => { const ok = validate(); if (ok) setCheckoutError(null); return ok; }}
+                  onValidate={() => { const ok = validate(); if (ok) { setCheckoutError(null); saveAddressToProfile(); } return ok; }}
                   onError={(msg) => setCheckoutError(msg)}
                 />
 
