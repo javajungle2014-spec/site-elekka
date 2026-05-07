@@ -232,8 +232,8 @@ function RegisterForm({ onSwitch, onSuccess }: { onSwitch: () => void; onSuccess
     <form onSubmit={handleSubmit} className="space-y-8">
       <div className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
-          <InputField label="Prénom" value={firstName} onChange={setFirstName} placeholder="Lucas" icon={User} />
-          <InputField label="Nom" value={lastName} onChange={setLastName} placeholder="Mourier" icon={User} />
+          <InputField label="Prénom" value={firstName} onChange={setFirstName} placeholder="Votre prénom" icon={User} />
+          <InputField label="Nom" value={lastName} onChange={setLastName} placeholder="Votre nom" icon={User} />
         </div>
         <InputField label="Email" type="email" value={email} onChange={setEmail} placeholder="votre@email.fr" icon={EnvelopeSimple} />
         <InputField label="Téléphone" type="tel" value={phone} onChange={setPhone} placeholder="+33 6 00 00 00 00" icon={Phone} />
