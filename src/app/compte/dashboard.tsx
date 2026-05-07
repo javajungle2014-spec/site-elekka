@@ -6,7 +6,7 @@ import Link from "next/link";
 import {
   House, Package, Heart, Tag, IdentificationCard,
   SignOut, CaretRight, Copy, Check, Truck, MapPin,
-  ArrowUpRight, ShoppingBag, X, ArrowSquareOut, UsersThree,
+  ArrowUpRight, ShoppingBag, X, ArrowSquareOut, UsersThree, Sliders,
 } from "@phosphor-icons/react";
 import { createClient } from "@/lib/supabase";
 import { useFavorites } from "@/lib/favorites-store";
@@ -19,7 +19,7 @@ import {
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-type DashTab = "overview" | "orders" | "favorites" | "parrainage" | "promotions" | "profile";
+type DashTab = "overview" | "orders" | "favorites" | "parrainage" | "promotions" | "bridles" | "profile";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -36,6 +36,7 @@ const TAB_ITEMS: { id: DashTab; label: string; Icon: React.ElementType }[] = [
   { id: "favorites", label: "Favoris", Icon: Heart },
   { id: "parrainage", label: "Parrainage", Icon: UsersThree },
   { id: "promotions", label: "Promotions", Icon: Tag },
+  { id: "bridles", label: "Mes filets", Icon: Sliders },
   { id: "profile", label: "Mon profil", Icon: IdentificationCard },
 ];
 
@@ -737,6 +738,99 @@ function ParrainageTab({ userId }: { userId: string }) {
   );
 }
 
+// ── Onglet Mes filets ─────────────────────────────────────────────────────────
+
+type SavedBridle = {
+  id: string;
+  name: string;
+  total: number;
+  code: string;
+  snapshot: Record<string, unknown>;
+  created_at: string;
+};
+
+function SavedBridlesTab({ userId }: { userId: string }) {
+  const [bridles, setBridles] = useState<SavedBridle[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getSession().then(async ({ data }) => {
+      const token = data.session?.access_token;
+      if (!token) { setLoading(false); return; }
+      const res = await fetch("/api/saved-bridles", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        const json = await res.json();
+        setBridles(json.bridles ?? []);
+      }
+      setLoading(false);
+    });
+  }, [userId]);
+
+  if (loading) {
+    return <div className="flex items-center justify-center py-20 text-sm text-muted">Chargement…</div>;
+  }
+
+  if (bridles.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
+        <Sliders size={40} weight="thin" className="text-muted-soft" />
+        <p className="text-sm text-muted">Aucun filet sauvegardé pour le moment.</p>
+        <p className="text-xs text-muted-soft max-w-[34ch] leading-relaxed">
+          Composez votre filet sur mesure et sauvegardez-le pour le retrouver ici.
+        </p>
+        <Link
+          href="/boutique/personnaliser"
+          className="press mt-2 inline-flex items-center gap-2 bg-ink text-on-ink px-5 py-3 text-sm font-medium hover:bg-ink-soft transition-colors"
+        >
+          Créer mon filet <ArrowSquareOut size={13} />
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <SectionTitle>{bridles.length} configuration{bridles.length > 1 ? "s" : ""} sauvegardée{bridles.length > 1 ? "s" : ""}</SectionTitle>
+        <Link
+          href="/boutique/personnaliser"
+          className="press text-xs text-muted hover:text-ink underline underline-offset-4 transition-colors"
+        >
+          + Nouvelle configuration
+        </Link>
+      </div>
+      <ul className="space-y-3">
+        {bridles.map((b) => (
+          <li key={b.id} className="border border-line p-5 space-y-4">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="font-semibold text-ink">{b.name}</p>
+                <p className="text-xs text-muted mt-0.5">
+                  Sauvegardé le {new Date(b.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                </p>
+              </div>
+              <p className="font-mono text-lg font-semibold text-ink shrink-0">
+                {formatPrice(b.total)}
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/boutique/personnaliser"
+                className="press flex-1 flex items-center justify-center gap-2 bg-ink text-on-ink py-2.5 text-xs font-medium hover:bg-ink-soft transition-colors"
+              >
+                <Sliders size={13} /> Charger dans le configurateur
+              </Link>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 // ── Onglet Promotions ─────────────────────────────────────────────────────────
 
 function PromotionsTab({ promotions }: { promotions: UserPromotion[] }) {
@@ -1276,6 +1370,8 @@ export function Dashboard({ userId, email, firstName }: DashboardProps) {
         return <ParrainageTab userId={userId} />;
       case "promotions":
         return <PromotionsTab promotions={promotions} />;
+      case "bridles":
+        return <SavedBridlesTab userId={userId} />;
       case "profile":
         return <ProfileTab userId={userId} email={email} authFirstName={firstName} />;
     }
