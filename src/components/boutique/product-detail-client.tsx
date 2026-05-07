@@ -355,7 +355,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
   function scrollToRef(ref: React.RefObject<HTMLDivElement | null>) {
     const el = ref.current;
     if (!el) return;
-    const top = el.getBoundingClientRect().top + window.scrollY - 104;
+    const top = el.getBoundingClientRect().top + window.scrollY - 140;
     window.scrollTo({ top, behavior: "smooth" });
   }
 
