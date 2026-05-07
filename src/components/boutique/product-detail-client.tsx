@@ -526,7 +526,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                   <div className="mt-3 flex items-center justify-between text-muted">
                     <span className="kicker-tight">Fig. {selectedImageIdx + 1} — {currentColour.label}</span>
                     <span className="font-mono text-[10px] tracking-wider">
-                      ELK-{product.slug.slice(0, 3).toUpperCase()}
+                      ELK-{product.slug.slice(0, 3).toUpperCase()}-{selectedColour.replace("havana-brown", "HB").replace("noir", "NO").replace("dark-brown", "DB").toUpperCase()}-{(selectedSize ?? product.defaultSize).slice(0, 2).toUpperCase()}
                     </span>
                   </div>
 
