@@ -352,12 +352,19 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const reinsRef      = useRef<HTMLDivElement>(null);
   const equipRef      = useRef<HTMLDivElement>(null);
 
+  function scrollToRef(ref: React.RefObject<HTMLDivElement | null>) {
+    const el = ref.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - 104;
+    window.scrollTo({ top, behavior: "smooth" });
+  }
+
   function scrollToNext(
     next: React.RefObject<HTMLDivElement | null>,
     wouldBeComplete: boolean
   ) {
     if (wouldBeComplete) return;
-    setTimeout(() => next.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+    setTimeout(() => scrollToRef(next), 60);
   }
 
   const currentColour = product.colours.find(c => c.key === selectedColour)!;
@@ -761,7 +768,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 {equipOptions.map((e, idx) => {
                   const isActive = selectedEquip === e.key;
                   return (
-                    <button key={e.key} type="button" onClick={() => { setSelectedEquip(e.key); const done = !!(selectedDiscipline && selectedColour && selectedSize && selectedReins && e.key); if (done) setTimeout(() => ctaRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 60); }}
+                    <button key={e.key} type="button" onClick={() => { setSelectedEquip(e.key); const done = !!(selectedDiscipline && selectedColour && selectedSize && selectedReins && e.key); if (done) setTimeout(() => scrollToRef(ctaRef), 60); }}
                       className={`choice press w-full text-left p-5 flex items-center justify-between gap-4 ${isActive ? "choice--active" : ""}`}>
                       <div className="flex items-baseline gap-5 min-w-0">
                         <span className={`font-mono text-[10px] tracking-wider mt-1 ${isActive ? "text-ink" : "text-muted-soft"}`}>0{idx + 1}</span>
