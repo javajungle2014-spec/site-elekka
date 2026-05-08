@@ -728,7 +728,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 {reinsOptions.map((r, idx) => {
                   const isActive = selectedReins === r.key;
                   return (
-                    <button key={r.key} type="button" onClick={() => { setSelectedReins(r.key); scrollToNext(equipRef, !!(selectedDiscipline && selectedColour && selectedSize && r.key && selectedEquip)); }}
+                    <button key={r.key} type="button" onClick={() => setSelectedReins(r.key)}
                       className={`choice press w-full text-left p-5 flex items-center justify-between gap-4 ${isActive ? "choice--active" : ""}`}>
                       <div className="flex items-baseline gap-5 min-w-0">
                         <span className={`font-mono text-[10px] tracking-wider mt-1 ${isActive ? "text-ink" : "text-muted-soft"}`}>0{idx + 1}</span>
@@ -768,7 +768,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 {equipOptions.map((e, idx) => {
                   const isActive = selectedEquip === e.key;
                   return (
-                    <button key={e.key} type="button" onClick={() => { setSelectedEquip(e.key); const done = !!(selectedDiscipline && selectedColour && selectedSize && selectedReins && e.key); if (done) setTimeout(() => scrollToRef(ctaRef), 60); }}
+                    <button key={e.key} type="button" onClick={() => setSelectedEquip(e.key)}
                       className={`choice press w-full text-left p-5 flex items-center justify-between gap-4 ${isActive ? "choice--active" : ""}`}>
                       <div className="flex items-baseline gap-5 min-w-0">
                         <span className={`font-mono text-[10px] tracking-wider mt-1 ${isActive ? "text-ink" : "text-muted-soft"}`}>0{idx + 1}</span>
