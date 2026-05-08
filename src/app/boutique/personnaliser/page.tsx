@@ -348,6 +348,13 @@ export default function PersonnaliserPage() {
   const [showCompareView, setShowCompareView] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 1024);
+    check();
+    window.addEventListener("resize", check, { passive: true });
+    return () => window.removeEventListener("resize", check);
+  }, []);
   const refs: Record<StepKey | "cart", React.RefObject<HTMLDivElement | null>> = {
     muserole: useRef(null),
     frontal: useRef(null),
@@ -589,14 +596,16 @@ export default function PersonnaliserPage() {
     <div style={{ display: "flex", flexDirection: "column", background: "#f5f2ec", color: "#14141a", minHeight: "100%" }}>
 
       {/* Bandeau social-proof */}
-      <div style={{
-        background: "#14141a", color: "#fff", fontSize: 11,
-        padding: "8px 24px", display: "flex", justifyContent: "space-between",
-        alignItems: "center", fontFamily: "var(--font-geist-mono)", letterSpacing: "0.08em",
-      }}>
-        <span>✦ Fait main · Cuir pleine fleur</span>
-        <span style={{ opacity: 0.6 }}>Livraison offerte · Expédition sous 48 h</span>
-      </div>
+      {!isMobile && (
+        <div style={{
+          background: "#14141a", color: "#fff", fontSize: 11,
+          padding: "8px 24px", display: "flex", justifyContent: "space-between",
+          alignItems: "center", fontFamily: "var(--font-geist-mono)", letterSpacing: "0.08em",
+        }}>
+          <span>✦ Fait main · Cuir pleine fleur</span>
+          <span style={{ opacity: 0.6 }}>Livraison offerte · Expédition sous 48 h</span>
+        </div>
+      )}
 
       {/* Sub-header */}
       <div style={{
@@ -734,13 +743,25 @@ export default function PersonnaliserPage() {
       )}
 
       {/* Split panes */}
-      <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", flex: 1, minHeight: "calc(100vh - 200px)" }}>
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: isMobile ? "1fr" : "1.1fr 1fr",
+        flex: 1,
+        minHeight: isMobile ? "auto" : "calc(100vh - 200px)",
+      }}>
 
-        {/* LEFT — aperçu fixe */}
+        {/* LEFT — aperçu */}
         <div style={{
-          borderRight: "1px solid #d8d3c7", padding: "20px 24px",
-          display: "flex", flexDirection: "column", gap: 14, position: "sticky", top: 80,
-          height: "calc(100vh - 80px)", overflowY: "auto",
+          borderRight: isMobile ? "none" : "1px solid #d8d3c7",
+          borderBottom: isMobile ? "1px solid #d8d3c7" : "none",
+          padding: "20px 24px",
+          display: "flex", flexDirection: "column", gap: 14,
+          position: isMobile ? "sticky" : "sticky",
+          top: isMobile ? 0 : 80,
+          height: isMobile ? "min(50vw, 340px)" : "calc(100vh - 80px)",
+          overflowY: "auto",
+          zIndex: isMobile ? 20 : "auto",
+          background: "#f5f2ec",
         }}>
           {/* Sélecteur de vue */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -848,12 +869,14 @@ export default function PersonnaliserPage() {
             </div>
           </div>
 
-          {/* Récap détaillé */}
-          <DetailedRecap
-            s={s} total={total}
-            completedCount={completedCount} totalSteps={STEP_KEYS.length}
-            onSave={openSave} onCompare={enterCompare} compareOn={compareOn}
-          />
+          {/* Récap détaillé — masqué sur mobile */}
+          {!isMobile && (
+            <DetailedRecap
+              s={s} total={total}
+              completedCount={completedCount} totalSteps={STEP_KEYS.length}
+              onSave={openSave} onCompare={enterCompare} compareOn={compareOn}
+            />
+          )}
         </div>
 
         {/* RIGHT — scrollable */}
