@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { Star, ArrowLeft, ArrowRight } from "@phosphor-icons/react";
 
 type Review = {
@@ -34,7 +35,7 @@ function Avatar({ name, photoUrl }: { name: string; photoUrl: string | null }) {
   const initials = name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
   if (photoUrl) {
     return (
-      <img src={photoUrl} alt={name} className="w-10 h-10 rounded-full object-cover shrink-0" />
+      <Image src={photoUrl} alt={name} width={40} height={40} className="rounded-full object-cover shrink-0" />
     );
   }
   return (
