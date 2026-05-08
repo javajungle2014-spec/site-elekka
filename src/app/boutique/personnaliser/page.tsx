@@ -84,6 +84,7 @@ function OptionGrid({
   stitch,
   flat = false,
   cols = 3,
+  mobile = false,
 }: {
   items: BridlePart[];
   selected: number | null;
@@ -93,9 +94,11 @@ function OptionGrid({
   stitch: string;
   flat?: boolean;
   cols?: number;
+  mobile?: boolean;
 }) {
+  const effectiveCols = mobile ? Math.min(cols, 2) : cols;
   return (
-    <div style={{ display: "grid", gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 10 }}>
+    <div style={{ display: "grid", gridTemplateColumns: `repeat(${effectiveCols}, 1fr)`, gap: 10 }}>
       {items.map((it, i) => {
         const Comp = Components[i];
         const isSelected = selected === i;
@@ -406,7 +409,7 @@ export default function PersonnaliserPage() {
     requestAnimationFrame(() => {
       const target = refs[key]?.current;
       if (!target) return;
-      const offset = isMobile ? 440 : 120;
+      const offset = isMobile ? 380 : 120;
       const y = target.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top: y, behavior: "smooth" });
     });
@@ -891,7 +894,7 @@ export default function PersonnaliserPage() {
                 items={C.muserole} selected={s.muserole}
                 onSelect={(i) => { set("muserole", i); completeAndAdvance("muserole"); }}
                 Components={MUSEROLE_COMPONENTS}
-                cuir={cuirId} stitch={stitchHex}
+                cuir={cuirId} stitch={stitchHex} mobile={isMobile}
               />
             </Panel>
           </div>
@@ -904,7 +907,7 @@ export default function PersonnaliserPage() {
                 items={C.frontal} selected={s.frontal}
                 onSelect={(i) => { set("frontal", i); completeAndAdvance("frontal"); }}
                 Components={FRONTAL_COMPONENTS}
-                cuir={cuirId} stitch={stitchHex} flat
+                cuir={cuirId} stitch={stitchHex} flat mobile={isMobile}
               />
             </Panel>
           </div>
@@ -917,7 +920,7 @@ export default function PersonnaliserPage() {
                 items={C.tetiere} selected={s.tetiere}
                 onSelect={(i) => { set("tetiere", i); completeAndAdvance("tetiere"); }}
                 Components={TETIERE_COMPONENTS}
-                cuir={cuirId} stitch={stitchHex}
+                cuir={cuirId} stitch={stitchHex} mobile={isMobile}
               />
             </Panel>
           </div>
@@ -944,7 +947,7 @@ export default function PersonnaliserPage() {
                 items={C.rene} selected={s.rene}
                 onSelect={(i) => { set("rene", i); completeAndAdvance("rene"); }}
                 Components={RENE_COMPONENTS}
-                cuir={cuirId} stitch={stitchHex} flat cols={3}
+                cuir={cuirId} stitch={stitchHex} flat cols={3} mobile={isMobile}
               />
               {s.enrenementOn && (
                 <div style={{ marginTop: 12, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
