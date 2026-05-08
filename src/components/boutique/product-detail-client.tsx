@@ -371,6 +371,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const currentColour = product.colours.find(c => c.key === selectedColour)!;
   const otherProducts = products.filter(p => p.slug !== product.slug);
 
+  useEffect(() => { window.scrollTo(0, 0); }, []);
   useEffect(() => { setFavoriteState(isFavorite(product.slug)); }, [isFavorite, product.slug]);
   useEffect(() => { setSelectedImageIdx(0); }, [selectedColour]);
 
@@ -483,8 +484,6 @@ export function ProductDetailClient({ product }: { product: Product }) {
           </div>
         </div>
       )}
-
-      <PerksMarquee />
 
       <div className="min-h-screen pb-24">
 

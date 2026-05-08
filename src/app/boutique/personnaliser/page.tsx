@@ -352,6 +352,7 @@ export default function PersonnaliserPage() {
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => { window.scrollTo(0, 0); }, []);
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024);
     check();
