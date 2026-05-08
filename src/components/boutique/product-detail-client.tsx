@@ -342,6 +342,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const [authOpen, setAuthOpen]   = useState(false);
   const [stickyVisible, setStickyVisible] = useState(false);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
+  const [zoomedImage, setZoomedImage]     = useState<string | null>(null);
   const [added, setAdded]         = useState(false);
   const [favorite, setFavoriteState] = useState(false);
   const [stockQty, setStockQty]   = useState<number | null>(null);
@@ -458,6 +459,30 @@ export function ProductDetailClient({ product }: { product: Product }) {
     <>
       <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
       {sizeGuideOpen && <SizeGuideModal onClose={() => setSizeGuideOpen(false)} />}
+      {zoomedImage && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/90 cursor-zoom-out"
+          onClick={() => setZoomedImage(null)}
+        >
+          <button
+            type="button"
+            onClick={() => setZoomedImage(null)}
+            className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center text-on-ink hover:text-on-ink-muted transition-colors"
+            aria-label="Fermer"
+          >
+            <span className="text-2xl leading-none">×</span>
+          </button>
+          <div className="relative w-full h-full max-w-3xl max-h-[90vh] m-8">
+            <Image
+              src={zoomedImage}
+              alt={product.name}
+              fill
+              className="object-contain"
+              sizes="90vw"
+            />
+          </div>
+        </div>
+      )}
 
       <PerksMarquee />
 
@@ -522,9 +547,16 @@ export function ProductDetailClient({ product }: { product: Product }) {
 
                 {/* Image principale */}
                 <div className="flex-1">
-                  <div className={`relative aspect-[3/4] overflow-hidden ${
-                    currentColour.images.length > 0 ? "bg-paper-2" : (LEATHER[selectedColour] ?? "bg-paper-2")
-                  }`}>
+                  <div
+                    className={`relative aspect-[3/4] overflow-hidden ${
+                      currentColour.images.length > 0 ? "bg-paper-2 cursor-zoom-in" : (LEATHER[selectedColour] ?? "bg-paper-2")
+                    }`}
+                    onDoubleClick={() => {
+                      if (currentColour.images.length > 0) {
+                        setZoomedImage(currentColour.images[selectedImageIdx] ?? currentColour.images[0]);
+                      }
+                    }}
+                  >
                     {currentColour.images.length > 0 ? (
                       <Image
                         src={currentColour.images[selectedImageIdx] ?? currentColour.images[0]}

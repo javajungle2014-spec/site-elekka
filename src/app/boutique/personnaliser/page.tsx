@@ -406,11 +406,12 @@ export default function PersonnaliserPage() {
     requestAnimationFrame(() => {
       const target = refs[key]?.current;
       if (!target) return;
-      const y = target.getBoundingClientRect().top + window.scrollY - 120;
+      const offset = isMobile ? 440 : 120;
+      const y = target.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top: y, behavior: "smooth" });
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isMobile]);
 
   const scrollToNextEmpty = useCallback(
     (currentDone: Partial<Record<StepKey, boolean>>) => {
@@ -593,7 +594,7 @@ export default function PersonnaliserPage() {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", background: "#f5f2ec", color: "#14141a", minHeight: "100%" }}>
+    <div style={{ display: "flex", flexDirection: "column", background: "#f5f2ec", color: "#14141a", minHeight: "100%", overflowX: "hidden" }}>
 
       {/* Bandeau social-proof */}
       {!isMobile && (
@@ -758,7 +759,7 @@ export default function PersonnaliserPage() {
           display: "flex", flexDirection: "column", gap: 14,
           position: isMobile ? "sticky" : "sticky",
           top: isMobile ? 0 : 80,
-          height: isMobile ? "min(50vw, 340px)" : "calc(100vh - 80px)",
+          height: isMobile ? "min(75vw, 420px)" : "calc(100vh - 80px)",
           overflowY: "auto",
           zIndex: isMobile ? 20 : "auto",
           background: "#f5f2ec",
@@ -880,7 +881,7 @@ export default function PersonnaliserPage() {
         </div>
 
         {/* RIGHT — scrollable */}
-        <div ref={scrollRef} style={{ padding: "20px 24px 100px" }}>
+        <div ref={scrollRef} style={{ padding: "20px 24px 100px", overflowX: "hidden" }}>
 
           {/* Muserolle */}
           <div ref={refs.muserole} onMouseEnter={() => setHoverPart("muserole")} onMouseLeave={() => setHoverPart(null)}>
