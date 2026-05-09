@@ -20,8 +20,16 @@ export default function MuserollePage() {
         { key: "triple",     label: "Triple attache", desc: "Interchangeable : épaisse, ovale, rectangulaire — Fusion",             priceEUR: 54.25 },
       ],
       colours: [
-        { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
-        { key: "noir",         label: "Noir",          swatch: "#0a0a0a" },
+        { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a", images: [
+          "/products/pieces/muserolle/muserolle-havana-brown-01.png",
+          "/products/pieces/muserolle/muserolle-havana-brown-02.png",
+          "/products/pieces/muserolle/muserolle-havana-brown-03.png",
+        ]},
+        { key: "noir", label: "Noir", swatch: "#0a0a0a", images: [
+          "/products/pieces/muserolle/muserolle-noir-01.png",
+          "/products/pieces/muserolle/muserolle-noir-02.png",
+          "/products/pieces/muserolle/muserolle-noir-03.png",
+        ]},
       ],
       sizes: ["Full", "Cob"],
       specs: [

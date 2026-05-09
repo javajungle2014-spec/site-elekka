@@ -20,8 +20,16 @@ export default function FrontalPage() {
         { key: "signature",  label: "Signature",   desc: "Large 5,5 cm — répartit la pression, finitions soignées — Fusion",  priceEUR: 38.75 },
       ],
       colours: [
-        { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
-        { key: "noir",         label: "Noir",          swatch: "#0a0a0a" },
+        { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a", images: [
+          "/products/pieces/frontal/frontal-havana-brown-01.png",
+          "/products/pieces/frontal/frontal-havana-brown-02.png",
+          "/products/pieces/frontal/frontal-havana-brown-03.png",
+        ]},
+        { key: "noir", label: "Noir", swatch: "#0a0a0a", images: [
+          "/products/pieces/frontal/frontal-noir-01.png",
+          "/products/pieces/frontal/frontal-noir-02.png",
+          "/products/pieces/frontal/frontal-noir-03.png",
+        ]},
       ],
       sizes: ["Full", "Cob"],
       specs: [

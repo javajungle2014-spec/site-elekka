@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Check } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowUp, ArrowDown, Check } from "@phosphor-icons/react";
 import { formatPrice } from "@/lib/products";
 import { useCart } from "@/lib/cart-store";
 import type { ColourKey, Size } from "@/lib/products";
@@ -21,7 +22,7 @@ export type Piece = {
   description: string;
   priceEUR: number;
   models: PieceModel[];
-  colours: { key: ColourKey; label: string; swatch: string }[];
+  colours: { key: ColourKey; label: string; swatch: string; images?: string[] }[];
   sizes: Size[];
   specs: [string, string][];
 };
@@ -32,16 +33,49 @@ const leatherClass: Record<ColourKey, string> = {
   "dark-brown":   "leather-dark-brown",
 };
 
+function ThumbnailRail({ images, selected, onSelect, name }: {
+  images: string[];
+  selected: number;
+  onSelect: (i: number) => void;
+  name: string;
+}) {
+  return (
+    <div className="hidden md:flex flex-col gap-1.5 shrink-0 w-[58px]">
+      {images.map((img, i) => (
+        <button
+          key={i}
+          type="button"
+          onClick={() => onSelect(i)}
+          className="press relative w-full overflow-hidden transition-all duration-200"
+          style={{
+            aspectRatio: "1/1",
+            border: selected === i ? "2px solid var(--ink)" : "2px solid transparent",
+            boxShadow: selected !== i ? "0 0 0 1px #e5e5e5" : undefined,
+          }}
+          aria-label={`Vue ${i + 1}`}
+        >
+          <Image src={img} alt={`${name} vue ${i + 1}`} fill sizes="58px" className="object-cover" />
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export function PieceDetail({ piece }: { piece: Piece }) {
-  const [model, setModel]   = useState<string>(piece.models[0]?.key ?? "");
-  const [colour, setColour] = useState<ColourKey>(piece.colours[0].key);
-  const [size, setSize]     = useState<Size>(piece.sizes[0]);
-  const [added, setAdded]   = useState(false);
-  const { addItem }         = useCart();
+  const [model, setModel]           = useState<string>(piece.models[0]?.key ?? "");
+  const [colour, setColour]         = useState<ColourKey>(piece.colours[0].key);
+  const [size, setSize]             = useState<Size>(piece.sizes[0]);
+  const [selectedImg, setSelectedImg] = useState(0);
+  const [added, setAdded]           = useState(false);
+  const { addItem }                 = useCart();
 
   const activeColour = piece.colours.find(c => c.key === colour) ?? piece.colours[0];
   const activeModel  = piece.models.find(m => m.key === model) ?? piece.models[0];
   const price        = activeModel?.priceEUR ?? piece.priceEUR;
+  const images       = activeColour.images ?? [];
+
+  // Reset image sélectionnée au changement de couleur
+  useEffect(() => { setSelectedImg(0); }, [colour]);
 
   function handleAdd() {
     addItem({
@@ -77,11 +111,59 @@ export function PieceDetail({ piece }: { piece: Piece }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-start">
 
           {/* Visuel */}
-          <div className={`aspect-square w-full ${leatherClass[colour]}`}>
-            <div className="w-full h-full flex items-end p-6">
-              <span className="font-mono text-[10px] text-white/30 tracking-widest uppercase">
-                {piece.name} · {activeModel?.label} · {activeColour.label}
-              </span>
+          <div className="flex gap-3">
+            {/* Rail miniatures vertical */}
+            {images.length > 1 && (
+              <ThumbnailRail
+                images={images}
+                selected={selectedImg}
+                onSelect={setSelectedImg}
+                name={piece.name}
+              />
+            )}
+
+            {/* Image principale */}
+            <div className="flex-1">
+              <div className={`relative aspect-square w-full overflow-hidden ${
+                images.length > 0 ? "bg-paper-2" : leatherClass[colour]
+              }`}>
+                {images.length > 0 ? (
+                  <Image
+                    src={images[selectedImg] ?? images[0]}
+                    alt={`${piece.name} — ${activeColour.label}`}
+                    fill
+                    sizes="(min-width: 768px) 40vw, 100vw"
+                    className="object-cover transition-opacity duration-300"
+                    priority
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-end p-6">
+                    <span className="font-mono text-[10px] text-white/30 tracking-widest uppercase">
+                      {piece.name} · {activeModel?.label} · {activeColour.label}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Strip mobile */}
+              {images.length > 1 && (
+                <div className="flex md:hidden gap-1.5 mt-2 overflow-x-auto">
+                  {images.map((img, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setSelectedImg(i)}
+                      className="press relative shrink-0 w-14 aspect-square overflow-hidden"
+                      style={{
+                        border: selectedImg === i ? "2px solid var(--ink)" : "2px solid transparent",
+                        boxShadow: selectedImg !== i ? "0 0 0 1px #e5e5e5" : undefined,
+                      }}
+                    >
+                      <Image src={img} alt={`vue ${i + 1}`} fill sizes="56px" className="object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
