@@ -598,7 +598,7 @@ export default function PersonnaliserPage() {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", background: "#f5f2ec", color: "#14141a", minHeight: "100%", overflowX: "hidden" }}>
+    <div style={{ display: "flex", flexDirection: "column", background: "#f5f2ec", color: "#14141a", minHeight: "100%" }}>
 
       {/* Bandeau social-proof */}
       {!isMobile && (
@@ -885,7 +885,7 @@ export default function PersonnaliserPage() {
         </div>
 
         {/* RIGHT — scrollable */}
-        <div ref={scrollRef} style={{ padding: "20px 24px 100px", overflowX: "hidden" }}>
+        <div ref={scrollRef} style={{ padding: "20px 24px 100px" }}>
 
           {/* Muserolle */}
           <div ref={refs.muserole} onMouseEnter={() => setHoverPart("muserole")} onMouseLeave={() => setHoverPart(null)}>
