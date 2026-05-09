@@ -4,10 +4,9 @@ import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { IntroOverlay } from "@/components/intro-overlay";
-import { AnnouncementBar } from "@/components/announcement-bar";
 import { RefTracker } from "@/components/ref-tracker";
 import { RewardNotifier } from "@/components/reward-notifier";
-import { PerksMarquee } from "@/components/perks-marquee";
+import { ConditionalAnnouncementBar } from "@/components/conditional-announcement-bar";
 import { CartProvider } from "@/lib/cart-store";
 import { FavoritesProvider } from "@/lib/favorites-store";
 import { CartDrawer } from "@/components/cart-drawer";
@@ -69,8 +68,7 @@ export default function RootLayout({
             <IntroOverlay />
             <RefTracker />
             <RewardNotifier />
-            <AnnouncementBar />
-            <PerksMarquee />
+            <ConditionalAnnouncementBar />
             <SiteHeader />
             <main className="flex-1">{children}</main>
             <SiteFooter />

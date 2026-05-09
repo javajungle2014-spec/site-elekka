@@ -485,6 +485,8 @@ export function ProductDetailClient({ product }: { product: Product }) {
         </div>
       )}
 
+      <PerksMarquee />
+
       <div className="min-h-screen pb-24">
 
         {/* Fil d'Ariane */}
