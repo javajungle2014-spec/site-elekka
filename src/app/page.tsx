@@ -7,6 +7,7 @@ import { ReviewsCarousel } from "@/components/home/reviews-carousel";
 import { ReferralSection } from "@/components/home/referral-section";
 import { ContactSection } from "@/components/home/contact";
 import { organizationSchema, websiteSchema } from "@/lib/structured-data";
+import { ScrollTop } from "@/components/scroll-top";
 
 export const metadata: Metadata = {
   title: "Elekka — Bridons en cuir pour chevaux",
@@ -22,6 +23,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
+      <ScrollTop />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema()) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema()) }} />
       <HomeHero />
