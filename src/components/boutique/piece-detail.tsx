@@ -13,6 +13,7 @@ export type PieceModel = {
   label: string;
   desc: string;
   priceEUR?: number;
+  images?: Partial<Record<ColourKey, string[]>>;
 };
 
 export type Piece = {
@@ -72,10 +73,10 @@ export function PieceDetail({ piece }: { piece: Piece }) {
   const activeColour = piece.colours.find(c => c.key === colour) ?? piece.colours[0];
   const activeModel  = piece.models.find(m => m.key === model) ?? piece.models[0];
   const price        = activeModel?.priceEUR ?? piece.priceEUR;
-  const images       = activeColour.images ?? [];
+  const images = activeModel.images?.[colour] ?? activeColour.images ?? [];
 
-  // Reset image sélectionnée au changement de couleur
-  useEffect(() => { setSelectedImg(0); }, [colour]);
+  // Reset image sélectionnée au changement de couleur OU de modèle
+  useEffect(() => { setSelectedImg(0); }, [colour, model]);
 
   function handleAdd() {
     addItem({
