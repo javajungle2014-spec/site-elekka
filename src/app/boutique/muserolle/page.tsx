@@ -38,7 +38,6 @@ export default function MuserollePage() {
         ["Bouclerie",     "Inox poli"],
         ["Compatibilité", "Tous bridons Elekka"],
         ["Expédition",    "2 à 4 jours ouvrés"],
-        ["Retours",       "14 jours"],
         ["Tailles",       "Full, Cob"],
       ],
     }} />

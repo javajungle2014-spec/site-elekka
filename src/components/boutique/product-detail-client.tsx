@@ -10,6 +10,7 @@ import { useFavorites } from "@/lib/favorites-store";
 import { AuthModal } from "@/components/auth-modal";
 import { productDescriptions, sharedTabs } from "@/lib/product-tabs";
 import { faqProductCategories, type FaqItem } from "@/lib/faq";
+import { PerksMarquee } from "@/components/perks-marquee";
 
 /* ─── Modal guide des tailles ───────────────────────────────────────── */
 function SizeGuideModal({ onClose }: { onClose: () => void }) {
@@ -110,32 +111,6 @@ const IcoHeart      = (p: { size?: number; filled?: boolean }) => <Icon size={p.
 const IcoBag        = (p: { size?: number }) => <Icon size={p.size ?? 16}><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0" /></Icon>;
 
 /* ─── Perks marquee ──────────────────────────────────────────────────── */
-function PerksMarquee() {
-  const items = [
-    "Livraison offerte",
-    "Rênes plates offertes",
-    "Cuir pleine fleur",
-    "Paiement sécurisé",
-    "Conçu par des cavaliers",
-  ];
-  const Loop = () => (
-    <div className="flex items-center gap-14 shrink-0 px-7">
-      {items.map((it, i) => (
-        <span key={i} className="flex items-center gap-14">
-          <span className="kicker-tight text-on-ink/85">{it}</span>
-          <span className="w-[3px] h-[3px] rounded-full bg-on-ink/40" />
-        </span>
-      ))}
-    </div>
-  );
-  return (
-    <div className="bg-ink text-on-ink py-3.5 overflow-hidden">
-      <div className="flex marquee-track w-max">
-        <Loop /><Loop />
-      </div>
-    </div>
-  );
-}
 
 /* ─── Step header ────────────────────────────────────────────────────── */
 const ROMAN = ["", "I", "II", "III", "IV", "V"];
