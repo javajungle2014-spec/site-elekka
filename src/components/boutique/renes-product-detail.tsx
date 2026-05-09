@@ -32,7 +32,6 @@ const specs = [
   ["Bouclerie",  "Inox poli"],
   ["Tailles",    "Cob, Full"],
   ["Expédition", "2 à 4 jours ouvrés"],
-  ["Retours",    "14 jours"],
 ];
 
 function Price({ value }: { value: number }) {
@@ -202,7 +201,7 @@ export function RenesProductDetail({ product }: { product: Product }) {
             <ProductPhotoPlaceholder leatherClass={leatherClass} />
           </div>
 
-          <div className="grid gap-4 border-t border-line py-5 lg:grid-cols-[1fr_420px]">
+          <div className="border-t border-line py-5 space-y-5">
             <div className="grid gap-3 sm:grid-cols-3">
               {product.highlights.slice(0, 3).map((h) => (
                 <div key={h} className="flex items-center gap-3">
