@@ -137,12 +137,12 @@ export function ProductFeature() {
         </div>
 
         {/* Cartes arguments */}
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_260px_1fr] gap-4 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_290px_1fr] gap-4 items-center">
           <div className="flex flex-col gap-3">
             {features.slice(0, 2).map(({ Icon, title, text }) => (
-              <div key={title} className="border border-line rounded-xl p-4">
-                <Icon size={18} weight="regular" className="text-muted mb-2" />
-                <h3 className="font-semibold text-sm tracking-wide uppercase mb-1">{title}</h3>
+              <div key={title} className="border border-line rounded-xl p-3">
+                <Icon size={16} weight="regular" className="text-muted mb-1.5" />
+                <h3 className="font-semibold text-xs tracking-wide uppercase mb-1">{title}</h3>
                 <p className="text-xs text-muted leading-relaxed">{text}</p>
               </div>
             ))}
@@ -164,9 +164,9 @@ export function ProductFeature() {
           </div>
           <div className="flex flex-col gap-3">
             {features.slice(2, 4).map(({ Icon, title, text }) => (
-              <div key={title} className="border border-line rounded-xl p-4">
-                <Icon size={18} weight="regular" className="text-muted mb-2" />
-                <h3 className="font-semibold text-sm tracking-wide uppercase mb-1">{title}</h3>
+              <div key={title} className="border border-line rounded-xl p-3">
+                <Icon size={16} weight="regular" className="text-muted mb-1.5" />
+                <h3 className="font-semibold text-xs tracking-wide uppercase mb-1">{title}</h3>
                 <p className="text-xs text-muted leading-relaxed">{text}</p>
               </div>
             ))}
