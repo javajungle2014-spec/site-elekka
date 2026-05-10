@@ -92,12 +92,12 @@ export function ProductFeature() {
   const translateX = -(railStart * (100 / products.length));
 
   return (
-    <section className="py-14 md:py-20 border-t border-line">
+    <section className="py-8 md:py-12 border-t border-line">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
 
         {/* Kicker + titre + description */}
-        <div className="text-center mb-10">
-          <span className="kicker text-muted block mb-6">Nos modèles</span>
+        <div className="text-center mb-6">
+          <span className="kicker text-muted block mb-3">Nos modèles</span>
           <div className="flex items-center justify-center gap-4 md:gap-8">
             <button
               type="button" aria-label="Modèle précédent"
@@ -106,14 +106,14 @@ export function ProductFeature() {
                 const prev = products[(i - 1 + products.length) % products.length];
                 select(prev.slug, (i - 1 + products.length) % products.length);
               }}
-              className="shrink-0 w-10 h-10 rounded-full border border-line flex items-center justify-center text-muted hover:text-ink hover:border-ink hover:bg-paper-2 transition-all duration-200 press"
+              className="shrink-0 w-9 h-9 rounded-full border border-line flex items-center justify-center text-muted hover:text-ink hover:border-ink hover:bg-paper-2 transition-all duration-200 press"
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </button>
             <div className="flex-1 max-w-xl">
-              <h2 className="display text-3xl md:text-4xl mb-3">{product.name}</h2>
+              <h2 className="display text-2xl md:text-3xl mb-2">{product.name}</h2>
               <p className="text-muted leading-relaxed text-sm">{product.description}</p>
-              <div className="flex items-center justify-center gap-1.5 mt-4">
+              <div className="flex items-center justify-center gap-1.5 mt-3">
                 {products.map((p) => (
                   <button key={p.slug} type="button" aria-label={p.name}
                     onClick={() => select(p.slug, products.findIndex((x) => x.slug === p.slug))}
@@ -129,7 +129,7 @@ export function ProductFeature() {
                 const next = products[(i + 1) % products.length];
                 select(next.slug, (i + 1) % products.length);
               }}
-              className="shrink-0 w-10 h-10 rounded-full border border-line flex items-center justify-center text-muted hover:text-ink hover:border-ink hover:bg-paper-2 transition-all duration-200 press"
+              className="shrink-0 w-9 h-9 rounded-full border border-line flex items-center justify-center text-muted hover:text-ink hover:border-ink hover:bg-paper-2 transition-all duration-200 press"
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </button>
@@ -137,18 +137,18 @@ export function ProductFeature() {
         </div>
 
         {/* Cartes arguments */}
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_320px_1fr] gap-6 items-center">
-          <div className="flex flex-col gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_260px_1fr] gap-4 items-center">
+          <div className="flex flex-col gap-3">
             {features.slice(0, 2).map(({ Icon, title, text }) => (
-              <div key={title} className="border border-line rounded-xl p-6">
-                <Icon size={24} weight="regular" className="text-muted mb-3" />
-                <h3 className="font-semibold text-sm tracking-wide uppercase mb-2">{title}</h3>
-                <p className="text-sm text-muted leading-relaxed">{text}</p>
+              <div key={title} className="border border-line rounded-xl p-4">
+                <Icon size={18} weight="regular" className="text-muted mb-2" />
+                <h3 className="font-semibold text-sm tracking-wide uppercase mb-1">{title}</h3>
+                <p className="text-xs text-muted leading-relaxed">{text}</p>
               </div>
             ))}
           </div>
-          <div className="flex flex-col items-center gap-4">
-            <div className="w-full aspect-[3/4] bg-paper-2 border border-dashed border-line rounded-xl flex flex-col items-center justify-center gap-3 text-muted-soft">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-full aspect-[4/5] bg-paper-2 border border-dashed border-line rounded-xl flex flex-col items-center justify-center gap-2 text-muted-soft">
               <svg width="40" height="40" viewBox="0 0 40 40" fill="none" className="opacity-30">
                 <rect x="4" y="4" width="32" height="32" rx="4" stroke="currentColor" strokeWidth="1.5" />
                 <circle cx="14" cy="15" r="3" stroke="currentColor" strokeWidth="1.5" />
@@ -162,19 +162,19 @@ export function ProductFeature() {
               Voir le produit <span aria-hidden>→</span>
             </Link>
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
             {features.slice(2, 4).map(({ Icon, title, text }) => (
-              <div key={title} className="border border-line rounded-xl p-6">
-                <Icon size={24} weight="regular" className="text-muted mb-3" />
-                <h3 className="font-semibold text-sm tracking-wide uppercase mb-2">{title}</h3>
-                <p className="text-sm text-muted leading-relaxed">{text}</p>
+              <div key={title} className="border border-line rounded-xl p-4">
+                <Icon size={18} weight="regular" className="text-muted mb-2" />
+                <h3 className="font-semibold text-sm tracking-wide uppercase mb-1">{title}</h3>
+                <p className="text-xs text-muted leading-relaxed">{text}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Rail carrousel */}
-        <div className="mt-10 border border-line rounded-2xl p-3 flex items-center gap-3">
+        <div className="mt-6 border border-line rounded-2xl p-3 flex items-center gap-3">
 
           <button type="button" aria-label="Précédent" onClick={prev}
             className={`shrink-0 w-9 h-9 rounded-full border flex items-center justify-center transition-all duration-200 press ${canPrev ? "border-line text-muted hover:text-ink hover:border-ink" : "border-line/40 text-line cursor-not-allowed"}`}
