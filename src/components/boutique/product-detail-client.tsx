@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, ShoppingBag, Heart, Truck, Gift } from "@phosphor-icons/react";
@@ -11,6 +12,8 @@ import { AuthModal } from "@/components/auth-modal";
 import { productDescriptions, sharedTabs } from "@/lib/product-tabs";
 import { faqProductCategories, type FaqItem } from "@/lib/faq";
 import { PerksMarquee } from "@/components/perks-marquee";
+import { FadeIn } from "@/components/ui/fade-in";
+import { PriceCounter } from "@/components/ui/price-counter";
 
 /* ─── Modal guide des tailles ───────────────────────────────────────── */
 function SizeGuideModal({ onClose }: { onClose: () => void }) {
@@ -534,13 +537,24 @@ export function ProductDetailClient({ product }: { product: Product }) {
                     }}
                   >
                     {currentColour.images.length > 0 ? (
-                      <Image
-                        src={currentColour.images[selectedImageIdx] ?? currentColour.images[0]}
-                        alt={`${product.name} — ${currentColour.label}`}
-                        fill sizes="(min-width: 768px) 40vw, 100vw"
-                        className="object-cover transition-opacity duration-300"
-                        priority
-                      />
+                      <AnimatePresence mode="wait">
+                        <motion.div
+                          key={`${selectedColour}-${selectedImageIdx}`}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.35, ease: "easeInOut" }}
+                          className="absolute inset-0"
+                        >
+                          <Image
+                            src={currentColour.images[selectedImageIdx] ?? currentColour.images[0]}
+                            alt={`${product.name} — ${currentColour.label}`}
+                            fill sizes="(min-width: 768px) 40vw, 100vw"
+                            className="object-cover"
+                            priority
+                          />
+                        </motion.div>
+                      </AnimatePresence>
                     ) : (
                       <>
                         <div className="absolute inset-0 ring-1 ring-inset ring-ink/5 pointer-events-none" />
@@ -593,7 +607,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 {[
                   { num: product.colours.length, label: "Coloris\ndisponibles" },
                   { num: product.sizes.length,   label: "Tailles\nproposées" },
-                  { num: formatPrice(product.priceEUR), label: "Prix\nTTC" },
+                  { num: <PriceCounter value={product.priceEUR} />, label: "Prix\nTTC" },
                 ].map((s, i) => (
                   <div key={i}>
                     <p className="display text-2xl text-ink tabular-nums">{s.num}</p>

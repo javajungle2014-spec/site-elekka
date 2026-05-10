@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { IntroOverlay } from "@/components/intro-overlay";
 import { RefTracker } from "@/components/ref-tracker";
+import { PageTransition } from "@/components/ui/page-transition";
 import { RewardNotifier } from "@/components/reward-notifier";
 import { ConditionalAnnouncementBar } from "@/components/conditional-announcement-bar";
 import { CartProvider } from "@/lib/cart-store";
@@ -70,7 +71,7 @@ export default function RootLayout({
             <RewardNotifier />
             <ConditionalAnnouncementBar />
             <SiteHeader />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1"><PageTransition>{children}</PageTransition></main>
             <SiteFooter />
             <CartDrawer />
             <FavoritesDrawer />
