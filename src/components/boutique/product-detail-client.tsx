@@ -276,27 +276,26 @@ function ThumbnailRail({ images, selected, onSelect, productName }: {
 
   return (
     <>
-      {/* Desktop : rail vertical à gauche — hauteur calquée sur l'image principale via items-stretch du parent */}
-      <div className="hidden md:flex flex-col gap-1.5 shrink-0 w-[76px] self-stretch">
-        {/* Flèche haut — toujours présente si carousel */}
+      {/* Desktop : rail vertical à gauche */}
+      <div className="hidden md:flex flex-col gap-1.5 shrink-0 w-[76px]">
         {needsCarousel && (
           <ArrowBtn dir="up" disabled={offset === 0} onClick={() => setOffset(o => Math.max(0, o - 1))} />
         )}
 
-        {/* Fenêtre scrollable — prend tout l'espace restant */}
-        <div className="flex flex-col gap-1.5 overflow-hidden flex-1 min-h-0">
+        {/* Fenêtre : hauteur = 4 × miniature + 3 × gap */}
+        <div className="flex flex-col gap-1.5 overflow-hidden"
+          style={{ height: `calc(${THUMB_VISIBLE} * (76px * 4 / 3) + ${THUMB_VISIBLE - 1} * 6px)` }}>
           <div
-            className="flex flex-col gap-1.5 transition-transform duration-350 ease-out"
-            style={{ transform: `translateY(calc(-${offset} * (100% / ${THUMB_VISIBLE} + 1.5px)))` }}
+            className="flex flex-col gap-1.5 transition-transform duration-300 ease-out"
+            style={{ transform: `translateY(calc(-${offset} * (76px * 4 / 3 + 6px)))` }}
           >
             {images.map((img, i) => (
               <button key={i} type="button" onClick={() => onSelect(i)}
                 className="press relative shrink-0 overflow-hidden border-2 transition-all duration-200 w-full"
                 style={{
+                  aspectRatio: "3/4",
                   borderColor: selected === i ? "var(--ink)" : "transparent",
                   boxShadow: selected !== i ? "0 0 0 1px #e5e5e5" : undefined,
-                  flex: `0 0 calc((100% - ${(THUMB_VISIBLE - 1) * 6}px) / ${THUMB_VISIBLE})`,
-                  minHeight: 0,
                 }}>
                 <Image src={img} alt={`${productName} vue ${i + 1}`} fill sizes="76px" className="object-cover" />
               </button>
@@ -304,7 +303,6 @@ function ThumbnailRail({ images, selected, onSelect, productName }: {
           </div>
         </div>
 
-        {/* Flèche bas */}
         {needsCarousel && (
           <ArrowBtn dir="down" disabled={offset >= maxOffset} onClick={() => setOffset(o => Math.min(maxOffset, o + 1))} />
         )}
@@ -543,7 +541,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
           <div className="grid grid-cols-12 gap-8 md:gap-12 items-start">
             {/* Image + thumbnails */}
             <div className="col-span-12 md:col-span-6">
-              <div className="flex gap-3 items-stretch">
+              <div className="flex gap-3 items-start">
 
                 {/* Rail miniatures avec carrousel si > 6 */}
                 {currentColour.images.length > 1 && (
