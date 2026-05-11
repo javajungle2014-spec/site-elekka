@@ -27,15 +27,19 @@ Comme le Signature, la fermeture est côté gauche et les rênes caoutchouc sont
 export const sharedTabs = {
   taille: `**Full ou Cob ?**
 
-Le Full convient aux chevaux de grande taille (au-delà de 1,65 m au garrot) : Selle Français, KWPN, Hanovrien, Lusitanien, etc. Le Cob est adapté aux poneys de grande taille, Quarter Horses et chevaux de morphologie plus compacte.
+Le Full est la taille la plus courante pour les chevaux de selle standards et les chevaux de sport, généralement à partir d'environ 1,65 m au garrot : Selle Français, KWPN, Hanovrien, Lusitanien, etc.
 
-En cas de doute, le Full est le choix le plus courant pour un cheval standard. Les modèles Elekka sont ajustables sur plusieurs crans pour s'adapter à différentes morphologies.
+Le Cob convient davantage aux poneys D, petits chevaux, chevaux fins ou morphologies plus compactes, généralement jusqu'à environ 1,65 m au garrot.
 
-**Comment mesurer ?**
+En cas de doute entre deux tailles, le Full reste souvent le choix le plus sûr pour un cheval standard. Les modèles Elekka sont ajustables sur plusieurs crans afin de s'adapter à différentes morphologies.
 
-Utilisez un mètre souple autour du chanfrein de votre cheval. Comparez la mesure obtenue avec les tailles proposées. Si votre cheval est à la limite entre les deux tailles, optez pour le Full — il offre plus de latitude d'ajustement.
+**Comment choisir ?**
 
-Vous n'êtes pas sûr ? Écrivez-nous à elekka.sellier@gmail.com avec la race et les mensurations de votre cheval. Nous vous répondons sous 48 h.`,
+Référez-vous principalement à la hauteur au garrot de votre cheval, mais tenez aussi compte de sa morphologie générale : tête fine, tête forte, cheval compact ou grand modèle.
+
+Si votre cheval se situe à la limite entre deux tailles, nous recommandons de choisir la taille supérieure afin de conserver plus de latitude d'ajustement.
+
+Vous n'êtes pas sûr ? Écrivez-nous à elekka.sellier@gmail.com avec la race, la hauteur au garrot et quelques photos de votre cheval. Nous vous répondrons sous 48 h.`,
 
   composition: `**Matières**
 
