@@ -504,6 +504,42 @@ function StockView({ password, onBack }: { password: string; onBack: () => void 
     } : c));
   }
 
+  async function deleteVariant(categoryId: number, modelId: number, variantId: number) {
+    if (!confirm("Supprimer cette variante ?")) return;
+    await fetch("/api/admin/stock", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${password}` },
+      body: JSON.stringify({ action: "delete-variant", variantId }),
+    });
+    setCategories((prev) => prev.map((c) => c.id === categoryId ? {
+      ...c, stock_models: c.stock_models.map((m) => m.id === modelId ? {
+        ...m, stock_variants: m.stock_variants.filter((v) => v.id !== variantId)
+      } : m)
+    } : c));
+  }
+
+  async function deleteModel(categoryId: number, modelId: number) {
+    if (!confirm("Supprimer ce modèle et toutes ses variantes ?")) return;
+    await fetch("/api/admin/stock", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${password}` },
+      body: JSON.stringify({ action: "delete-model", modelId }),
+    });
+    setCategories((prev) => prev.map((c) => c.id === categoryId ? {
+      ...c, stock_models: c.stock_models.filter((m) => m.id !== modelId)
+    } : c));
+  }
+
+  async function deleteCategory(categoryId: number) {
+    if (!confirm("Supprimer cette catégorie et tous ses modèles ?")) return;
+    await fetch("/api/admin/stock", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${password}` },
+      body: JSON.stringify({ action: "delete-category", categoryId }),
+    });
+    setCategories((prev) => prev.filter((c) => c.id !== categoryId));
+  }
+
   if (loading) return <div className="min-h-screen bg-paper flex items-center justify-center text-sm text-muted">Chargement…</div>;
 
   return (
@@ -530,8 +566,12 @@ function StockView({ password, onBack }: { password: string; onBack: () => void 
         {/* Catégories */}
         {categories.map((cat) => (
           <div key={cat.id} className="border border-line">
-            <div className="bg-paper-2 px-5 py-3 border-b border-line">
+            <div className="bg-paper-2 px-5 py-3 border-b border-line flex items-center justify-between">
               <p className="text-sm font-semibold tracking-wide">{cat.name}</p>
+              <button type="button" onClick={() => deleteCategory(cat.id)}
+                className="text-xs text-muted-soft hover:text-red-500 transition-colors press" title="Supprimer la catégorie">
+                ×
+              </button>
             </div>
 
             <div className="divide-y divide-line">
@@ -539,10 +579,16 @@ function StockView({ password, onBack }: { password: string; onBack: () => void 
                 <div key={model.id} className="p-5">
                   <div className="flex items-center justify-between mb-3">
                     <p className="text-sm font-medium">{model.name}</p>
-                    <button type="button" onClick={() => { setAddingVariant(model.id); setAddingModel(null); }}
-                      className="text-xs text-muted hover:text-ink underline underline-offset-4 transition-colors">
-                      + Variante
-                    </button>
+                    <div className="flex items-center gap-3">
+                      <button type="button" onClick={() => { setAddingVariant(model.id); setAddingModel(null); }}
+                        className="text-xs text-muted hover:text-ink underline underline-offset-4 transition-colors">
+                        + Variante
+                      </button>
+                      <button type="button" onClick={() => deleteModel(cat.id, model.id)}
+                        className="text-xs text-muted-soft hover:text-red-500 transition-colors press" title="Supprimer le modèle">
+                        ×
+                      </button>
+                    </div>
                   </div>
 
                   {model.stock_variants.length === 0 && (
@@ -553,8 +599,14 @@ function StockView({ password, onBack }: { password: string; onBack: () => void 
                     {model.stock_variants.map((v) => (
                       <div key={v.id} className="flex items-center justify-between gap-4">
                         <span className="text-sm text-muted">{v.colour} · {v.size}</span>
-                        <QuantityControl variant={v} password={password}
-                          onUpdate={(id, qty) => updateVariantQty(cat.id, model.id, id, qty)} />
+                        <div className="flex items-center gap-3">
+                          <QuantityControl variant={v} password={password}
+                            onUpdate={(id, qty) => updateVariantQty(cat.id, model.id, id, qty)} />
+                          <button type="button" onClick={() => deleteVariant(cat.id, model.id, v.id)}
+                            className="text-muted-soft hover:text-red-500 transition-colors press text-sm leading-none" title="Supprimer la variante">
+                            ×
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>

@@ -55,5 +55,26 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true });
   }
 
+  if (body.action === "delete-variant") {
+    await supabase.from("stock_variants").delete().eq("id", body.variantId);
+    return NextResponse.json({ success: true });
+  }
+
+  if (body.action === "delete-model") {
+    await supabase.from("stock_variants").delete().eq("model_id", body.modelId);
+    await supabase.from("stock_models").delete().eq("id", body.modelId);
+    return NextResponse.json({ success: true });
+  }
+
+  if (body.action === "delete-category") {
+    const { data: models } = await supabase.from("stock_models").select("id").eq("category_id", body.categoryId);
+    if (models) {
+      for (const m of models) await supabase.from("stock_variants").delete().eq("model_id", m.id);
+    }
+    await supabase.from("stock_models").delete().eq("category_id", body.categoryId);
+    await supabase.from("stock_categories").delete().eq("id", body.categoryId);
+    return NextResponse.json({ success: true });
+  }
+
   return NextResponse.json({ error: "Action inconnue" }, { status: 400 });
 }
