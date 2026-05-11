@@ -405,13 +405,13 @@ export function ProductDetailClient({ product }: { product: Product }) {
   ];
 
   const reinsOptions = [
-    { key: "aucune",      label: "Sans rênes",         desc: "Filet seul",                          note: null,             deltaEUR: 0 },
+    { key: "aucune",      label: "Sans rênes",         desc: "",                                    note: null,             deltaEUR: 0 },
     { key: "caoutchouc",  label: "Rênes caoutchouc",   desc: "Anti-glisse · 59,99 € valeur",        note: "Offertes",       deltaEUR: 0 },
     { key: "tissu",       label: "Rênes tissu",         desc: "Légères & confortables",              note: "-15 %",          deltaEUR: Math.round(49.99 * 0.85 * 100) / 100 },
   ];
 
   const equipOptions = [
-    { key: "aucun",       label: "Sans équipement",    desc: "Configuration épurée",                note: null,             deltaEUR: 0 },
+    { key: "aucun",       label: "Sans équipement",    desc: "",                                    note: null,             deltaEUR: 0 },
     { key: "tylman",      label: "Tylman",              desc: "Enrênement d'aide à la décontraction", note: "-15 %",         deltaEUR: Math.round(59.99 * 0.85 * 100) / 100 },
     { key: "martingale",  label: "Martingale",          desc: "Enrênement fixe réglable",            note: "-15 %",          deltaEUR: Math.round(59.99 * 0.85 * 100) / 100 },
   ];
@@ -666,7 +666,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 Composez votre filet à votre <em className="italic font-light text-muted">image</em>.
               </p>
               <p className="mt-6 text-[15px] text-muted leading-relaxed max-w-[52ch]">
-                Cinq décisions, prises ensemble. De votre discipline à vos accessoires — chaque détail compte.
+                Cinq choix pour un filet à votre image. De votre discipline à vos accessoires, chaque détail compte.
               </p>
             </div>
           </div>
@@ -733,7 +733,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
           {/* Étape III — Taille */}
           <div ref={sizeRef} className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
             <div className="col-span-12 md:col-span-4">
-              <StepHeader index={3} total={5} label="Taille" sub="Mesures prises au-dessus du chanfrein."
+              <StepHeader index={3} total={5} label="Taille" sub="Consultez le tableau ci-dessous pour sélectionner la taille la plus adaptée."
                 done={!!selectedSize} value={selectedSize} />
                       <button type="button" onClick={() => setSizeGuideOpen(true)}
                 className="ml-12 mt-4 text-[12px] text-ink underline underline-offset-4 press inline-flex items-center gap-1.5 transition-colors hover:text-muted">
@@ -753,7 +753,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                       )}
                       <p className="display text-3xl">{size}</p>
                       <p className="text-[11px] text-muted mt-2 leading-snug">
-                        {size === "Full" ? "Chevaux de selle adultes" : "Poneys, chevaux fins"}
+                        {size === "Full" ? "Taille idéale pour cheval standard" : "Pour poneys et petits chevaux"}
                       </p>
                     </button>
                   );
@@ -765,7 +765,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
           {/* Étape IV — Rênes */}
           <div ref={reinsRef} className="grid grid-cols-12 gap-8 md:gap-16 mb-16">
             <div className="col-span-12 md:col-span-4">
-              <StepHeader index={4} total={5} label="Rênes" sub="Les rênes caoutchouc sont offertes."
+              <StepHeader index={4} total={5} label="Rênes" sub="Un contact précis, souple et élégant."
                 done={!!selectedReins} value={selectedReins ? reinsOptions.find(r => r.key === selectedReins)?.label ?? null : null} />
             </div>
             <div className="col-span-12 md:col-span-8">
@@ -784,7 +784,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                               <span className="bg-ink text-on-ink text-[9px] tracking-[0.2em] uppercase px-2 py-1 font-medium">{r.note}</span>
                             )}
                           </div>
-                          <p className="text-[12px] text-muted mt-1 leading-snug">{r.desc}</p>
+                          {r.desc && <p className="text-[12px] text-muted mt-1 leading-snug">{r.desc}</p>}
                         </div>
                       </div>
                       <div className="flex items-center gap-4 shrink-0">
@@ -799,6 +799,42 @@ export function ProductDetailClient({ product }: { product: Product }) {
                   );
                 })}
               </div>
+
+              {/* Panneau images rênes */}
+              <AnimatePresence>
+                {selectedReins && selectedReins !== "aucune" && (
+                  <motion.div
+                    key={selectedReins}
+                    initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                    animate={{ opacity: 1, height: "auto", marginTop: 24 }}
+                    exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <div className="border border-line p-5 space-y-4">
+                      <p className="kicker-tight text-muted">{reinsOptions.find(r => r.key === selectedReins)?.label}</p>
+                      <div className="grid grid-cols-3 gap-2">
+                        {[
+                          { label: "Vue principale" },
+                          { label: "Détail grip" },
+                          { label: "Vue d'ensemble" },
+                        ].map((view, i) => (
+                          <div key={i} className="relative overflow-hidden" style={{ aspectRatio: "4/5" }}>
+                            <div className={`w-full h-full ${LEATHER[selectedColour] ?? "bg-paper-2"}`} />
+                            <div className="absolute inset-0 flex flex-col justify-between p-2 pointer-events-none">
+                              <span className="font-mono text-[8px] tracking-widest text-white/30 uppercase">0{i + 1}</span>
+                              <span className="font-mono text-[8px] tracking-widest text-white/30 uppercase">{view.label}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="text-xs text-muted leading-relaxed">
+                        Photo à venir — les rênes seront photographiées avec le filet.
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
 
@@ -841,8 +877,17 @@ export function ProductDetailClient({ product }: { product: Product }) {
               </div>
 
               {/* Panneau couleur + taille pour l'enrênement sélectionné */}
+              <AnimatePresence>
               {selectedEquip && selectedEquip !== "aucun" && (
-                <div className="mt-6 border border-line p-5 space-y-5">
+                <motion.div
+                  key={selectedEquip}
+                  initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                  animate={{ opacity: 1, height: "auto", marginTop: 24 }}
+                  exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  className="overflow-hidden"
+                >
+                <div className="border border-line p-5 space-y-5">
                   <p className="kicker-tight text-muted">Personnaliser l&apos;enrênement</p>
 
                   {/* Visuels × 3 */}
@@ -905,7 +950,9 @@ export function ProductDetailClient({ product }: { product: Product }) {
                     </div>
                   </div>
                 </div>
+                </motion.div>
               )}
+              </AnimatePresence>
             </div>
           </div>
 
