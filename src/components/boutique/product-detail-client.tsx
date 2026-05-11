@@ -433,7 +433,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
     if (!selectedEquip || selectedEquip === "aucun") return;
     const slug = selectedEquip === "tylman" ? "enrenement-1" : "enrenement-2";
     const colour = product.colours.find(c => c.key === equipColour)?.label ?? equipColour;
-    fetch(`/api/stock/check?slug=${slug}&colour=${encodeURIComponent(colour)}&size=Full`)
+    fetch(`/api/stock/check?slug=${slug}&colour=${encodeURIComponent(colour)}&size=`)
       .then(r => r.json())
       .then(async (d) => {
         setEquipStockQty(d.quantity ?? null);
@@ -441,7 +441,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
           // Cherche une couleur alternative disponible
           const otherColours = product.colours.filter(c => c.key !== equipColour);
           for (const c of otherColours) {
-            const res = await fetch(`/api/stock/check?slug=${slug}&colour=${encodeURIComponent(c.label)}&size=Full`);
+            const res = await fetch(`/api/stock/check?slug=${slug}&colour=${encodeURIComponent(c.label)}&size=`);
             const data = await res.json();
             if (data.quantity === null || data.quantity > 0) {
               setEquipAltColour(c.label);
@@ -1025,23 +1025,9 @@ export function ProductDetailClient({ product }: { product: Product }) {
                     <p className="text-xs text-muted mt-2">
                       {product.colours.find(c => c.key === equipColour)?.label}
                     </p>
+
                   </div>
 
-                  {/* Taille */}
-                  <div>
-                    <p className="kicker-tight text-muted mb-3">Taille</p>
-                    <div className="flex gap-2">
-                      {product.sizes.map(s => (
-                        <button key={s} type="button"
-                          onClick={() => setEquipSize(s)}
-                          className={`press h-9 px-5 border text-sm font-bold transition-colors ${
-                            equipSize === s ? "border-ink bg-ink text-on-ink" : "border-line hover:border-ink/40"
-                          }`}>
-                          {s}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
                 </div>
                 </motion.div>
               )}
@@ -1091,6 +1077,14 @@ export function ProductDetailClient({ product }: { product: Product }) {
                   <p className="kicker text-ink">Total</p>
                   <p className="display text-3xl tabular-nums">{formatPrice(total)}</p>
                 </div>
+                {outOfStock && (
+                  <div className="mt-4 border border-red-200 bg-red-50 px-4 py-3 space-y-1">
+                    <p className="text-sm font-medium text-red-600">Ce coloris est en rupture de stock.</p>
+                    {altColour && (
+                      <p className="text-xs text-red-500">Disponible en <strong>{altColour}</strong> — sélectionnez cette couleur pour commander.</p>
+                    )}
+                  </div>
+                )}
                 <div className="mt-6 flex gap-2">
                   <button type="button" onClick={handleAdd} disabled={!complete || outOfStock}
                     className={`cta-shine press flex-1 inline-flex items-center justify-between pl-6 pr-5 h-14 text-sm tracking-wider transition-colors ${
