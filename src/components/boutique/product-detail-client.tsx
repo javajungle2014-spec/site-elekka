@@ -19,65 +19,88 @@ import { PriceCounter } from "@/components/ui/price-counter";
 function SizeGuideModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center px-5">
-      {/* Backdrop */}
       <div className="absolute inset-0 bg-ink/50 backdrop-blur-sm" onClick={onClose} />
 
-      {/* Contenu */}
-      <div className="relative w-full max-w-[540px] bg-paper shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-[560px] bg-paper shadow-2xl overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-line">
-          <div>
-            <p className="kicker-tight text-muted">Étape III</p>
-            <h2 className="display text-2xl mt-1">Guide des tailles</h2>
-          </div>
+        <div className="flex items-center justify-between px-7 py-5 border-b border-line">
+          <h2 className="display text-2xl">Guide des tailles</h2>
           <button type="button" onClick={onClose}
             className="press w-9 h-9 flex items-center justify-center text-muted hover:text-ink transition-colors text-xl leading-none">
             ×
           </button>
         </div>
 
-        {/* Tableau */}
-        <div className="px-6 py-6 space-y-6">
+        <div className="px-7 py-6 space-y-6">
+          {/* Intro */}
           <p className="text-sm text-muted leading-relaxed">
-            Mesurez le tour de tête de votre cheval à l'aide d'un mètre souple, au niveau du chanfrein. Comparez avec le tableau ci-dessous.
+            La taille de votre filet se choisit principalement selon la <strong className="text-ink font-medium">hauteur au garrot</strong> de votre cheval et sa morphologie générale.
           </p>
 
-          <table className="w-full text-sm border-collapse">
+          {/* Tableau */}
+          <table className="w-full border-collapse">
             <thead>
-              <tr className="border-b border-ink">
-                <th className="text-left kicker-tight text-muted py-3 pr-4 font-medium">Taille</th>
-                <th className="text-left kicker-tight text-muted py-3 pr-4 font-medium">Tour de tête</th>
-                <th className="text-left kicker-tight text-muted py-3 font-medium">Convient à</th>
+              <tr className="border-b-2 border-ink">
+                <th className="text-left kicker-tight text-muted pb-3 pr-6 font-medium w-[70px]">Taille</th>
+                <th className="text-left kicker-tight text-muted pb-3 pr-6 font-medium">Hauteur au garrot</th>
+                <th className="text-left kicker-tight text-muted pb-3 font-medium">Convient à</th>
               </tr>
             </thead>
             <tbody>
               <tr className="border-b border-line">
-                <td className="py-4 pr-4 font-semibold display text-lg">Full</td>
-                <td className="py-4 pr-4 font-mono text-sm">55 – 65 cm</td>
-                <td className="py-4 text-muted text-xs leading-snug">Chevaux de sport, Selle Français, KWPN, Hanovrien, Lusitanien</td>
+                <td className="py-4 pr-6 align-top">
+                  <span className="display text-xl font-bold">Cob</span>
+                </td>
+                <td className="py-4 pr-6 align-top">
+                  <span className="font-mono text-sm text-ink">jusqu'à 1,65 m</span>
+                </td>
+                <td className="py-4 text-xs text-muted leading-relaxed align-top">
+                  Poneys D, petits chevaux, chevaux fins ou compacts
+                </td>
+              </tr>
+              <tr className="border-b border-line">
+                <td className="py-4 pr-6 align-top">
+                  <span className="display text-xl font-bold">Full</span>
+                </td>
+                <td className="py-4 pr-6 align-top">
+                  <span className="font-mono text-sm text-ink">1,65 – 1,75 m</span>
+                </td>
+                <td className="py-4 text-xs text-muted leading-relaxed align-top">
+                  Chevaux de selle standards, Selle Français, KWPN, Hanovrien, Lusitanien
+                </td>
               </tr>
               <tr>
-                <td className="py-4 pr-4 font-semibold display text-lg">Cob</td>
-                <td className="py-4 pr-4 font-mono text-sm">48 – 55 cm</td>
-                <td className="py-4 text-muted text-xs leading-snug">Poneys grands gabarits, Quarter Horse, chevaux de morphologie fine</td>
+                <td className="pt-4 pr-6 align-top">
+                  <span className="display text-xl font-bold text-muted-soft">Full*</span>
+                </td>
+                <td className="pt-4 pr-6 align-top">
+                  <span className="font-mono text-sm text-muted">au-delà de 1,75 m</span>
+                </td>
+                <td className="pt-4 text-xs text-muted leading-relaxed align-top">
+                  Selon morphologie — nous contacter en cas de doute
+                </td>
               </tr>
             </tbody>
           </table>
 
-          <div className="bg-paper-2 px-4 py-3 text-xs text-muted leading-relaxed">
-            <strong className="text-ink">Conseil :</strong> En cas de doute entre les deux tailles, optez pour le Full — tous nos modèles sont réglables sur plusieurs crans.
+          {/* Conseil */}
+          <div className="border-l-2 border-ink pl-4 py-1 space-y-1">
+            <p className="text-xs font-semibold uppercase tracking-widest text-ink">Conseil</p>
+            <p className="text-sm text-muted leading-relaxed">
+              En cas de doute entre deux tailles, choisissez la taille supérieure. Tous nos modèles sont réglables sur plusieurs crans pour s'adapter à différentes morphologies.
+            </p>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="px-6 pb-6 flex items-center justify-between gap-4 border-t border-line pt-5">
+        <div className="px-7 pb-6 pt-4 border-t border-line flex items-center justify-between gap-4">
           <button type="button" onClick={onClose}
             className="press text-sm text-muted hover:text-ink underline underline-offset-4 transition-colors">
             Retour à ma commande
           </button>
           <a href="/ressources/conseils/mesurer-tete-cheval-taille-filet"
             className="press inline-flex items-center gap-2 bg-ink text-on-ink px-5 py-2.5 text-xs font-medium hover:bg-ink-soft transition-colors">
-            Je ne sais pas quelle taille prendre
+            Je ne sais pas quelle taille choisir
             <IcoArrowUpRight size={11} />
           </a>
         </div>
