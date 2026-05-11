@@ -277,7 +277,7 @@ function ThumbnailRail({ images, selected, onSelect, productName }: {
   return (
     <>
       {/* Desktop : rail vertical à gauche — hauteur calquée sur l'image principale via items-stretch du parent */}
-      <div className="hidden md:flex flex-col gap-1.5 shrink-0 w-[58px] self-stretch">
+      <div className="hidden md:flex flex-col gap-1.5 shrink-0 w-[76px] self-stretch">
         {/* Flèche haut — toujours présente si carousel */}
         {needsCarousel && (
           <ArrowBtn dir="up" disabled={offset === 0} onClick={() => setOffset(o => Math.max(0, o - 1))} />
@@ -293,12 +293,12 @@ function ThumbnailRail({ images, selected, onSelect, productName }: {
               <button key={i} type="button" onClick={() => onSelect(i)}
                 className="press relative shrink-0 overflow-hidden border-2 transition-all duration-200 w-full"
                 style={{
-                  aspectRatio: "3/4",
                   borderColor: selected === i ? "var(--ink)" : "transparent",
                   boxShadow: selected !== i ? "0 0 0 1px #e5e5e5" : undefined,
-                  flex: `0 0 calc(100% / ${THUMB_VISIBLE} - ${(THUMB_VISIBLE - 1) * 6 / THUMB_VISIBLE}px)`,
+                  flex: `0 0 calc((100% - ${(THUMB_VISIBLE - 1) * 6}px) / ${THUMB_VISIBLE})`,
+                  minHeight: 0,
                 }}>
-                <Image src={img} alt={`${productName} vue ${i + 1}`} fill sizes="58px" className="object-cover" />
+                <Image src={img} alt={`${productName} vue ${i + 1}`} fill sizes="76px" className="object-cover" />
               </button>
             ))}
           </div>
