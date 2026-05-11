@@ -2,6 +2,12 @@ import { Resend } from "resend";
 import { createClient } from "@supabase/supabase-js";
 import { BRIDLE_COMPONENTS, isBridle } from "@/lib/bridle-components";
 
+// Slugs dont la taille n'est pas stockée (size = "" en base)
+const NO_SIZE_SLUGS = new Set(["enrenement-1", "enrenement-2", "renes-1", "renes-2"]);
+function deductSize(slug: string, itemSize: string): string {
+  return NO_SIZE_SLUGS.has(slug) ? "" : itemSize;
+}
+
 export type OrderItem = {
   slug: string; name: string; colourLabel: string;
   size: string; quantity: number; priceEUR: number;
@@ -71,14 +77,13 @@ export async function createOrderAndGetNumber({
     }
 
     for (const slug of slugsToDeduct) {
-      const isComponent = slug !== item.slug;
       const { data: model } = await supabase
         .from("stock_models").select("id").eq("slug", slug).single();
       if (!model) continue;
       await supabase.rpc("deduct_stock", {
         p_model_id: model.id,
         p_colour: item.colourLabel,
-        p_size: isComponent ? item.size : item.size, // même couleur/taille
+        p_size: deductSize(slug, item.size),
         p_qty: item.quantity,
       });
     }
