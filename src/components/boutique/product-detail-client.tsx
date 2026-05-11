@@ -404,8 +404,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
     if (!selectedReins || selectedReins === "aucune") return;
     const slug = selectedReins === "caoutchouc" ? "renes-1" : "renes-2";
     const colour = currentColour.label;
-    const size = selectedSize ?? product.defaultSize;
-    fetch(`/api/stock/check?slug=${slug}&colour=${encodeURIComponent(colour)}&size=${encodeURIComponent(size)}`)
+    fetch(`/api/stock/check?slug=${slug}&colour=${encodeURIComponent(colour)}&size=`)
       .then(r => r.json())
       .then(d => setReinsStockQty(d.quantity ?? null))
       .catch(() => {});

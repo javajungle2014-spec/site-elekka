@@ -3,7 +3,7 @@
 import { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
-import type { Product, ColourKey, Size } from "@/lib/products";
+import type { Product, ColourKey } from "@/lib/products";
 import { formatPrice } from "@/lib/products";
 import { useCart } from "@/lib/cart-store";
 import { leatherClassByColour } from "@/components/boutique/shared";
@@ -30,7 +30,6 @@ const specs = [
   ["Cuir",       "Pleine fleur"],
   ["Longueur",   "145 cm"],
   ["Bouclerie",  "Inox poli"],
-  ["Tailles",    "Cob, Full"],
   ["Expédition", "2 à 4 jours ouvrés"],
 ];
 
@@ -80,19 +79,17 @@ function Selector({ label, children }: { label: string; children: React.ReactNod
   );
 }
 
-function BuyStrip({ product: p, activeColour, colourKey, setColourKey, size, setSize, onAdd, added }: {
+function BuyStrip({ product: p, activeColour, colourKey, setColourKey, onAdd, added }: {
   product: Product;
   activeColour: Product["colours"][number];
   colourKey: ColourKey;
   setColourKey: (k: ColourKey) => void;
-  size: Size;
-  setSize: (s: Size) => void;
   onAdd: () => void;
   added: boolean;
 }) {
   return (
     <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-1">
         <Selector label="Cuir">
           <div className="flex gap-2">
             {p.colours.map((colour) => (
@@ -105,18 +102,6 @@ function BuyStrip({ product: p, activeColour, colourKey, setColourKey, size, set
             ))}
           </div>
           <span className="mt-2 block text-sm font-semibold">{activeColour.label}</span>
-        </Selector>
-        <Selector label="Taille">
-          <div className="flex gap-2">
-            {p.sizes.map((item) => (
-              <button key={item} type="button"
-                onClick={() => setSize(item)}
-                className={`press h-10 min-w-16 border px-4 text-sm font-bold ${size === item ? "border-ink bg-ink text-on-ink" : "border-line bg-white"}`}
-                aria-pressed={size === item}>
-                {item}
-              </button>
-            ))}
-          </div>
         </Selector>
       </div>
       <div className="flex flex-col gap-3">
@@ -134,7 +119,6 @@ function BuyStrip({ product: p, activeColour, colourKey, setColourKey, size, set
 
 export function RenesProductDetail({ product }: { product: Product }) {
   const [colourKey, setColourKey] = useState<ColourKey>(product.defaultColour);
-  const [size, setSize]           = useState<Size>(product.defaultSize);
   const [added, setAdded]         = useState(false);
   const [stickyVisible, setStickyVisible] = useState(false);
   const { addItem }               = useCart();
@@ -153,7 +137,7 @@ export function RenesProductDetail({ product }: { product: Product }) {
 
   function handleAdd() {
     addItem({ slug: product.slug, name: product.name, priceEUR: product.priceEUR,
-      colour: colourKey, colourLabel: activeColour.label, colourSwatch: activeColour.swatch, size });
+      colour: colourKey, colourLabel: activeColour.label, colourSwatch: activeColour.swatch, size: "Full" });
     setAdded(true);
     setTimeout(() => setAdded(false), 1800);
   }
@@ -210,7 +194,7 @@ export function RenesProductDetail({ product }: { product: Product }) {
                 </div>
               ))}
             </div>
-            <BuyStrip product={product} activeColour={activeColour} colourKey={colourKey} setColourKey={setColourKey} size={size} setSize={setSize} onAdd={handleAdd} added={added} />
+            <BuyStrip product={product} activeColour={activeColour} colourKey={colourKey} setColourKey={setColourKey} onAdd={handleAdd} added={added} />
           </div>
         </div>
       </section>
@@ -286,7 +270,6 @@ export function RenesProductDetail({ product }: { product: Product }) {
                 <p className="text-[13px] font-medium leading-tight truncate">
                   {product.name}
                   <span className="text-on-ink-muted"> · {activeColour.label}</span>
-                  <span className="text-on-ink-muted"> · {size}</span>
                 </p>
                 <p className="kicker-tight text-on-ink-muted mt-1 hidden sm:block">Prêt à commander</p>
               </div>
