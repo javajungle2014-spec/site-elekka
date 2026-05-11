@@ -80,7 +80,7 @@ export function CategoryNav({ categories }: Props) {
           {/* Créer mon filet */}
           <div className="shrink-0 pl-4">
             <div className="relative">
-              <span aria-hidden className="absolute inset-0 rounded-full bg-ink/30 animate-ping" />
+              <span aria-hidden className="absolute inset-0 rounded-full bg-ink/8 animate-ping" style={{ animationDuration: "3s" }} />
               <Link
                 href="/boutique/personnaliser"
                 className="press btn-create-shimmer group relative flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-ink text-on-ink text-sm font-bold whitespace-nowrap shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
