@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowUp, ArrowDown, Check } from "@phosphor-icons/react";
@@ -14,6 +14,7 @@ export type PieceModel = {
   desc: string;
   priceEUR?: number;
   images?: Partial<Record<ColourKey, string[]>>;
+  stockSlug?: string; // slug unique pour la vérification de stock
 };
 
 export type Piece = {
@@ -68,6 +69,7 @@ export function PieceDetail({ piece }: { piece: Piece }) {
   const [size, setSize]             = useState<Size>(piece.sizes[0]);
   const [selectedImg, setSelectedImg] = useState(0);
   const [added, setAdded]           = useState(false);
+  const [stockQty, setStockQty]     = useState<number | null>(null);
   const { addItem }                 = useCart();
 
   const activeColour = piece.colours.find(c => c.key === colour) ?? piece.colours[0];
@@ -78,9 +80,19 @@ export function PieceDetail({ piece }: { piece: Piece }) {
   // Reset image sélectionnée au changement de couleur OU de modèle
   useEffect(() => { setSelectedImg(0); }, [colour, model]);
 
+  // Vérification stock : utilise le stockSlug du modèle si disponible
+  useEffect(() => {
+    const slug = activeModel?.stockSlug ?? piece.slug;
+    fetch(`/api/stock/check?slug=${slug}&colour=${encodeURIComponent(activeColour.label)}&size=${encodeURIComponent(size)}`)
+      .then(r => r.json()).then(d => setStockQty(d.quantity ?? null)).catch(() => {});
+  }, [model, colour, size, activeModel, activeColour.label, piece.slug]);
+
+  const outOfStock = stockQty === 0;
+
   function handleAdd() {
+    if (outOfStock) return;
     addItem({
-      slug: piece.slug,
+      slug: activeModel?.stockSlug ?? piece.slug,
       name: `${piece.name} — ${activeModel?.label ?? ""}`,
       priceEUR: price,
       colour,
@@ -251,8 +263,11 @@ export function PieceDetail({ piece }: { piece: Piece }) {
                 <p className="font-mono text-2xl font-semibold">{formatPrice(price)}</p>
               </div>
               <button type="button" onClick={handleAdd}
-                className="cta-shine press h-12 bg-ink text-on-ink px-8 text-xs font-bold uppercase tracking-[0.18em] hover:bg-ink-soft transition-colors">
-                {added ? "Ajouté ✓" : "Ajouter au panier"}
+                disabled={outOfStock}
+                className={`press h-12 px-8 text-xs font-bold uppercase tracking-[0.18em] transition-colors ${
+                  outOfStock ? "bg-red-50 text-red-400 border border-red-200 cursor-not-allowed" : "cta-shine bg-ink text-on-ink hover:bg-ink-soft"
+                }`}>
+                {added ? "Ajouté ✓" : outOfStock ? "Rupture de stock" : "Ajouter au panier"}
               </button>
             </div>
 

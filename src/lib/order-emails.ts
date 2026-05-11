@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { createClient } from "@supabase/supabase-js";
+import { BRIDLE_COMPONENTS, isBridle } from "@/lib/bridle-components";
 
 export type OrderItem = {
   slug: string; name: string; colourLabel: string;
@@ -63,16 +64,21 @@ export async function createOrderAndGetNumber({
 
   // Déduire le stock automatiquement
   for (const item of items) {
-    const { data: model } = await supabase
-      .from("stock_models")
-      .select("id")
-      .eq("slug", item.slug)
-      .single();
-    if (model) {
+    // Slugs à déduire : le produit lui-même + ses composants si c'est un filet
+    const slugsToDeduct = [item.slug];
+    if (isBridle(item.slug)) {
+      slugsToDeduct.push(...(BRIDLE_COMPONENTS[item.slug] ?? []));
+    }
+
+    for (const slug of slugsToDeduct) {
+      const isComponent = slug !== item.slug;
+      const { data: model } = await supabase
+        .from("stock_models").select("id").eq("slug", slug).single();
+      if (!model) continue;
       await supabase.rpc("deduct_stock", {
         p_model_id: model.id,
         p_colour: item.colourLabel,
-        p_size: item.size,
+        p_size: isComponent ? item.size : item.size, // même couleur/taille
         p_qty: item.quantity,
       });
     }
