@@ -352,7 +352,9 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const [zoomedImage, setZoomedImage]     = useState<string | null>(null);
   const [added, setAdded]         = useState(false);
   const [favorite, setFavoriteState] = useState(false);
-  const [stockQty, setStockQty]   = useState<number | null>(null);
+  const [stockQty, setStockQty]           = useState<number | null>(null);
+  const [equipStockQty, setEquipStockQty] = useState<number | null>(null);
+  const [equipAltColour, setEquipAltColour] = useState<string | null>(null);
   const ctaRef        = useRef<HTMLDivElement>(null);
   const disciplineRef = useRef<HTMLDivElement>(null);
   const colourRef     = useRef<HTMLDivElement>(null);
@@ -395,6 +397,33 @@ export function ProductDetailClient({ product }: { product: Product }) {
   useEffect(() => { setEquipColour(selectedColour); }, [selectedColour]);
   useEffect(() => { if (selectedSize) setEquipSize(selectedSize as import("@/lib/products").Size); }, [selectedSize]);
 
+  // Vérification stock enrênement sélectionné
+  useEffect(() => {
+    setEquipStockQty(null);
+    setEquipAltColour(null);
+    if (!selectedEquip || selectedEquip === "aucun") return;
+    const slug = selectedEquip === "tylman" ? "enrenement-1" : "enrenement-2";
+    const colour = product.colours.find(c => c.key === equipColour)?.label ?? equipColour;
+    fetch(`/api/stock/check?slug=${slug}&colour=${encodeURIComponent(colour)}&size=Full`)
+      .then(r => r.json())
+      .then(async (d) => {
+        setEquipStockQty(d.quantity ?? null);
+        if (d.quantity === 0) {
+          // Cherche une couleur alternative disponible
+          const otherColours = product.colours.filter(c => c.key !== equipColour);
+          for (const c of otherColours) {
+            const res = await fetch(`/api/stock/check?slug=${slug}&colour=${encodeURIComponent(c.label)}&size=Full`);
+            const data = await res.json();
+            if (data.quantity === null || data.quantity > 0) {
+              setEquipAltColour(c.label);
+              break;
+            }
+          }
+        }
+      })
+      .catch(() => {});
+  }, [selectedEquip, equipColour, product.colours]);
+
   // Sticky cart
   useEffect(() => {
     const el = ctaRef.current;
@@ -429,7 +458,8 @@ export function ProductDetailClient({ product }: { product: Product }) {
   }, [selectedReins, selectedEquip, product.priceEUR]);
 
   const outOfStock = stockQty === 0;
-  const complete = !!(selectedDiscipline && selectedColour && selectedSize && selectedReins && selectedEquip) && !outOfStock;
+  const equipOutOfStock = equipStockQty === 0;
+  const complete = !!(selectedDiscipline && selectedColour && selectedSize && selectedReins && selectedEquip) && !outOfStock && !equipOutOfStock;
 
   function handleFavorite() {
     if (!userId) { setAuthOpen(true); return; }
@@ -961,6 +991,20 @@ export function ProductDetailClient({ product }: { product: Product }) {
               </AnimatePresence>
             </div>
           </div>
+
+          {/* Message rupture enrênement */}
+          {equipOutOfStock && (
+            <div className="border border-red-200 bg-red-50 px-5 py-3 space-y-1">
+              <p className="text-sm font-medium text-red-600">
+                {equipOptions.find(e => e.key === selectedEquip)?.label} — rupture de stock en {product.colours.find(c => c.key === equipColour)?.label}.
+              </p>
+              {equipAltColour && (
+                <p className="text-xs text-red-500">
+                  Disponible en <strong>{equipAltColour}</strong> — sélectionnez cette couleur pour l'enrênement ci-dessus.
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Récap + CTA */}
           <div ref={ctaRef} className="grid grid-cols-12 gap-8">
