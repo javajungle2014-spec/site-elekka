@@ -85,6 +85,7 @@ function OptionGrid({
   flat = false,
   cols = 3,
   mobile = false,
+  stockMap,
 }: {
   items: BridlePart[];
   selected: number | null;
