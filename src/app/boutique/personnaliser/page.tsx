@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, ShoppingBag, Shuffle, ArrowCounterClockwise, MagnifyingGlassPlus, X, FloppyDisk, Scales, ArrowLeft as ArrowL, ArrowRight as ArrowR, ArrowSquareOut } from "@phosphor-icons/react";
 import { useCart } from "@/lib/cart-store";
 import { createClient } from "@/lib/supabase";
-import { BRIDLE_CATALOG, STOCK_LABEL, BASE_PRICE } from "@/lib/bridle-catalog";
+import { BRIDLE_CATALOG, STOCK_LABEL, BASE_PRICE, ES_PALETTE } from "@/lib/bridle-catalog";
 import type { BridlePart, CuirOption } from "@/lib/bridle-catalog";
 import { useBridleState, priceOf, encodeConfig, randomize, emptyState } from "@/lib/bridle-store";
 import type { BridleState } from "@/lib/bridle-store";
@@ -349,10 +349,24 @@ export default function PersonnaliserPage() {
   const [creations, setCreations] = useState<Creation[]>([]);
   const [activeIdx, setActiveIdx] = useState(0);
   const [showCompareView, setShowCompareView] = useState(false);
+  const [enStockMap, setEnStockMap] = useState<Record<string, number | null>>({});
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => { window.scrollTo(0, 0); }, []);
+
+  // Vérification stock enrênements quand la couleur change
+  useEffect(() => {
+    const cuirName = C.cuir.find(c => c.id === s.cuir)?.name;
+    if (!cuirName) return;
+    const slugs = ["enrenement-1", "enrenement-2"];
+    slugs.forEach(slug => {
+      fetch(`/api/stock/check?slug=${slug}&colour=${encodeURIComponent(cuirName)}&size=Full`)
+        .then(r => r.json())
+        .then(d => setEnStockMap(prev => ({ ...prev, [slug]: d.quantity ?? null })))
+        .catch(() => {});
+    });
+  }, [s.cuir]);
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024);
     check();
@@ -952,23 +966,52 @@ export default function PersonnaliserPage() {
               />
               {s.enrenementOn && (
                 <div style={{ marginTop: 12, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                  {C.enrenement.map((en, i) => (
-                    <div
-                      key={en.id}
-                      onClick={() => set("enrenement", i)}
-                      style={{
-                        padding: 12, borderRadius: 10, cursor: "pointer",
-                        border: `1px solid ${s.enrenement === i ? "#14141a" : "#d8d3c7"}`,
-                        background: "#fff",
-                      }}
-                    >
-                      <div style={{ fontWeight: 500, fontSize: 13 }}>{en.name}</div>
-                      <div style={{ fontSize: 11, color: "#5a5a63", marginTop: 2 }}>{en.desc}</div>
-                      <div style={{ fontFamily: "var(--font-geist-mono)", fontSize: 11, color: "#5a5a63", marginTop: 4 }}>
-                        +{en.price} € {en.note && `· ${en.note}`}
+                  {C.enrenement.map((en, i) => {
+                    const slug = i === 0 ? "enrenement-1" : "enrenement-2";
+                    const qty = enStockMap[slug];
+                    const rupture = qty === 0;
+                    const pal = ES_PALETTE[s.cuir ?? "noir"];
+                    return (
+                      <div
+                        key={en.id}
+                        onClick={() => !rupture && set("enrenement", i)}
+                        style={{
+                          borderRadius: 10, overflow: "hidden",
+                          border: `1px solid ${s.enrenement === i && !rupture ? "#14141a" : "#d8d3c7"}`,
+                          background: "#fff",
+                          cursor: rupture ? "not-allowed" : "pointer",
+                          opacity: rupture ? 0.85 : 1,
+                        }}
+                      >
+                        {/* Image cuir floutée si rupture */}
+                        <div style={{
+                          height: 64, position: "relative", overflow: "hidden",
+                          background: `linear-gradient(140deg, ${pal.highlight} 0%, ${pal.surface} 50%, ${pal.edge} 100%)`,
+                          filter: rupture ? "blur(3px) brightness(0.7)" : "none",
+                          transition: "filter .3s",
+                        }} />
+                        {/* Bandeau rupture */}
+                        {rupture && (
+                          <div style={{
+                            marginTop: -24, position: "relative", zIndex: 2,
+                            background: "#14141a", color: "#fafaf9",
+                            textAlign: "center", padding: "4px 8px",
+                            fontFamily: "var(--font-geist-mono)", fontSize: 9,
+                            letterSpacing: "0.2em", textTransform: "uppercase",
+                          }}>
+                            Rupture de stock
+                          </div>
+                        )}
+                        <div style={{ padding: "10px 12px" }}>
+                          <div style={{ fontWeight: 500, fontSize: 13, color: rupture ? "#a0a0a0" : "#14141a" }}>{en.name}</div>
+                          <div style={{ fontSize: 11, color: "#5a5a63", marginTop: 2 }}>{en.desc}</div>
+                          <div style={{ fontFamily: "var(--font-geist-mono)", fontSize: 11, color: "#5a5a63", marginTop: 4 }}>
+                            +{en.price} € {en.note && `· ${en.note}`}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </Panel>
