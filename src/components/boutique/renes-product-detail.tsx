@@ -121,6 +121,7 @@ export function RenesProductDetail({ product }: { product: Product }) {
   const [colourKey, setColourKey] = useState<ColourKey>(product.defaultColour);
   const [added, setAdded]         = useState(false);
   const [stickyVisible, setStickyVisible] = useState(false);
+  const [stockQty, setStockQty]   = useState<number | null>(null);
   const { addItem }               = useCart();
 
   useEffect(() => {
@@ -128,6 +129,12 @@ export function RenesProductDetail({ product }: { product: Product }) {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    const colour = product.colours.find(c => c.key === colourKey)?.label ?? "";
+    fetch(`/api/stock/check?slug=${product.slug}&colour=${encodeURIComponent(colour)}&size=`)
+      .then(r => r.json()).then(d => setStockQty(d.quantity ?? null)).catch(() => {});
+  }, [colourKey, product.slug, product.colours]);
 
   const activeColour = useMemo(
     () => product.colours.find((c) => c.key === colourKey) ?? product.colours[0],
@@ -182,7 +189,18 @@ export function RenesProductDetail({ product }: { product: Product }) {
             <div className="absolute left-0 top-1/2 hidden -translate-y-1/2 writing-vertical font-mono text-xs uppercase tracking-[0.22em] text-muted-soft md:block">
               Remplacer par vos photos
             </div>
-            <ProductPhotoPlaceholder leatherClass={leatherClass} />
+            <div className="relative">
+              <div className={stockQty === 0 ? "opacity-40 blur-[3px] transition-all duration-300" : "transition-all duration-300"}>
+                <ProductPhotoPlaceholder leatherClass={leatherClass} />
+              </div>
+              {stockQty === 0 && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <span className="bg-ink/85 text-on-ink text-xs tracking-[0.2em] uppercase font-semibold px-6 py-2 shadow-lg" style={{ transform: "rotate(-35deg)", whiteSpace: "nowrap" }}>
+                    Rupture de stock
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="border-t border-line py-5 space-y-5">

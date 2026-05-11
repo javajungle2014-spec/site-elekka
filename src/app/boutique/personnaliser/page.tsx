@@ -95,6 +95,7 @@ function OptionGrid({
   flat?: boolean;
   cols?: number;
   mobile?: boolean;
+  stockMap?: Record<number, number | null>;
 }) {
   const effectiveCols = mobile ? Math.min(cols, 2) : cols;
   return (
@@ -102,10 +103,11 @@ function OptionGrid({
       {items.map((it, i) => {
         const Comp = Components[i];
         const isSelected = selected === i;
+        const rupture = stockMap ? stockMap[i] === 0 : false;
         return (
           <div
             key={it.id}
-            onClick={() => onSelect(i)}
+            onClick={() => !rupture && onSelect(i)}
             style={{
               position: "relative",
               display: "flex",
@@ -113,9 +115,9 @@ function OptionGrid({
               gap: 10,
               padding: 12,
               borderRadius: 10,
+              cursor: rupture ? "not-allowed" : "pointer",
               background: "#ffffff",
               border: `1px solid ${isSelected ? "#14141a" : "#d8d3c7"}`,
-              cursor: "pointer",
               transition: "border-color .15s, box-shadow .15s",
               boxShadow: isSelected ? "0 0 0 3px rgba(20,20,26,.06)" : "none",
             }}
@@ -144,8 +146,21 @@ function OptionGrid({
               borderRadius: 7, overflow: "hidden",
               background: "#ece8df",
               display: "flex", alignItems: "center",
+              position: "relative",
             }}>
-              {Comp && <Comp color={cuir} stitch={stitch} />}
+              <div style={{ filter: rupture ? "blur(2px) brightness(0.7)" : "none", width: "100%", transition: "filter .3s" }}>
+                {Comp && <Comp color={cuir} stitch={stitch} />}
+              </div>
+              {rupture && (
+                <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
+                  <span style={{
+                    background: "rgba(20,20,26,0.85)", color: "#fafaf9",
+                    fontSize: 8, letterSpacing: "0.2em", textTransform: "uppercase",
+                    fontWeight: 600, padding: "3px 10px", transform: "rotate(-35deg)",
+                    whiteSpace: "nowrap", boxShadow: "0 1px 4px rgba(0,0,0,.3)",
+                  }}>Rupture de stock</span>
+                </div>
+              )}
             </div>
             {/* Infos */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8 }}>
@@ -355,13 +370,13 @@ export default function PersonnaliserPage() {
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
-  // Vérification stock enrênements quand la couleur change
+  // Vérification stock enrênements + rênes quand la couleur change
   useEffect(() => {
     const cuirName = C.cuir.find(c => c.id === s.cuir)?.name;
     if (!cuirName) return;
-    const slugs = ["enrenement-1", "enrenement-2"];
+    const slugs = ["enrenement-1", "enrenement-2", "renes-1", "renes-2"];
     slugs.forEach(slug => {
-      fetch(`/api/stock/check?slug=${slug}&colour=${encodeURIComponent(cuirName)}&size=Full`)
+      fetch(`/api/stock/check?slug=${slug}&colour=${encodeURIComponent(cuirName)}&size=`)
         .then(r => r.json())
         .then(d => setEnStockMap(prev => ({ ...prev, [slug]: d.quantity ?? null })))
         .catch(() => {});
@@ -963,6 +978,7 @@ export default function PersonnaliserPage() {
                 onSelect={(i) => { set("rene", i); completeAndAdvance("rene"); }}
                 Components={RENE_COMPONENTS}
                 cuir={cuirId} stitch={stitchHex} flat cols={3} mobile={isMobile}
+                stockMap={{ 1: enStockMap["renes-1"] ?? null, 2: enStockMap["renes-2"] ?? null }}
               />
               {s.enrenementOn && (
                 <div style={{ marginTop: 12, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>

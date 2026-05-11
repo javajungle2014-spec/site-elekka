@@ -226,6 +226,7 @@ export function EnrenementProductDetail({ product }: { product: Product }) {
   const [stickyVisible, setStickyVisible] = useState(false);
   const [openBenefit, setOpenBenefit] = useState<number | null>(0);
   const [selectedGalleryImage, setSelectedGalleryImage] = useState(0);
+  const [stockQty, setStockQty]     = useState<number | null>(null);
   const { addItem }                 = useCart();
 
   useEffect(() => {
@@ -233,6 +234,12 @@ export function EnrenementProductDetail({ product }: { product: Product }) {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    const colour = product.colours.find(c => c.key === colourKey)?.label ?? "";
+    fetch(`/api/stock/check?slug=${product.slug}&colour=${encodeURIComponent(colour)}&size=`)
+      .then(r => r.json()).then(d => setStockQty(d.quantity ?? null)).catch(() => {});
+  }, [colourKey, product.slug, product.colours]);
 
   const activeColour = useMemo(
     () => product.colours.find((c) => c.key === colourKey) ?? product.colours[0],
@@ -264,7 +271,18 @@ export function EnrenementProductDetail({ product }: { product: Product }) {
       </div>
 
       <section className="mx-auto grid max-w-[1680px] gap-4 px-4 pt-6 md:px-8 lg:grid-cols-[1fr_520px] lg:pt-10">
-        <ThreePhotoHero leatherClass={leatherClass} activeColour={activeColour.label} />
+        <div className="relative">
+          <div className={stockQty === 0 ? "opacity-40 blur-[3px] transition-all duration-300" : "transition-all duration-300"}>
+            <ThreePhotoHero leatherClass={leatherClass} activeColour={activeColour.label} />
+          </div>
+          {stockQty === 0 && (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <span className="bg-ink/85 text-on-ink text-xs tracking-[0.2em] uppercase font-semibold px-6 py-2 shadow-lg" style={{ transform: "rotate(-35deg)", whiteSpace: "nowrap" }}>
+                Rupture de stock
+              </span>
+            </div>
+          )}
+        </div>
         <PurchasePanel product={product} activeColour={activeColour} colourKey={colourKey} setColourKey={setColourKey} size={size} setSize={setSize} onAdd={handleAdd} added={added} />
       </section>
 
