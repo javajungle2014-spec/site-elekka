@@ -43,19 +43,19 @@ Vous n'êtes pas sûr ? Écrivez-nous à elekka.sellier@gmail.com avec la race, 
 
   composition: `**Matières**
 
-Cuir : pleine fleur, pleine épaisseur. Sélectionné pour sa souplesse native, sa résistance dans la durée et le respect de la peau du cheval.
+Cuir : pleine fleur, pleine épaisseur. Sélectionné pour sa souplesse naturelle, sa résistance dans la durée et le respect de la peau du cheval.
 
-Rembourrage (modèles Signature et Fusion) : mousse haute densité gainée cuir, 2,5 à 3 cm d'épaisseur.
+Rembourrage : mousse haute densité gainée de cuir.
 
-Quincaillerie : inox argenté, résistant à l'humidité et à la corrosion. Anneaux, boucles et attaches traités pour durer.
+Éléments métalliques : acier inoxydable finition argentée, résistant à l'humidité et à la corrosion. Anneaux, boucles et attaches sont sélectionnés pour leur solidité et leur tenue dans le temps.
 
-Rênes (modèles Signature et Fusion) : cuir pleine fleur avec grip caoutchouc, pour une prise en main sûre par tous les temps.
+Rênes : cuir pleine fleur avec grip caoutchouc ou tissu tressé, pour une prise en main sûre par tous les temps.
 
 **Dimensions**
 
-Browband Full : 42 cm · Browband Cob : 38 cm
-Browband Signature Full : 17 pouces (43 cm) · Cob : 16 pouces (40 cm)
-Browband Fusion : 5,5 cm de large`,
+Frontal : environ 43 cm en taille Full, environ 41 cm en taille Cob.
+
+Les modèles Elekka sont ajustables sur plusieurs crans afin de s'adapter à différentes morphologies et d'offrir un réglage précis.`,
 
   entretien: `**Entretien du cuir**
 
