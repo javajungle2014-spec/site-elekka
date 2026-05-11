@@ -261,7 +261,6 @@ export const products: Product[] = [
   {
     slug: "renes-2",
     name: "Rênes Elekka N°2",
-    hidden: true,
     category: "Rênes",
     family: "Classique",
     tagline: "Rênes lisses, pour les mains expertes.",
