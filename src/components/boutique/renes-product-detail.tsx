@@ -17,7 +17,7 @@ const chapters = [
   {
     eyebrow: "02 / Ligne",
     title: "Silhouette nette",
-    copy: "Les montants restent fins, la muserolle est doublée sans paraître lourde, et la bouclerie se fait discrète.",
+    copy: "Les montants restent fins, la muserolle est doublée sans paraître lourde, et les arrêtoirs en cuir se font discrets.",
   },
   {
     eyebrow: "03 / Usage",
@@ -29,7 +29,8 @@ const chapters = [
 const specs = [
   ["Cuir",       "Pleine fleur"],
   ["Longueur",   "145 cm"],
-  ["Bouclerie",  "Inox poli"],
+  ["Arrêtoirs",  "En cuir"],
+  ["Grip",       "Caoutchouc intégré"],
   ["Expédition", "2 à 4 jours ouvrés"],
 ];
 
