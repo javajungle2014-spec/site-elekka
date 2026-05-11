@@ -4,9 +4,9 @@ export type TabContent = {
 
 // Description spécifique par produit
 export const productDescriptions: Record<string, string> = {
-  essentiel: `Le Filet Essentiel est notre modèle classique et intemporel. Pensé pour les cavaliers qui recherchent un bridon fiable, bien construit, sans fioriture — à un prix sincère.
+  essentiel: `Le Filet Essentiel est notre modèle classique et intemporel. Pensé pour les cavaliers qui recherchent un bridon fiable, bien construit, à un prix sincère.
 
-Le cuir pleine fleur utilisé est sélectionné pour sa souplesse dès la première utilisation et sa capacité à développer une belle patine avec le temps. La muserolle française classique assure un contact doux et uniforme sur le chanfrein. La quincaillerie inox argentée est robuste et résistante à l'humidité.
+Le cuir pleine fleur utilisé est sélectionné pour sa souplesse dès la première utilisation et sa capacité à développer une belle patine avec le temps. La muserolle française classique assure un contact doux et uniforme sur le chanfrein. Les éléments argentés apportent une touche sobre et élégante, tout en garantissant une finition robuste et durable.
 
 L'Essentiel convient à tous les chevaux et toutes les disciplines : dressage, saut d'obstacles, équitation de loisir. C'est le choix de ceux qui veulent bien faire, sans se perdre dans le superflu.`,
 
@@ -53,19 +53,23 @@ Browband Full : 42 cm · Browband Cob : 38 cm
 Browband Signature Full : 17 pouces (43 cm) · Cob : 16 pouces (40 cm)
 Browband Fusion : 5,5 cm de large`,
 
-  entretien: `**Avant la première utilisation**
+  entretien: `**Entretien du cuir**
 
-Appliquez une huile de pied de bœuf ou une glycérine neutre sur l'ensemble du filet. Laissez pénétrer 1 à 2 heures avant usage. Ce geste assouplit le cuir, prévient les frottements et prolonge significativement sa durée de vie.
+Le cuir pleine fleur est une matière vivante. Pour conserver sa souplesse, son éclat et sa tenue dans le temps, un entretien régulier est recommandé.
 
 **Après chaque utilisation**
 
-Essuyez les résidus de bave et de transpiration avec un chiffon légèrement humide. Ne laissez jamais le cuir sécher avec de l'humidité — cela accélère le craquelage.
+Nettoyez votre filet avec une éponge légèrement humide et un savon glycériné adapté au cuir. Ce geste permet de retirer les traces de poussière, de transpiration et d'humidité, tout en préservant la souplesse naturelle du cuir.
 
-**Entretien régulier**
+**Une à deux fois par mois**
 
-Une fois par semaine ou après chaque utilisation intensive : démontez le filet, nettoyez chaque pièce avec un savon pour cuir (glycérine, savon de selle), laissez sécher à l'air libre hors du soleil direct, puis appliquez une fine couche de graisse nourrissante.
+Appliquez un baume nourrissant sur cuir propre à l'aide d'un chiffon doux ou d'une éponge propre. Le baume aide à hydrater le cuir en profondeur et à conserver son confort d'utilisation au fil du temps.
 
-**Conservation**
+**Une à deux fois par an**
 
-Rangez sur un porte-bridon dans un endroit sec, tempéré et aéré. Évitez les sacs fermés ou les espaces humides. Un cuir bien entretenu se bonifie avec le temps et peut durer plusieurs décennies.`,
+Vous pouvez utiliser une huile pour cuir afin d'assouplir davantage les parties les plus sèches. Appliquez-la avec parcimonie, au pinceau, puis laissez le cuir absorber naturellement avant utilisation.
+
+**Conseil**
+
+Évitez de stocker votre filet dans un endroit humide, en plein soleil ou près d'une source de chaleur. Après nettoyage, laissez-le sécher à température ambiante, puis rangez-le dans un endroit sec et aéré.`,
 };

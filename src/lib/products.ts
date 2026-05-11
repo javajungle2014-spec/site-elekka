@@ -34,7 +34,7 @@ export const products: Product[] = [
     tagline: "Le classique, sans compromis.",
     priceEUR: 99.99,
     description:
-      "Cuir pleine fleur, muserolle simple, quincaillerie argentée. La ligne épurée d'un bridon anglais, travaillée avec rigueur.",
+      "Essentiel incarne l'élégance du bridon anglais dans sa forme la plus pure : une ligne sobre, un cuir pleine fleur soigneusement sélectionné et des finitions pensées pour durer.",
     longDescription:
       "L'Essentiel reprend les codes du bridon anglais classique : une muserolle française simple, une frontière rectiligne, une quincaillerie argentée sobre. Le cuir pleine fleur est sélectionné pour sa souplesse au premier usage et sa patine dans la durée.",
     highlights: [

@@ -1028,8 +1028,13 @@ export function ProductDetailClient({ product }: { product: Product }) {
             <div className="col-span-12 md:col-span-8">
               <span className="italic text-[5rem] leading-[0.5] text-muted/40 block mb-4" style={{ fontWeight: 300 }}>"</span>
               <p className="display text-[1.75rem] md:text-[2.25rem] xl:text-[2.5rem]" style={{ lineHeight: 1.15 }}>
-                Un filet n'est pas un accessoire. C'est une{" "}
-                <em className="italic font-light text-muted">conversation</em> entre le cavalier, le cheval et le cuir — qui se patine au fil des années.
+                {product.slug === "essentiel" ? (
+                  <>J'ai voulu créer un filet simple, juste et{" "}
+                  <em className="italic font-light text-muted">durable</em> : un filet pensé pour le cheval avant tout, mais assez élégant pour accompagner les cavaliers les plus exigeants.</>
+                ) : (
+                  <>Un filet n'est pas un accessoire. C'est une{" "}
+                  <em className="italic font-light text-muted">conversation</em> entre le cavalier, le cheval et le cuir — qui se patine au fil des années.</>
+                )}
               </p>
               <div className="mt-10 flex items-center gap-4">
                 <div className="w-10 h-10 bg-paper-2 rounded-full flex items-center justify-center text-xs font-semibold text-muted">EK</div>
