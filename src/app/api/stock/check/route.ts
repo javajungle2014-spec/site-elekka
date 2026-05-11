@@ -10,7 +10,7 @@ export async function GET(req: Request) {
   const colour = searchParams.get("colour");
   const size   = searchParams.get("size");
 
-  if (!slug || !colour || !size) {
+  if (!slug || !colour) {
     return NextResponse.json({ error: "Paramètres manquants" }, { status: 400 });
   }
 

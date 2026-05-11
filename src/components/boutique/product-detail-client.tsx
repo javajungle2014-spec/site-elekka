@@ -980,7 +980,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                   <div className="space-y-2">
                     <div className="flex items-baseline justify-between">
                       <p className="text-sm font-medium">{equipOptions.find(e => e.key === selectedEquip)?.label}</p>
-                      <p className="text-xs text-muted">{product.colours.find(c => c.key === equipColour)?.label} · {equipSize}</p>
+                      <p className="text-xs text-muted">{product.colours.find(c => c.key === equipColour)?.label}</p>
                     </div>
                     <div className="grid grid-cols-3 gap-2">
                       {[
@@ -1064,7 +1064,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                     { label: "Taille",       value: selectedSize },
                     { label: "Rênes",        value: selectedReins ? reinsOptions.find(r => r.key === selectedReins)?.label : null },
                     { label: "Équipement",   value: selectedEquip && selectedEquip !== "aucun"
-                      ? `${equipOptions.find(e => e.key === selectedEquip)?.label} · ${product.colours.find(c => c.key === equipColour)?.label} · ${equipSize}`
+                      ? `${equipOptions.find(e => e.key === selectedEquip)?.label} · ${product.colours.find(c => c.key === equipColour)?.label}`
                       : selectedEquip === "aucun" ? "Sans équipement" : null },
                   ].map(it => (
                     <div key={it.label} className="flex items-baseline justify-between border-b border-line pb-3">
