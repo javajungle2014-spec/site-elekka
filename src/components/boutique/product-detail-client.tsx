@@ -249,13 +249,13 @@ function FaqItem({ item }: { item: FaqItem }) {
 }
 
 /* ─── Rail de miniatures avec carrousel ─────────────────────────────── */
-const THUMB_VISIBLE = 6;
+const THUMB_VISIBLE = 4;
 
 function ArrowBtn({ dir, disabled, onClick }: { dir: "up" | "down"; disabled: boolean; onClick: () => void }) {
   return (
     <button type="button" onClick={onClick} disabled={disabled}
-      className={`press h-7 w-full flex items-center justify-center border border-line transition-colors ${
-        disabled ? "text-muted-soft cursor-not-allowed opacity-30" : "hover:border-ink text-ink"
+      className={`press shrink-0 h-7 w-full flex items-center justify-center border border-line transition-colors ${
+        disabled ? "text-muted-soft cursor-not-allowed opacity-25" : "hover:border-ink text-ink"
       }`}>
       <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
         <path d={dir === "up" ? "M1 5L5 1L9 5" : "M1 1L5 5L9 1"} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -276,33 +276,41 @@ function ThumbnailRail({ images, selected, onSelect, productName }: {
 
   return (
     <>
-      {/* Desktop : rail vertical à gauche */}
-      <div className="hidden md:flex flex-col gap-1.5 shrink-0 w-[60px]">
+      {/* Desktop : rail vertical à gauche — hauteur calquée sur l'image principale via items-stretch du parent */}
+      <div className="hidden md:flex flex-col gap-1.5 shrink-0 w-[58px] self-stretch">
+        {/* Flèche haut — toujours présente si carousel */}
         {needsCarousel && (
           <ArrowBtn dir="up" disabled={offset === 0} onClick={() => setOffset(o => Math.max(0, o - 1))} />
         )}
 
-        <div className="flex flex-col gap-1.5 overflow-hidden flex-1">
-          <div className="flex flex-col gap-1.5 transition-transform duration-300 ease-out"
-            style={{ transform: `translateY(calc(-${offset} * (100% / ${THUMB_VISIBLE} + 2px)))` }}>
+        {/* Fenêtre scrollable — prend tout l'espace restant */}
+        <div className="flex flex-col gap-1.5 overflow-hidden flex-1 min-h-0">
+          <div
+            className="flex flex-col gap-1.5 transition-transform duration-350 ease-out"
+            style={{ transform: `translateY(calc(-${offset} * (100% / ${THUMB_VISIBLE} + 1.5px)))` }}
+          >
             {images.map((img, i) => (
               <button key={i} type="button" onClick={() => onSelect(i)}
-                className={`press relative shrink-0 overflow-hidden border-2 transition-all duration-200 w-full`}
-                style={{ aspectRatio: "3/4", borderColor: selected === i ? "var(--ink)" : "transparent",
-                  outline: selected === i ? "none" : undefined,
-                  boxShadow: selected !== i ? "0 0 0 1px #e5e5e5" : undefined }}>
-                <Image src={img} alt={`${productName} vue ${i + 1}`} fill sizes="60px" className="object-cover" />
+                className="press relative shrink-0 overflow-hidden border-2 transition-all duration-200 w-full"
+                style={{
+                  aspectRatio: "3/4",
+                  borderColor: selected === i ? "var(--ink)" : "transparent",
+                  boxShadow: selected !== i ? "0 0 0 1px #e5e5e5" : undefined,
+                  flex: `0 0 calc(100% / ${THUMB_VISIBLE} - ${(THUMB_VISIBLE - 1) * 6 / THUMB_VISIBLE}px)`,
+                }}>
+                <Image src={img} alt={`${productName} vue ${i + 1}`} fill sizes="58px" className="object-cover" />
               </button>
             ))}
           </div>
         </div>
 
+        {/* Flèche bas */}
         {needsCarousel && (
           <ArrowBtn dir="down" disabled={offset >= maxOffset} onClick={() => setOffset(o => Math.min(maxOffset, o + 1))} />
         )}
       </div>
 
-      {/* Mobile : strip horizontale en dessous de l'image (rendu via portail dans le parent) */}
+      {/* Mobile : strip horizontale en dessous de l'image */}
     </>
   );
 }
@@ -535,7 +543,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
           <div className="grid grid-cols-12 gap-8 md:gap-12 items-start">
             {/* Image + thumbnails */}
             <div className="col-span-12 md:col-span-6">
-              <div className="flex gap-3">
+              <div className="flex gap-3 items-stretch">
 
                 {/* Rail miniatures avec carrousel si > 6 */}
                 {currentColour.images.length > 1 && (
