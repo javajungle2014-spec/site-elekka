@@ -355,6 +355,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const [stockQty, setStockQty]           = useState<number | null>(null);
   const [equipStockQty, setEquipStockQty] = useState<number | null>(null);
   const [equipAltColour, setEquipAltColour] = useState<string | null>(null);
+  const [reinsStockQty, setReinsStockQty]   = useState<number | null>(null);
   const ctaRef        = useRef<HTMLDivElement>(null);
   const disciplineRef = useRef<HTMLDivElement>(null);
   const colourRef     = useRef<HTMLDivElement>(null);
@@ -396,6 +397,19 @@ export function ProductDetailClient({ product }: { product: Product }) {
   }, [selectedColour, selectedSize, product.slug, product.colours]);
   useEffect(() => { setEquipColour(selectedColour); }, [selectedColour]);
   useEffect(() => { if (selectedSize) setEquipSize(selectedSize as import("@/lib/products").Size); }, [selectedSize]);
+
+  // Vérification stock rênes sélectionnées
+  useEffect(() => {
+    setReinsStockQty(null);
+    if (!selectedReins || selectedReins === "aucune") return;
+    const slug = selectedReins === "caoutchouc" ? "renes-1" : "renes-2";
+    const colour = currentColour.label;
+    const size = selectedSize ?? product.defaultSize;
+    fetch(`/api/stock/check?slug=${slug}&colour=${encodeURIComponent(colour)}&size=${encodeURIComponent(size)}`)
+      .then(r => r.json())
+      .then(d => setReinsStockQty(d.quantity ?? null))
+      .catch(() => {});
+  }, [selectedReins, selectedColour, selectedSize, currentColour.label, product.defaultSize]);
 
   // Vérification stock enrênement sélectionné
   useEffect(() => {
@@ -856,11 +870,18 @@ export function ProductDetailClient({ product }: { product: Product }) {
                           { label: "Vue d'ensemble" },
                         ].map((view, i) => (
                           <div key={i} className="relative overflow-hidden" style={{ aspectRatio: "4/5" }}>
-                            <div className={`w-full h-full ${LEATHER[selectedColour] ?? "bg-paper-2"}`} />
+                            <div className={`w-full h-full ${reinsStockQty === 0 ? "opacity-40" : ""} ${LEATHER[selectedColour] ?? "bg-paper-2"} transition-opacity duration-300`} />
                             <div className="absolute inset-0 flex flex-col justify-between p-2 pointer-events-none">
                               <span className="font-mono text-[8px] tracking-widest text-white/30 uppercase">0{i + 1}</span>
                               <span className="font-mono text-[8px] tracking-widest text-white/30 uppercase">{view.label}</span>
                             </div>
+                            {reinsStockQty === 0 && (
+                              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <span className="bg-ink/85 text-on-ink text-[8px] tracking-[0.2em] uppercase font-medium px-3 py-1 rotate-[-35deg] whitespace-nowrap shadow">
+                                  Rupture de stock
+                                </span>
+                              </div>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -939,11 +960,18 @@ export function ProductDetailClient({ product }: { product: Product }) {
                         { label: "Vue d'ensemble" },
                       ].map((view, i) => (
                         <div key={i} className="relative overflow-hidden" style={{ aspectRatio: "4/5" }}>
-                          <div className={`w-full h-full ${LEATHER[equipColour] ?? "bg-paper-2"}`} />
+                          <div className={`w-full h-full ${equipOutOfStock ? "opacity-40" : ""} ${LEATHER[equipColour] ?? "bg-paper-2"} transition-opacity duration-300`} />
                           <div className="absolute inset-0 flex flex-col justify-between p-2 pointer-events-none">
                             <span className="font-mono text-[8px] tracking-widest text-white/30 uppercase">0{i + 1}</span>
                             <span className="font-mono text-[8px] tracking-widest text-white/30 uppercase">{view.label}</span>
                           </div>
+                          {equipOutOfStock && (
+                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                              <span className="bg-ink/85 text-on-ink text-[8px] tracking-[0.2em] uppercase font-medium px-3 py-1 rotate-[-35deg] whitespace-nowrap shadow">
+                                Rupture de stock
+                              </span>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
