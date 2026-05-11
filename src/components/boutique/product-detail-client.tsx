@@ -353,6 +353,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const [added, setAdded]         = useState(false);
   const [favorite, setFavoriteState] = useState(false);
   const [stockQty, setStockQty]           = useState<number | null>(null);
+  const [altColour, setAltColour]         = useState<string | null>(null);
   const [equipStockQty, setEquipStockQty] = useState<number | null>(null);
   const [equipAltColour, setEquipAltColour] = useState<string | null>(null);
   const [reinsStockQty, setReinsStockQty]   = useState<number | null>(null);
@@ -387,12 +388,27 @@ export function ProductDetailClient({ product }: { product: Product }) {
 
   // Vérification du stock dès que couleur ou taille change
   useEffect(() => {
+    setAltColour(null);
     if (!selectedSize || !selectedColour) return;
     const colour = product.colours.find(c => c.key === selectedColour)?.label;
     if (!colour) return;
     fetch(`/api/stock/check?slug=${product.slug}&colour=${encodeURIComponent(colour)}&size=${selectedSize}`)
       .then(r => r.json())
-      .then(d => setStockQty(d.quantity ?? null))
+      .then(async (d) => {
+        setStockQty(d.quantity ?? null);
+        if (d.quantity === 0) {
+          // Cherche une couleur alternative disponible
+          const others = product.colours.filter(c => c.key !== selectedColour);
+          for (const c of others) {
+            const res = await fetch(`/api/stock/check?slug=${product.slug}&colour=${encodeURIComponent(c.label)}&size=${selectedSize}`);
+            const data = await res.json();
+            if (data.quantity === null || data.quantity > 0) {
+              setAltColour(c.label);
+              break;
+            }
+          }
+        }
+      })
       .catch(() => setStockQty(null));
   }, [selectedColour, selectedSize, product.slug, product.colours]);
   useEffect(() => { setEquipColour(selectedColour); }, [selectedColour]);
@@ -580,6 +596,20 @@ export function ProductDetailClient({ product }: { product: Product }) {
               )}
             </div>
           </div>
+
+          {/* Message rupture + couleur alternative */}
+          {outOfStock && (
+            <div className="border border-red-200 bg-red-50 px-5 py-3 mb-2 space-y-1">
+              <p className="text-sm font-medium text-red-600">
+                Ce coloris est actuellement en rupture de stock.
+              </p>
+              {altColour ? (
+                <p className="text-xs text-red-500">
+                  Disponible en <strong>{altColour}</strong> — sélectionnez cette couleur pour commander.
+                </p>
+              ) : null}
+            </div>
+          )}
 
           <div className="grid grid-cols-12 gap-8 md:gap-12 items-start">
             {/* Image + thumbnails */}
