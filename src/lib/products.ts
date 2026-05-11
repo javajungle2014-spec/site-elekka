@@ -83,10 +83,10 @@ export const products: Product[] = [
     name: "Bridon Anatomique Elekka Signature",
     category: "Bridons",
     family: "Anatomique",
-    tagline: "Conçu par le fondateur.",
+    tagline: "La pièce maîtresse d'Elekka, entre confort anatomique, précision et élégance.",
     priceEUR: 175,
     description:
-      "Têtière anatomique incurvée, muserolle rembourrée 2,5 – 3 cm, rênes caoutchouc incluses. Pensé pour la nuque du cheval.",
+      "Têtière anatomique incurvée, muserolle rembourrée de 2,5 à 3 cm. Un filet pensé pour préserver les zones sensibles du cheval.",
     longDescription:
       "Le Signature a été dessiné par Lucas, fondateur d'Elekka, à partir des contraintes observées sur ses propres chevaux de concours. La têtière anatomique se creuse pour libérer la nuque ; la muserolle rembourrée de 2,5 à 3 cm ferme sur le côté gauche.",
     highlights: [

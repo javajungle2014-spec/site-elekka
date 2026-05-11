@@ -10,11 +10,11 @@ Le cuir pleine fleur utilisé est sélectionné pour sa souplesse dès la premi�
 
 L'Essentiel convient à tous les chevaux et toutes les disciplines : dressage, saut d'obstacles, équitation de loisir. C'est le choix de ceux qui veulent bien faire, sans se perdre dans le superflu.`,
 
-  signature: `Le Filet Signature est le premier modèle anatomique conçu par Lucas, fondateur d'Elekka. Il est né d'une réflexion simple : pourquoi accepter qu'un équipement génère des tensions quand il peut soulager ?
+  signature: `Le Filet Signature est la pièce maîtresse de notre collection. Il est né d'une idée simple : offrir plus de confort au cheval, sans jamais perdre l'élégance ni la précision du filet.
 
-La têtière incurvée libère la zone de la nuque et des oreilles, réduisant les points de pression identifiés par les vétérinaires et ostéopathes équins. La muserolle rembourrée — 2,5 à 3 cm d'épaisseur — répartit le contact sur une plus grande surface et protège le chanfrein des frottements. La fermeture côté gauche évite toute protubérance sous le cuir.
+Sa têtière anatomique incurvée libère la zone de la nuque et des oreilles, afin de réduire les points de pression sur les zones sensibles. Sa muserolle rembourrée, d'une épaisseur de 2,5 à 3 cm, répartit le contact de manière plus douce et protège le chanfrein des frottements. La fermeture côté gauche permet de conserver une ligne propre, sans surépaisseur inutile sous le cuir.
 
-Le Signature inclut des rênes caoutchouc de qualité, pour une prise en main assurée par tous les temps. Recommandé pour les chevaux sensibles, les jeunes chevaux en débourrage, ou tout cavalier soucieux du bien-être de sa monture.`,
+Pensé pour les chevaux sensibles, les jeunes chevaux ou les cavaliers attentifs au confort de leur monture, le Signature réunit technicité, sobriété et exigence dans un filet anatomique élégant.`,
 
   fusion: `Le Filet Fusion est notre modèle le plus complet. Il reprend les bases anatomiques du Signature et y ajoute une polyvalence inédite grâce à sa muserolle à triple attache.
 

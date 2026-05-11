@@ -1029,6 +1029,9 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 {product.slug === "essentiel" ? (
                   <>J'ai voulu créer un filet simple, juste et{" "}
                   <em className="italic font-light text-muted">durable</em> : un filet pensé pour le cheval avant tout, mais assez élégant pour accompagner les cavaliers les plus exigeants.</>
+                ) : product.slug === "signature" ? (
+                  <>Avec Signature, chaque détail a été pensé pour respecter les zones{" "}
+                  <em className="italic font-light text-muted">sensibles</em> du cheval, tout en conservant une ligne élégante, technique et intemporelle.</>
                 ) : (
                   <>Un filet n'est pas un accessoire. C'est une{" "}
                   <em className="italic font-light text-muted">conversation</em> entre le cavalier, le cheval et le cuir — qui se patine au fil des années.</>
