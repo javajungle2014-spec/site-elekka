@@ -16,11 +16,13 @@ Sa têtière anatomique incurvée libère la zone de la nuque et des oreilles, a
 
 Pensé pour les chevaux sensibles, les jeunes chevaux ou les cavaliers attentifs au confort de leur monture, le Signature réunit technicité, sobriété et exigence dans un filet anatomique élégant.`,
 
-  fusion: `Le Filet Fusion est notre modèle le plus complet. Il reprend les bases anatomiques du Signature et y ajoute une polyvalence inédite grâce à sa muserolle à triple attache.
+  fusion: `Le Filet Fusion est notre modèle le plus polyvalent. Il reprend les bases anatomiques du Signature — têtière incurvée, fermeture côté gauche, rênes caoutchouc incluses — et y ajoute une muserolle à triple attache interchangeable sans outil.
 
-Le browband anatomique large — 5,5 cm — est conçu pour s'adapter à toutes les morphologies frontales sans créer de tension. La muserolle à triple attache (épaisse, ovale, rectangulaire) permet d'ajuster finement le contact selon la morphologie et la sensibilité du cheval.
+Épaisse, ovale ou rectangulaire : trois formes de contact pour trois sensibilités différentes. La première répartit la pression sur une large surface. La seconde affine le contact sur le chanfrein. La troisième offre un maintien précis et ciblé. On change en quelques secondes, sans défaire le filet.
 
-Comme le Signature, la fermeture est côté gauche et les rênes caoutchouc sont incluses. Le Fusion est le choix des cavaliers qui veulent un bridon anatomique performant, polyvalent, et taillé pour le long terme.`,
+Le browband anatomique large — 5,5 cm — est conçu pour répartir la pression sur tout le front du cheval sans créer de point de tension. C'est une pièce pensée pour les chevaux qui réagissent aux frontaux classiques, ou pour ceux dont la morphologie demande plus de surface d'appui.
+
+Le Fusion convient aux cavaliers qui travaillent plusieurs chevaux aux morphologies différentes, ou qui cherchent un bridon qui évoluera avec leur pratique sans devoir en racheter un.`,
 };
 
 // Contenu identique pour tous les produits
@@ -41,21 +43,26 @@ Si votre cheval se situe à la limite entre deux tailles, nous recommandons de c
 
 Vous n'êtes pas sûr ? Écrivez-nous à elekka.sellier@gmail.com avec la race, la hauteur au garrot et quelques photos de votre cheval. Nous vous répondrons sous 48 h.`,
 
-  composition: `**Matières**
+  composition: `**Cuir**
 
-Cuir : pleine fleur, pleine épaisseur. Sélectionné pour sa souplesse naturelle, sa résistance dans la durée et le respect de la peau du cheval.
+Pleine fleur, pleine épaisseur. C'est la couche supérieure de la peau, la plus dense, la plus résistante, celle qui se bonifie à l'usage. Elle est sélectionnée pour sa souplesse naturelle dès le premier contact et sa capacité à développer une patine propre au fil des années.
 
-Rembourrage : mousse haute densité gainée de cuir.
+**Rembourrage** (modèles Signature et Fusion)
 
-Éléments métalliques : acier inoxydable finition argentée, résistant à l'humidité et à la corrosion. Anneaux, boucles et attaches sont sélectionnés pour leur solidité et leur tenue dans le temps.
+Mousse haute densité gainée de cuir. Épaisseur de 2,5 à 3 cm sur la muserolle. Elle répartit la pression sur une surface plus large et protège le chanfrein des frottements répétés.
 
-Rênes : cuir pleine fleur avec grip caoutchouc ou tissu tressé, pour une prise en main sûre par tous les temps.
+**Éléments métalliques**
+
+Acier inoxydable, finition argentée. Résistant à l'humidité, à la transpiration et à l'usure. Chaque boucle, anneau et attache est sélectionné pour sa solidité sur le long terme.
+
+**Rênes incluses** (modèles Signature et Fusion)
+
+Cuir pleine fleur avec grip caoutchouc intégré. Prise en main sûre et précise par tous les temps, sans alourdir le contact.
 
 **Dimensions**
 
-Frontal : environ 43 cm en taille Full, environ 41 cm en taille Cob.
-
-Les modèles Elekka sont ajustables sur plusieurs crans afin de s'adapter à différentes morphologies et d'offrir un réglage précis.`,
+Frontal : environ 43 cm (Full) — environ 41 cm (Cob).
+Tous les modèles sont réglables sur plusieurs crans pour s'adapter à différentes morphologies.`,
 
   entretien: `**Entretien du cuir**
 

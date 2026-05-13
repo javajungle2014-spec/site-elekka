@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Package, CaretLeft, Truck, Check, SignOut, ChartBar, DownloadSimple, Warehouse, Plus, Minus } from "@phosphor-icons/react";
+import { Package, CaretLeft, Truck, Check, SignOut, ChartBar, DownloadSimple, Warehouse, Plus, Minus, Tag } from "@phosphor-icons/react";
 import { formatPrice } from "@/lib/products";
 
 type OrderStatus = "en_preparation" | "expediee" | "livree" | "annulee";
@@ -278,6 +278,140 @@ function OrderDetail({
   );
 }
 
+// ── Codes promo ───────────────────────────────────────────────────────────────
+
+type PromoCode = {
+  id: number; code: string; discount_type: "percent" | "fixed";
+  discount_value: number; max_uses: number; used_count: number;
+  active: boolean; created_at: string;
+};
+
+function PromoCodesView({ password, onBack }: { password: string; onBack: () => void }) {
+  const [codes, setCodes] = useState<PromoCode[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [newCode, setNewCode] = useState("");
+  const [newType, setNewType] = useState<"percent" | "fixed">("percent");
+  const [newValue, setNewValue] = useState("");
+  const [newMaxUses, setNewMaxUses] = useState("1");
+  const [adding, setAdding] = useState(false);
+
+  const load = () => {
+    fetch("/api/admin/promo-codes", { headers: { Authorization: `Bearer ${password}` } })
+      .then(r => r.json())
+      .then(d => { setCodes(d.codes ?? []); setLoading(false); });
+  };
+
+  useEffect(() => { load(); }, []);
+
+  async function handleCreate() {
+    if (!newCode || !newValue) return;
+    setAdding(true);
+    await fetch("/api/admin/promo-codes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${password}` },
+      body: JSON.stringify({ action: "create", code: newCode, discount_type: newType, discount_value: newValue, max_uses: newMaxUses }),
+    });
+    setNewCode(""); setNewValue(""); setNewMaxUses("1"); setAdding(false);
+    load();
+  }
+
+  async function handleToggle(id: number, active: boolean) {
+    await fetch("/api/admin/promo-codes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${password}` },
+      body: JSON.stringify({ action: "toggle", id, active: !active }),
+    });
+    setCodes(prev => prev.map(c => c.id === id ? { ...c, active: !active } : c));
+  }
+
+  async function handleDelete(id: number) {
+    if (!confirm("Supprimer ce code ?")) return;
+    await fetch("/api/admin/promo-codes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${password}` },
+      body: JSON.stringify({ action: "delete", id }),
+    });
+    setCodes(prev => prev.filter(c => c.id !== id));
+  }
+
+  if (loading) return <div className="min-h-screen bg-paper flex items-center justify-center text-sm text-muted">Chargement…</div>;
+
+  return (
+    <div className="min-h-screen bg-paper">
+      <div className="max-w-[900px] mx-auto px-5 md:px-10 py-10 space-y-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs tracking-widest uppercase text-muted mb-1">Elekka</p>
+            <h1 className="text-3xl font-bold">Codes promo</h1>
+          </div>
+          <button type="button" onClick={onBack} className="flex items-center gap-2 text-sm text-muted hover:text-ink transition-colors">
+            <CaretLeft size={14} /> Commandes
+          </button>
+        </div>
+
+        {/* Créer un code */}
+        <div className="border border-line p-6 space-y-4">
+          <p className="text-xs tracking-widest uppercase text-muted">Nouveau code</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <input
+              value={newCode} onChange={e => setNewCode(e.target.value.toUpperCase())}
+              placeholder="CODE-PROMO"
+              className="col-span-2 border-b border-line bg-transparent py-2 text-sm focus:outline-none focus:border-ink font-mono"
+            />
+            <select value={newType} onChange={e => setNewType(e.target.value as "percent" | "fixed")}
+              className="border-b border-line bg-transparent py-2 text-sm focus:outline-none text-muted">
+              <option value="percent">Pourcentage (%)</option>
+              <option value="fixed">Fixe (€)</option>
+            </select>
+            <input
+              value={newValue} onChange={e => setNewValue(e.target.value)}
+              placeholder={newType === "percent" ? "ex: 15" : "ex: 30"}
+              type="number" min="1"
+              className="border-b border-line bg-transparent py-2 text-sm focus:outline-none focus:border-ink font-mono"
+            />
+            <input
+              value={newMaxUses} onChange={e => setNewMaxUses(e.target.value)}
+              placeholder="Usages max"
+              type="number" min="1"
+              className="border-b border-line bg-transparent py-2 text-sm focus:outline-none focus:border-ink font-mono"
+            />
+            <button
+              type="button" onClick={handleCreate} disabled={adding || !newCode || !newValue}
+              className="col-span-3 bg-ink text-on-ink py-2 text-xs font-semibold hover:bg-ink-soft transition-colors disabled:opacity-40">
+              {adding ? "Création…" : "Créer le code"}
+            </button>
+          </div>
+        </div>
+
+        {/* Liste des codes */}
+        <div className="space-y-3">
+          {codes.length === 0 && <p className="text-sm text-muted">Aucun code promo créé.</p>}
+          {codes.map(c => (
+            <div key={c.id} className={`border p-4 flex items-center justify-between gap-4 ${c.active ? "border-line" : "border-line opacity-50"}`}>
+              <div className="flex items-center gap-4 min-w-0">
+                <span className={`w-2 h-2 rounded-full shrink-0 ${c.active ? "bg-green-500" : "bg-muted-soft"}`} />
+                <span className="font-mono text-sm font-semibold">{c.code}</span>
+                <span className="text-sm text-muted">
+                  {c.discount_type === "percent" ? `−${c.discount_value}%` : `−${c.discount_value} €`}
+                </span>
+                <span className="text-xs text-muted-soft">{c.used_count}/{c.max_uses} utilisations</span>
+              </div>
+              <div className="flex items-center gap-3 shrink-0">
+                <button type="button" onClick={() => handleToggle(c.id, c.active)}
+                  className="text-xs text-muted hover:text-ink underline underline-offset-4 transition-colors">
+                  {c.active ? "Désactiver" : "Activer"}
+                </button>
+                <button type="button" onClick={() => handleDelete(c.id)}
+                  className="text-xs text-muted-soft hover:text-red-500 transition-colors press">×</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Statistiques ─────────────────────────────────────────────────────────────
 
 type Stats = {
@@ -288,22 +422,49 @@ type Stats = {
   topItems: { name: string; count: number }[];
 };
 
+type CriticalStock = { model: string; colour: string; size: string; quantity: number };
+
 function StatsView({ password, onBack }: { password: string; onBack: () => void }) {
   const [stats, setStats] = useState<Stats | null>(null);
+  const [critical, setCritical] = useState<CriticalStock[]>([]);
 
   useEffect(() => {
     fetch("/api/admin/stats", { headers: { Authorization: `Bearer ${password}` } })
       .then((r) => r.json())
       .then(setStats);
+
+    // Charger les stocks critiques depuis l'API stock
+    fetch("/api/admin/stock", { headers: { Authorization: `Bearer ${password}` } })
+      .then((r) => r.json())
+      .then((d) => {
+        const alerts: CriticalStock[] = [];
+        for (const cat of (d.categories ?? [])) {
+          for (const model of (cat.stock_models ?? [])) {
+            for (const v of (model.stock_variants ?? [])) {
+              if (v.quantity <= 3) {
+                alerts.push({
+                  model: model.name,
+                  colour: v.colour,
+                  size: v.size,
+                  quantity: v.quantity,
+                });
+              }
+            }
+          }
+        }
+        alerts.sort((a, b) => a.quantity - b.quantity);
+        setCritical(alerts);
+      });
   }, [password]);
 
   if (!stats) return <div className="min-h-screen bg-paper flex items-center justify-center text-sm text-muted">Chargement…</div>;
 
   const maxRevenue = Math.max(...stats.months.map((m) => m.revenue), 1);
+  const avgOrderValue = stats.totalOrders > 0 ? (stats.totalRevenue / stats.totalOrders) : 0;
 
   return (
     <div className="min-h-screen bg-paper">
-      <div className="max-w-[900px] mx-auto px-5 md:px-10 py-10 space-y-10">
+      <div className="max-w-[960px] mx-auto px-5 md:px-10 py-10 space-y-8">
 
         <div className="flex items-center justify-between">
           <div>
@@ -315,17 +476,42 @@ function StatsView({ password, onBack }: { password: string; onBack: () => void 
           </button>
         </div>
 
+        {/* Alertes stock critique */}
+        {critical.length > 0 && (
+          <div className="border border-red-200 bg-red-50 p-5">
+            <p className="text-xs tracking-widest uppercase text-red-500 mb-3 font-semibold">
+              ⚠ Stock critique — {critical.filter(c => c.quantity === 0).length} en rupture, {critical.filter(c => c.quantity > 0 && c.quantity <= 3).length} faibles
+            </p>
+            <div className="space-y-2">
+              {critical.slice(0, 8).map((c, i) => (
+                <div key={i} className="flex items-center justify-between text-sm">
+                  <span className="text-red-700">
+                    {c.model} · {c.colour}{c.size ? ` · ${c.size}` : ""}
+                  </span>
+                  <span className={`font-mono font-bold ${c.quantity === 0 ? "text-red-600" : "text-amber-600"}`}>
+                    {c.quantity === 0 ? "RUPTURE" : `${c.quantity} restant${c.quantity > 1 ? "s" : ""}`}
+                  </span>
+                </div>
+              ))}
+              {critical.length > 8 && (
+                <p className="text-xs text-red-400">+{critical.length - 8} autres variantes critiques — voir onglet Stock</p>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* KPIs */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
-            { label: "CA total", value: `${stats.totalRevenue.toFixed(0)} €` },
-            { label: "CA ce mois", value: `${stats.monthRevenue.toFixed(0)} €` },
-            { label: "Commandes total", value: String(stats.totalOrders) },
-            { label: "Commandes ce mois", value: String(stats.monthOrders) },
-          ].map(({ label, value }) => (
+            { label: "CA total", value: `${stats.totalRevenue.toFixed(0)} €`, sub: "depuis le début" },
+            { label: "CA ce mois", value: `${stats.monthRevenue.toFixed(0)} €`, sub: `${stats.monthOrders} commandes` },
+            { label: "Panier moyen", value: `${avgOrderValue.toFixed(0)} €`, sub: "par commande" },
+            { label: "Commandes", value: String(stats.totalOrders), sub: `${stats.byStatus.en_preparation} en préparation` },
+          ].map(({ label, value, sub }) => (
             <div key={label} className="border border-line p-5">
               <p className="text-2xl font-bold font-mono">{value}</p>
               <p className="text-xs text-muted mt-1">{label}</p>
+              <p className="text-[11px] text-muted-soft mt-0.5">{sub}</p>
             </div>
           ))}
         </div>
@@ -338,10 +524,13 @@ function StatsView({ password, onBack }: { password: string; onBack: () => void 
               <div key={m.label} className="flex-1 flex flex-col items-center gap-2">
                 <span className="text-xs text-muted font-mono">{m.revenue > 0 ? `${m.revenue.toFixed(0)} €` : ""}</span>
                 <div
-                  className="w-full bg-ink transition-all"
+                  className="w-full bg-ink transition-all rounded-sm"
                   style={{ height: `${Math.max((m.revenue / maxRevenue) * 100, m.revenue > 0 ? 4 : 0)}%` }}
                 />
-                <span className="text-[10px] text-muted">{m.label}</span>
+                <div className="text-center">
+                  <span className="text-[10px] text-muted block">{m.label}</span>
+                  {m.count > 0 && <span className="text-[9px] text-muted-soft">{m.count} cmd</span>}
+                </div>
               </div>
             ))}
           </div>
@@ -365,6 +554,16 @@ function StatsView({ password, onBack }: { password: string; onBack: () => void 
                   <span className="font-mono font-semibold">{count}</span>
                 </div>
               ))}
+              <div className="border-t border-line pt-3 mt-3">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-soft text-xs">Taux livraison</span>
+                  <span className="font-mono text-xs text-muted">
+                    {stats.totalOrders > 0
+                      ? `${((stats.byStatus.livree / stats.totalOrders) * 100).toFixed(0)}%`
+                      : "—"}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -372,9 +571,12 @@ function StatsView({ password, onBack }: { password: string; onBack: () => void 
             <p className="text-xs tracking-widest uppercase text-muted mb-4">Articles les plus commandés</p>
             <div className="space-y-3">
               {stats.topItems.length === 0 && <p className="text-sm text-muted">Aucune donnée</p>}
-              {stats.topItems.map((item) => (
+              {stats.topItems.map((item, i) => (
                 <div key={item.name} className="flex items-center justify-between text-sm">
-                  <span className="text-muted truncate">{item.name}</span>
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="font-mono text-[10px] text-muted-soft shrink-0">{i + 1}</span>
+                    <span className="text-muted truncate">{item.name}</span>
+                  </div>
                   <span className="font-mono font-semibold shrink-0 ml-2">{item.count} vendus</span>
                 </div>
               ))}
@@ -738,9 +940,9 @@ function ExportButton({ password }: { password: string }) {
 }
 
 function OrdersList({
-  orders, password, onSelect, onLogout, onStats, onStock,
+  orders, password, onSelect, onLogout, onStats, onStock, onPromo,
 }: {
-  orders: Order[]; password: string; onSelect: (o: Order) => void; onLogout: () => void; onStats: () => void; onStock: () => void;
+  orders: Order[]; password: string; onSelect: (o: Order) => void; onLogout: () => void; onStats: () => void; onStock: () => void; onPromo: () => void;
 }) {
   const counts = {
     en_preparation: orders.filter((o) => o.status === "en_preparation").length,
@@ -772,6 +974,13 @@ function OrdersList({
               className="flex items-center gap-2 text-sm text-muted hover:text-ink transition-colors"
             >
               <Warehouse size={14} /> Stock
+            </button>
+            <button
+              type="button"
+              onClick={onPromo}
+              className="flex items-center gap-2 text-sm text-muted hover:text-ink transition-colors"
+            >
+              <Tag size={14} /> Promos
             </button>
             <button
               type="button"
@@ -852,6 +1061,7 @@ export default function AdminPage() {
   const [selected, setSelected] = useState<Order | null>(null);
   const [showStats, setShowStats] = useState(false);
   const [showStock, setShowStock] = useState(false);
+  const [showPromo, setShowPromo] = useState(false);
   const [authError, setAuthError] = useState(false);
 
   const loadOrders = useCallback(async (pwd: string) => {
@@ -926,6 +1136,10 @@ export default function AdminPage() {
     return <StockView password={password} onBack={() => setShowStock(false)} />;
   }
 
+  if (showPromo) {
+    return <PromoCodesView password={password} onBack={() => setShowPromo(false)} />;
+  }
+
   return (
     <OrdersList
       orders={orders}
@@ -934,6 +1148,7 @@ export default function AdminPage() {
       onLogout={handleLogout}
       onStats={() => setShowStats(true)}
       onStock={() => setShowStock(true)}
+      onPromo={() => setShowPromo(true)}
     />
   );
 }

@@ -7,7 +7,7 @@ import { useCart } from "@/lib/cart-store";
 import { createClient } from "@/lib/supabase";
 import { BRIDLE_CATALOG, STOCK_LABEL, BASE_PRICE, ES_PALETTE } from "@/lib/bridle-catalog";
 import type { BridlePart, CuirOption } from "@/lib/bridle-catalog";
-import { useBridleState, priceOf, encodeConfig, randomize, emptyState } from "@/lib/bridle-store";
+import { useBridleState, priceOf, encodeConfig, decodeConfig, randomize, emptyState } from "@/lib/bridle-store";
 import type { BridleState } from "@/lib/bridle-store";
 import { HorsePreview } from "@/components/boutique/horse-preview";
 import {
@@ -369,7 +369,27 @@ export default function PersonnaliserPage() {
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => { window.scrollTo(0, 0); }, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    // Restaurer une configuration depuis un lien partagé (?config=...)
+    const params = new URLSearchParams(window.location.search);
+    const configCode = params.get("config");
+    if (configCode) {
+      const decoded = decodeConfig(configCode);
+      if (decoded) {
+        setAll(decoded);
+        const d: Partial<Record<StepKey, boolean>> = {};
+        if (decoded.muserole != null) d.muserole = true;
+        if (decoded.frontal != null) d.frontal = true;
+        if (decoded.tetiere != null) d.tetiere = true;
+        if (decoded.rene != null) d.rene = true;
+        if (decoded.cuir) d.finitions = true;
+        if (decoded.taille) d.taille = true;
+        setDone(d);
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Vérification stock enrênements + rênes quand la couleur change
   useEffect(() => {
@@ -1064,7 +1084,7 @@ export default function PersonnaliserPage() {
           {/* Taille */}
           <div ref={refs.taille}>
             <Panel n="06" title="Taille" status={done.taille ? "done" : done.finitions ? "active" : "idle"} highlighted={false}>
-              <div style={{ display: "flex", gap: 6 }}>
+              <div style={{ display: "flex", gap: 6, marginBottom: 16 }}>
                 {C.taille.map((t) => (
                   <div
                     key={t}
@@ -1080,6 +1100,34 @@ export default function PersonnaliserPage() {
                     {t}
                   </div>
                 ))}
+              </div>
+              {/* Gravure — optionnelle */}
+              <div style={{ borderTop: "1px solid #e8e4db", paddingTop: 14 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 }}>
+                  <span style={{ fontFamily: "var(--font-geist-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5a5a63" }}>
+                    Gravure
+                  </span>
+                  <span style={{ fontFamily: "var(--font-geist-mono)", fontSize: 10, color: "#5a5a63" }}>
+                    {s.grav ? `+ 25 €` : "optionnel"}
+                  </span>
+                </div>
+                <input
+                  placeholder="Initiales ou prénom (ex : L.M.)"
+                  value={s.grav}
+                  onChange={(e) => set("grav", e.target.value.slice(0, 14))}
+                  style={{
+                    width: "100%", height: 42, padding: "0 12px",
+                    border: "1px solid #d8d3c7", borderRadius: 6,
+                    background: "#fff", fontSize: 14, fontStyle: s.grav ? "normal" : "italic",
+                    color: "#14141a", outline: "none", boxSizing: "border-box",
+                    fontFamily: "var(--font-geist-sans)",
+                  }}
+                  onFocus={(e) => { e.target.style.borderColor = "#14141a"; e.target.style.fontStyle = "normal"; }}
+                  onBlur={(e) => { e.target.style.borderColor = "#d8d3c7"; if (!s.grav) e.target.style.fontStyle = "italic"; }}
+                />
+                <div style={{ fontSize: 11, color: "#8a8a92", marginTop: 5 }}>
+                  Gravure laser sur la têtière · 14 caractères max
+                </div>
               </div>
             </Panel>
           </div>

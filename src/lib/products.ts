@@ -135,16 +135,16 @@ export const products: Product[] = [
     name: "Bridon Anatomique Elekka Fusion",
     category: "Bridons",
     family: "Anatomique",
-    tagline: "Trois muserolles, un seul bridon.",
+    tagline: "Un filet, trois configurations. Anatomique, modulable, taillé pour durer.",
     priceEUR: 175,
     description:
-      "Browband anatomique large 5,5 cm, muserolle à triple attache — épaisse, ovale, rectangulaire. Un bridon, trois configurations.",
+      "Le Fusion réunit l'anatomie du Signature et une muserolle à triple attache interchangeable. Un seul bridon, trois formes de contact — épaisse, ovale, rectangulaire — pour s'adapter à chaque cheval.",
     longDescription:
-      "Le Fusion a été imaginé pour les cavaliers qui n'ont pas envie de posséder trois bridons. La muserolle modulable se décline en trois formes interchangeables pour s'adapter au cheval et à la discipline.",
+      "Le Fusion est né d'une conviction : un bridon de qualité devrait s'adapter au cheval, pas l'inverse. Sa muserolle à triple attache se change sans outil, en quelques secondes, pour répondre à des morphologies et des sensibilités très différentes. Le browband anatomique large de 5,5 cm répartit la pression sur tout le front, sans point de compression. Comme le Signature, la fermeture est côté gauche pour conserver une ligne propre. Les rênes caoutchouc sont incluses. C'est le choix des cavaliers qui cherchent un bridon anatomique complet, polyvalent, et pensé pour évoluer avec leur pratique.",
     highlights: [
-      "Browband anatomique large 5,5 cm",
-      "Muserolle à triple attache (épaisse / ovale / rectangulaire)",
-      "Fermeture côté gauche",
+      "Muserolle à triple attache — épaisse, ovale ou rectangulaire",
+      "Browband anatomique 5,5 cm — répartition optimale sur le front",
+      "Fermeture côté gauche, ligne nette",
       "Rênes caoutchouc incluses",
       "Coloris Havana Brown ou Dark Brown",
     ],
@@ -187,16 +187,16 @@ export const products: Product[] = [
     name: "Licol Elekka N°1",
     category: "Licoles",
     family: "Classique",
-    tagline: "Le licol en cuir, sans superflu.",
+    tagline: "Le quotidien, en cuir pleine fleur.",
     priceEUR: 49.99,
     description:
-      "Licol en cuir pleine fleur, quincaillerie inox. Sobre, solide, pensé pour le quotidien.",
+      "Licol en cuir pleine fleur, quincaillerie inox argentée. Réglable, robuste, conçu pour durer au fil des séances.",
     longDescription:
-      "Le Licol N°1 reprend les codes du licol anglais classique. Cuir pleine fleur sélectionné pour sa résistance et sa souplesse, quincaillerie inox argentée, réglages simples et fiables.",
+      "Le Licol N°1 est taillé dans le même cuir pleine fleur que nos bridons. Sobre et bien construit, il s'adapte à toutes les morphologies grâce à ses réglages en nuque et en museau. La quincaillerie inox argentée résiste à l'humidité et à l'usure. Un licol fiable, sans superflu — pour les propriétaires qui préfèrent la qualité à l'accumulation.",
     highlights: [
-      "Cuir pleine fleur",
-      "Quincaillerie inox argentée",
-      "Réglage nuque et museau",
+      "Cuir pleine fleur pleine épaisseur",
+      "Quincaillerie inox argentée — résistante à l'humidité",
+      "Réglage précis en nuque et museau",
       "Tailles Full et Cob",
     ],
     colours: [
@@ -238,17 +238,17 @@ export const products: Product[] = [
     name: "Rênes Elekka N°1",
     category: "Rênes",
     family: "Classique",
-    tagline: "Rênes en cuir, prise en main assurée.",
+    tagline: "La prise en main, par tous les temps.",
     priceEUR: 39.99,
     description:
-      "Rênes en cuir pleine fleur avec grip caoutchouc. Légères, résistantes, adaptées à toutes les disciplines.",
+      "Rênes en cuir pleine fleur avec grip caoutchouc intégré. Légères, précises, confortables pour toutes les disciplines.",
     longDescription:
-      "Les Rênes N°1 sont taillées dans le même cuir pleine fleur que nos bridons. Le grip caoutchouc assure une prise en main sûre même par temps humide.",
+      "Les Rênes N°1 sont taillées dans le même cuir pleine fleur que nos bridons — sélectionné pour sa souplesse naturelle et sa patine dans la durée. Le grip caoutchouc intégré assure une prise en main ferme et stable par tous les temps, sans rugueux excessif sur les doigts. Les arrêtoirs en cuir renforcent les points de fixation. Des rênes pensées pour travailler, pas seulement pour paraître.",
     highlights: [
-      "Cuir pleine fleur",
-      "Grip caoutchouc intégré",
-      "Boucles inox argentées",
-      "Longueur standard",
+      "Cuir pleine fleur souple et résistant",
+      "Grip caoutchouc — prise sûre par temps humide",
+      "Arrêtoirs en cuir",
+      "Longueur standard — compatible tous bridons",
     ],
     colours: [
       { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a", images: [] },
@@ -263,17 +263,17 @@ export const products: Product[] = [
     name: "Rênes Elekka N°2",
     category: "Rênes",
     family: "Classique",
-    tagline: "Rênes lisses, pour les mains expertes.",
+    tagline: "Cuir lisse. Sensation directe. Contact pur.",
     priceEUR: 50,
     description:
-      "Rênes en cuir pleine fleur lisse. Pour les cavaliers qui préfèrent une sensation directe et sans grip.",
+      "Rênes en cuir pleine fleur lisse, sans grip. Pour les cavaliers qui privilégient la sensation directe dans la main.",
     longDescription:
-      "Les Rênes N°2 sont en cuir pleine fleur lisse, sans grip. Idéales pour les cavaliers confirmés qui privilégient la sensation dans la main et la légèreté du contact.",
+      "Les Rênes N°2 s'adressent aux cavaliers qui veulent sentir le cuir — rien d'autre. En pleine fleur lisse, elles offrent un contact direct, délicat et précis. Elles s'assouplissent à l'usage et développent une patine personnelle. Pour ceux qui travaillent à la légèreté et cherchent un contact qui ne ment pas.",
     highlights: [
-      "Cuir pleine fleur lisse",
-      "Boucles inox argentées",
-      "Finition soignée",
-      "Longueur standard",
+      "Cuir pleine fleur lisse — patine naturelle à l'usage",
+      "Contact direct, sans intermédiaire",
+      "Arrêtoirs en cuir",
+      "Finition soignée — longueur standard",
     ],
     colours: [
       { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a", images: [] },
