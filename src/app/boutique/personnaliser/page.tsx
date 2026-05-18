@@ -665,10 +665,11 @@ export default function PersonnaliserPage() {
       {/* Sub-header */}
       <div style={{
         display: "flex", justifyContent: "space-between", alignItems: "center",
-        padding: "16px 28px", borderBottom: "1px solid #d8d3c7",
+        padding: isMobile ? "12px 16px" : "16px 28px", borderBottom: "1px solid #d8d3c7",
         background: "#f5f2ec", position: "sticky", top: 0, zIndex: 30,
+        overflow: "hidden",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 10 : 16, minWidth: 0 }}>
           <button
             onClick={() => {
               if (completedCount > 0) { setExitOpen(true); }
@@ -677,37 +678,24 @@ export default function PersonnaliserPage() {
             style={{
               display: "flex", alignItems: "center", gap: 6,
               fontSize: 12, color: "#5a5a63", background: "none",
-              border: "none", cursor: "pointer", padding: 0,
+              border: "none", cursor: "pointer", padding: 0, flexShrink: 0,
             }}
           >
-            <ArrowLeft size={13} /> Boutique
+            <ArrowLeft size={13} /> {!isMobile && "Boutique"}
           </button>
-          <span style={{ color: "#d8d3c7" }}>|</span>
-          <div>
-            <div style={{ fontFamily: "var(--font-geist-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5a5a63" }}>
-              Atelier {compareOn && "· Comparaison"}
-            </div>
-            <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+          {!isMobile && <span style={{ color: "#d8d3c7" }}>|</span>}
+          <div style={{ minWidth: 0, overflow: "hidden" }}>
+            {!isMobile && (
+              <div style={{ fontFamily: "var(--font-geist-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5a5a63" }}>
+                Atelier {compareOn && "· Comparaison"}
+              </div>
+            )}
+            <div style={{ fontSize: isMobile ? 16 : 22, fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
               {compareOn ? creations[activeIdx]?.name ?? "Votre création" : "Créez votre filet"}
             </div>
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          {/* Points de progression */}
-          <div style={{ display: "none", alignItems: "center", gap: 4 }}>
-            {STEP_KEYS.map((k) => (
-              <div
-                key={k}
-                title={STEP_LABELS[k]}
-                onClick={() => scrollToStep(k)}
-                style={{
-                  width: 8, height: 8, borderRadius: 99, cursor: "pointer",
-                  background: done[k] ? "#d75f2a" : "#d8d3c7",
-                  transition: "background .2s",
-                }}
-              />
-            ))}
-          </div>
+        <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 6 : 12, flexShrink: 0 }}>
           <span style={{ fontFamily: "var(--font-geist-mono)", fontSize: 11, color: "#5a5a63" }}>
             {completedCount}/{STEP_KEYS.length}
           </span>
@@ -715,25 +703,27 @@ export default function PersonnaliserPage() {
             <button
               onClick={handleRandomize}
               style={{
-                height: 36, padding: "0 14px", borderRadius: 99, border: "1px solid #d8d3c7",
+                height: 34, padding: isMobile ? "0 10px" : "0 14px", borderRadius: 99, border: "1px solid #d8d3c7",
                 background: "transparent", fontSize: 12, fontWeight: 500, cursor: "pointer",
-                display: "flex", alignItems: "center", gap: 6,
+                display: "flex", alignItems: "center", gap: 5,
               }}
+              title="Aléatoire"
             >
               <span className={spinning ? "spin-once" : ""} style={{ display: "flex" }}>
                 <Shuffle size={13} />
               </span>
-              Aléatoire
+              {!isMobile && "Aléatoire"}
             </button>
             <button
               onClick={handleReset}
               style={{
-                height: 36, padding: "0 14px", borderRadius: 99, border: "1px solid #d8d3c7",
+                height: 34, padding: isMobile ? "0 10px" : "0 14px", borderRadius: 99, border: "1px solid #d8d3c7",
                 background: "transparent", fontSize: 12, fontWeight: 500, cursor: "pointer",
-                display: "flex", alignItems: "center", gap: 6,
+                display: "flex", alignItems: "center", gap: 5,
               }}
+              title="Recommencer"
             >
-              <ArrowCounterClockwise size={13} /> Recommencer
+              <ArrowCounterClockwise size={13} /> {!isMobile && "Recommencer"}
             </button>
           </div>
         </div>
