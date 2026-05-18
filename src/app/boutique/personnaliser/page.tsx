@@ -802,7 +802,7 @@ export default function PersonnaliserPage() {
           padding: "20px 24px",
           display: "flex", flexDirection: "column", gap: 14,
           position: isMobile ? "sticky" : "sticky",
-          top: isMobile ? 57 : 80,
+          top: isMobile ? 64 : 80,
           height: isMobile ? "min(75vw, 420px)" : "calc(100vh - 80px)",
           overflowY: "auto",
           zIndex: isMobile ? 20 : "auto",
