@@ -379,6 +379,14 @@ export function ProductDetailClient({ product }: { product: Product }) {
     setTimeout(() => scrollToRef(next), 60);
   }
 
+  function scrollToFirstMissing() {
+    if (!selectedDiscipline) return scrollToRef(disciplineRef);
+    if (!selectedColour)     return scrollToRef(colourRef);
+    if (!selectedSize)       return scrollToRef(sizeRef);
+    if (!selectedReins)      return scrollToRef(reinsRef);
+    if (!selectedEquip)      return scrollToRef(equipRef);
+  }
+
   const currentColour = product.colours.find(c => c.key === selectedColour)!;
   const otherProducts = products.filter(p => p.slug !== product.slug);
 
@@ -1095,10 +1103,10 @@ export function ProductDetailClient({ product }: { product: Product }) {
                   </div>
                 )}
                 <div className="mt-6 flex gap-2">
-                  <button type="button" onClick={handleAdd} disabled={!complete || outOfStock}
+                  <button type="button" onClick={complete ? handleAdd : scrollToFirstMissing} disabled={outOfStock}
                     className={`cta-shine press flex-1 inline-flex items-center justify-between pl-6 pr-5 h-14 text-sm tracking-wider transition-colors ${
                       outOfStock ? "bg-red-50 text-red-400 cursor-not-allowed border border-red-200" :
-                      complete ? "bg-ink text-on-ink hover:bg-ink-soft" : "bg-ink/30 text-on-ink/60 cursor-not-allowed"
+                      complete ? "bg-ink text-on-ink hover:bg-ink-soft" : "bg-ink/30 text-on-ink/60"
                     }`}>
                     <span className="inline-flex items-center gap-3">
                       <IcoBag size={16} />
