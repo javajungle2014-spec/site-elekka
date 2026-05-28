@@ -16,6 +16,7 @@ import {
   TETIERE_COMPONENTS,
   RENE_COMPONENTS,
 } from "@/components/boutique/bridle-parts";
+import { AtelierComingSoon } from "@/components/atelier-coming-soon";
 
 /* ─── Constantes ───────────────────────────────────────────── */
 
@@ -649,6 +650,8 @@ export default function PersonnaliserPage() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", background: "#f5f2ec", color: "#14141a", minHeight: "100%" }}>
+
+      <AtelierComingSoon />
 
       {/* Bandeau social-proof */}
       {!isMobile && (
