@@ -649,9 +649,12 @@ export default function PersonnaliserPage() {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", background: "#f5f2ec", color: "#14141a", minHeight: "100%" }}>
+    <div style={{ display: "flex", flexDirection: "column", background: "#f5f2ec", color: "#14141a", minHeight: "100%", position: "relative" }}>
 
       <AtelierComingSoon />
+
+      {/* Couche bloquante — rend tout le contenu non interactif */}
+      <div style={{ position: "fixed", inset: 0, zIndex: 9998, pointerEvents: "all" }} aria-hidden />
 
       {/* Bandeau social-proof */}
       {!isMobile && (

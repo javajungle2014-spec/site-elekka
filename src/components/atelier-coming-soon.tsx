@@ -6,8 +6,12 @@ export function AtelierComingSoon() {
   const router = useRouter();
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center"
-      style={{ backdropFilter: "blur(5px)", background: "rgba(20,20,26,0.35)" }}>
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center"
+      style={{ backdropFilter: "blur(5px)", background: "rgba(20,20,26,0.35)" }}
+      onPointerDown={(e) => e.stopPropagation()}
+      onClick={(e) => e.stopPropagation()}
+    >
       <div className="relative w-full max-w-md mx-5 bg-paper shadow-2xl">
 
         {/* Header */}
