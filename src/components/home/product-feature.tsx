@@ -18,8 +18,8 @@ const featureData: Record<string, { Icon: React.ElementType; title: string; text
   ],
   signature: [
     { Icon: Heart,  title: "Têtière anatomique",   text: "Incurvée pour libérer la nuque et les os de la tempe." },
-    { Icon: Shield, title: "Muserolle rembourrée",  text: "2,5 à 3 cm de rembourrage, fermeture confortable côté gauche." },
-    { Icon: Ruler,  title: "Browband ajusté",       text: "Full 17\" / Cob 16\" — sans pression latérale." },
+    { Icon: Shield, title: "Muserolle redessinée",  text: "Rembourrage et fermeture avec mousse de protection." },
+    { Icon: Ruler,  title: "Browband ajusté",       text: "Frontal élargi, dimensions réinventées — sans pression latérale." },
     { Icon: Leaf,   title: "Rênes caoutchouc",      text: "Incluses — adhérence optimale en toutes conditions." },
   ],
   fusion: [
