@@ -260,7 +260,15 @@ export const products: Product[] = [
           "/products/renes-1/renes-1-havana-brown-studio-02.png",
         ],
       },
-      { key: "noir", label: "Noir", swatch: "#0a0a0a", images: [] },
+      {
+        key: "noir", label: "Noir", swatch: "#0a0a0a",
+        images: [
+          "/products/renes-1/renes-1-noir-detail-boucle.png",
+          "/products/renes-1/renes-1-noir-studio-01.png",
+          "/products/renes-1/renes-1-noir-detail-grip.png",
+          "/products/renes-1/renes-1-noir-studio-02.png",
+        ],
+      },
     ],
     sizes: ["Full", "Cob"],
     defaultColour: "havana-brown",
