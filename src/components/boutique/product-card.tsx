@@ -108,8 +108,10 @@ export function ProductCard({
         />
 
         {/* Badge famille */}
-        <div className="absolute top-4 left-4 z-20 bg-paper/90 backdrop-blur-sm px-3 py-1.5 text-xs tracking-[0.14em] uppercase">
-          {product.family}
+        <div className="absolute top-3 left-3 z-20 bg-paper/90 backdrop-blur-sm px-2 py-1 text-[8px] tracking-[0.12em] uppercase">
+          {product.category === "Rênes"
+            ? product.slug === "renes-1" ? "Caoutchouc" : "Tissu"
+            : product.family}
         </div>
 
         {/* Bouton favori */}
