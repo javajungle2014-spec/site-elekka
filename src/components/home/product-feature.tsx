@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
 import {
   Leaf, Star, Wrench, Heart, Shield, Ruler,
   ArrowsCounterClockwise, Palette, Tag, ArrowClockwise, Barbell, Link as LinkIcon,
@@ -148,13 +149,25 @@ export function ProductFeature() {
             ))}
           </div>
           <div className="flex flex-col items-center gap-3">
-            <div className="w-full aspect-[4/5] bg-paper-2 border border-dashed border-line rounded-xl flex flex-col items-center justify-center gap-2 text-muted-soft">
-              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" className="opacity-30">
-                <rect x="4" y="4" width="32" height="32" rx="4" stroke="currentColor" strokeWidth="1.5" />
-                <circle cx="14" cy="15" r="3" stroke="currentColor" strokeWidth="1.5" />
-                <path d="M4 26l9-7 7 6 5-4 11 9" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-              </svg>
-              <span className="text-xs tracking-widest uppercase">Photo à venir</span>
+            <div className="w-full aspect-[4/5] relative overflow-hidden rounded-xl bg-paper-2">
+              {product.colours[0]?.images[0] ? (
+                <Image
+                  src={product.colours[0].images[0]}
+                  alt={product.name}
+                  fill
+                  sizes="290px"
+                  className="object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-soft border border-dashed border-line rounded-xl">
+                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" className="opacity-30">
+                    <rect x="4" y="4" width="32" height="32" rx="4" stroke="currentColor" strokeWidth="1.5" />
+                    <circle cx="14" cy="15" r="3" stroke="currentColor" strokeWidth="1.5" />
+                    <path d="M4 26l9-7 7 6 5-4 11 9" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+                  </svg>
+                  <span className="text-xs tracking-widest uppercase">Photo à venir</span>
+                </div>
+              )}
             </div>
             <Link href={`/boutique/${product.slug}`}
               className="inline-flex items-center gap-2 bg-ink text-on-ink px-6 py-3 text-sm tracking-wide press hover:bg-ink-soft"
