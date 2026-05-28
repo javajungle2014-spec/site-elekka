@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
-import { products } from "@/lib/products";
+import { products, formatPrice } from "@/lib/products";
 import { ProductCard } from "@/components/boutique/product-card";
 import { CategoryNav } from "@/components/boutique/category-nav";
 
@@ -55,7 +55,7 @@ export default function BoutiquePage() {
         </div>
       </Link>
 
-      <CategoryNav categories={categories.map(({ key, label }) => ({ key, label }))} />
+      <CategoryNav categories={[...categories.map(({ key, label }) => ({ key, label })), { key: "Enrênements", label: "Enrênements" }]} />
 
       <div className="mx-auto max-w-[1400px] px-5 md:px-10 pt-16 pb-24 space-y-24 md:space-y-32">
         {categories.map((cat, catIndex) => {
@@ -104,6 +104,51 @@ export default function BoutiquePage() {
             </section>
           );
         })}
+        {/* ── Enrênements — bientôt disponibles ── */}
+        {(() => {
+          const enrenements = products.filter(p => p.category === "Enrênements");
+          return (
+            <section id="Enrênements" className="scroll-mt-28">
+              <header className="mb-16 md:mb-20">
+                <p className="kicker text-muted rise">Enrênements</p>
+                <h2 className="display mt-4 text-5xl md:text-7xl rise">
+                  Nos enrênements.<br />
+                  <span className="text-muted">Bientôt disponibles.</span>
+                </h2>
+                <p className="mt-6 text-base text-muted leading-relaxed max-w-[52ch] rise">
+                  Conçus pour accompagner le travail monté et en main. Même exigence de cuir et de finition que l'ensemble de la gamme Elekka.
+                </p>
+              </header>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-10 md:gap-x-8 md:gap-y-14">
+                {enrenements.map((product, i) => (
+                  <div key={product.slug} className="group block rise" style={{ ["--i" as string]: i + 3 }}>
+                    <div className="relative aspect-[4/5] overflow-hidden bg-paper-2 flex flex-col items-center justify-center gap-4">
+                      <div className="absolute inset-6 border border-line pointer-events-none" />
+                      <span className="kicker text-muted-soft tracking-[0.22em]">Bientôt disponible</span>
+                      <p className="text-center text-sm font-semibold text-ink px-6 leading-snug">{product.name}</p>
+                    </div>
+                    <div className="mt-5">
+                      <div className="flex items-start justify-between gap-4">
+                        <h2 className="text-sm md:text-lg font-semibold tracking-tight text-ink leading-snug">{product.name}</h2>
+                        <span className="shrink-0 font-mono text-xs md:text-sm text-muted tabular-nums pt-0.5">{formatPrice(product.priceEUR)}</span>
+                      </div>
+                      <p className="mt-1 text-xs md:text-sm text-muted leading-relaxed hidden sm:block">{product.tagline}</p>
+                      <div className="flex items-center gap-2 mt-4">
+                        {product.colours.map(c => (
+                          <span key={c.key} className="inline-block w-3.5 h-3.5 rounded-full border border-line/80 shrink-0" style={{ backgroundColor: c.swatch }} title={c.label} />
+                        ))}
+                        <span className="text-xs text-muted ml-0.5">{product.colours.map(c => c.label).join(", ")}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-5 text-xs text-muted-soft uppercase tracking-widest font-medium">
+                        En cours de création
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          );
+        })()}
       </div>
 
       {/* ── Pièces détachées ── */}
