@@ -151,7 +151,7 @@ export function ProductFeature() {
         )}
 
         {/* Cartes arguments — même layout mobile et desktop */}
-        <div className="grid grid-cols-[1fr_42%_1fr] gap-2 md:gap-4 items-center">
+        <div className="grid grid-cols-[1fr_34%_1fr] gap-2 md:gap-4 items-center">
           <div className="flex flex-col gap-2">
             {features.slice(0, 2).map(({ Icon, title, text }) => (
               <div key={title} className="border border-line rounded-lg p-2 md:p-3">
@@ -162,7 +162,7 @@ export function ProductFeature() {
             ))}
           </div>
           <div className="flex flex-col items-center gap-2">
-            <div className="w-full aspect-[3/4] relative overflow-hidden rounded-xl bg-paper-2 cursor-zoom-in group"
+            <div className="w-full aspect-[3/4] md:aspect-[2/3] relative overflow-hidden rounded-xl bg-paper-2 cursor-zoom-in group"
               onClick={() => { const img = product.heroImage ?? product.colours[0]?.images[0]; if (img) setZoomedImg(img); }}>
               {(product.heroImage ?? product.colours[0]?.images[0]) ? (
                 <Image
