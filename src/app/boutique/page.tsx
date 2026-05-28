@@ -93,6 +93,7 @@ export default function BoutiquePage() {
                           colourOverride={c.key}
                           index={ci}
                           compact
+                          fallbackImage={product.slug === "renes-2" ? "/products/renes-1/renes-1-havana-brown-studio-02.png" : undefined}
                         />
                       ))
                     )

@@ -17,11 +17,13 @@ export function ProductCard({
   index = 0,
   colourOverride,
   compact = false,
+  fallbackImage,
 }: {
   product: Product;
   index?: number;
   colourOverride?: ColourKey;
   compact?: boolean;
+  fallbackImage?: string;
 }) {
   const { isFavorite, toggle, userId } = useFavorites();
   const favourite = isFavorite(product.slug);
@@ -82,9 +84,14 @@ export function ProductCard({
               style={{ transitionTimingFunction: EASE }}
             />
           ) : compact ? (
-            <div className="w-full h-full bg-paper-2 flex flex-col items-center justify-center gap-3">
-              <span className="text-xs tracking-[0.2em] uppercase font-semibold text-muted-soft">Rupture de stock</span>
-              <span className="text-[10px] text-muted-soft/60 tracking-widest uppercase">Bientôt disponible</span>
+            <div className="relative w-full h-full overflow-hidden">
+              {fallbackImage && (
+                <Image src={fallbackImage} alt="" fill sizes="33vw" className="object-cover scale-110 blur-xl brightness-75" aria-hidden />
+              )}
+              <div className={`absolute inset-0 flex flex-col items-center justify-center gap-2 ${fallbackImage ? "" : "bg-paper-2"}`}>
+                <span className="text-xs tracking-[0.2em] uppercase font-semibold text-white drop-shadow">Rupture de stock</span>
+                <span className="text-[10px] tracking-widest uppercase text-white/70 drop-shadow">Bientôt disponible</span>
+              </div>
             </div>
           ) : (
             <ProductPlaceholder label={product.name} />
