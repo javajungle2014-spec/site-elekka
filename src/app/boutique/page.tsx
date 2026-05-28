@@ -84,9 +84,21 @@ export default function BoutiquePage() {
               </header>
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-10 md:gap-x-8 md:gap-y-14">
-                {items.map((product, i) => (
-                  <ProductCard key={product.slug} product={product} index={i} />
-                ))}
+                {cat.key === "Rênes"
+                  ? items.flatMap((product) =>
+                      product.colours.map((c, ci) => (
+                        <ProductCard
+                          key={`${product.slug}-${c.key}`}
+                          product={product}
+                          colourOverride={c.key}
+                          index={ci}
+                        />
+                      ))
+                    )
+                  : items.map((product, i) => (
+                      <ProductCard key={product.slug} product={product} index={i} />
+                    ))
+                }
               </div>
             </section>
           );

@@ -36,12 +36,17 @@ export async function generateMetadata({
 
 export default async function ProductPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ couleur?: string }>;
 }) {
   const { slug } = await params;
+  const { couleur } = await searchParams;
   const product = getProduct(slug);
   if (!product) notFound();
+
+  const validColour = product.colours.find(c => c.key === couleur)?.key;
 
   const jsonLd = [productSchema(product), breadcrumbSchema([
     { name: "Accueil", url: "https://elekka-sellier.fr" },
@@ -57,7 +62,7 @@ export default async function ProductPage({
     </>
   );
 
-  if (product.category === "Rênes")        return <>{schema}<RenesProductDetail product={product} /></>;
+  if (product.category === "Rênes")        return <>{schema}<RenesProductDetail product={product} initialColour={validColour as import("@/lib/products").ColourKey | undefined} /></>;
   if (product.category === "Licoles")      return <>{schema}<LicolProductDetail product={product} /></>;
   if (product.category === "Enrênements") return <>{schema}<EnrenementProductDetail product={product} /></>;
 

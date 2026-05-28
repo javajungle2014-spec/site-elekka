@@ -118,8 +118,8 @@ function BuyStrip({ product: p, activeColour, colourKey, setColourKey, onAdd, ad
   );
 }
 
-export function RenesProductDetail({ product }: { product: Product }) {
-  const [colourKey, setColourKey] = useState<ColourKey>(product.defaultColour);
+export function RenesProductDetail({ product, initialColour }: { product: Product; initialColour?: ColourKey }) {
+  const [colourKey, setColourKey] = useState<ColourKey>(initialColour ?? product.defaultColour);
   const [added, setAdded]         = useState(false);
   const [stickyVisible, setStickyVisible] = useState(false);
   const [stockQty, setStockQty]   = useState<number | null>(null);

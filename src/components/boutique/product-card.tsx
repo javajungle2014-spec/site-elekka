@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Heart } from "@phosphor-icons/react";
-import { type Product, formatPrice } from "@/lib/products";
+import { type Product, type ColourKey, formatPrice } from "@/lib/products";
 import { ProductPlaceholder } from "@/components/product-placeholder";
 import { useFavorites } from "@/lib/favorites-store";
 import { AuthModal } from "@/components/auth-modal";
@@ -15,13 +15,16 @@ const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
 export function ProductCard({
   product,
   index = 0,
+  colourOverride,
 }: {
   product: Product;
   index?: number;
+  colourOverride?: ColourKey;
 }) {
   const { isFavorite, toggle, userId } = useFavorites();
-  const favorite = isFavorite(product.slug);
+  const favourite = isFavorite(product.slug);
   const [authOpen, setAuthOpen] = useState(false);
+  const activeColour = colourOverride ?? product.defaultColour;
 
   function handleFavorite(e: React.MouseEvent) {
     e.preventDefault(); e.stopPropagation();
@@ -33,7 +36,11 @@ export function ProductCard({
   }
 
   const images =
-    product.colours.find((c) => c.key === product.defaultColour)?.images ?? [];
+    product.colours.find((c) => c.key === activeColour)?.images ?? [];
+  const colourLabel = product.colours.find((c) => c.key === activeColour)?.label;
+  const href = colourOverride
+    ? `/boutique/${product.slug}?couleur=${colourOverride}`
+    : `/boutique/${product.slug}`;
 
   const [activeIdx, setActiveIdx] = useState(0);
   const [hoveredThumb, setHoveredThumb] = useState<number | null>(null);
@@ -48,7 +55,7 @@ export function ProductCard({
     <>
     <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
     <Link
-      href={`/boutique/${product.slug}`}
+      href={href}
       className="group block rise"
       style={{ ["--i" as string]: index + 3 }}
     >
@@ -95,13 +102,13 @@ export function ProductCard({
         <div className="absolute top-4 right-4 z-20">
           <button
             type="button"
-            aria-label={favorite ? "Retirer des favoris" : "Ajouter aux favoris"}
+            aria-label={favourite ? "Retirer des favoris" : "Ajouter aux favoris"}
             onClick={handleFavorite}
             className={`press w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
-              favorite ? "bg-ink text-on-ink" : "bg-paper/80 backdrop-blur-sm text-muted hover:text-ink hover:bg-paper"
+              favourite ? "bg-ink text-on-ink" : "bg-paper/80 backdrop-blur-sm text-muted hover:text-ink hover:bg-paper"
             }`}
           >
-            <Heart size={14} weight={favorite ? "fill" : "regular"} />
+            <Heart size={14} weight={favourite ? "fill" : "regular"} />
           </button>
         </div>
 
@@ -185,7 +192,7 @@ export function ProductCard({
       <div className="mt-5">
         <div className="flex items-start justify-between gap-4">
           <h2 className="text-sm md:text-lg font-semibold tracking-tight text-ink leading-snug">
-            {product.name}
+            {product.name}{colourOverride && colourLabel ? ` — ${colourLabel}` : ""}
           </h2>
           <span className="shrink-0 font-mono text-xs md:text-sm text-ink tabular-nums pt-0.5">
             {formatPrice(product.priceEUR)}
