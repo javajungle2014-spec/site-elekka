@@ -30,7 +30,7 @@ const featureData: Record<string, { Icon: React.ElementType; title: string; text
   ],
   "licol-1": [
     { Icon: Leaf,   title: "Cuir pleine fleur",  text: "Résistant et souple dès le premier usage, pour un usage quotidien durable." },
-    { Icon: Wrench, title: "Quincaillerie inox",  text: "Boucles et anneaux inox argentés, sans altération dans le temps." },
+    { Icon: Heart,  title: "Licol anatomique",    text: "Conçu pour respecter les zones sensibles — nuque, joues et chanfrein." },
     { Icon: Ruler,  title: "Réglage nuque",       text: "Ajustable pour s'adapter précisément à la morphologie du cheval." },
     { Icon: Tag,    title: "Tailles Full et Cob", text: "Adapté aux chevaux de sport comme aux poneys de compétition." },
   ],
@@ -67,18 +67,19 @@ const featureData: Record<string, { Icon: React.ElementType; title: string; text
 };
 
 const VISIBLE = 4;
+const carouselProducts = products.filter(p => p.slug !== "licol-2");
 
 export function ProductFeature() {
-  const [activeSlug, setActiveSlug] = useState(products[0].slug);
+  const [activeSlug, setActiveSlug] = useState(carouselProducts[0].slug);
   const [railStart, setRailStart] = useState(0);
   const [zoomedImg, setZoomedImg] = useState<string | null>(null);
   const railRef = useRef<HTMLDivElement>(null);
 
-  const product = products.find((p) => p.slug === activeSlug)!;
+  const product = carouselProducts.find((p) => p.slug === activeSlug)!;
   const features = featureData[activeSlug] ?? featureData["essentiel"];
 
   const canPrev = railStart > 0;
-  const canNext = railStart + VISIBLE < products.length;
+  const canNext = railStart + VISIBLE < carouselProducts.length;
 
   function prev() { if (canPrev) setRailStart((s) => s - 1); }
   function next() { if (canNext) setRailStart((s) => s + 1); }
@@ -91,7 +92,7 @@ export function ProductFeature() {
   }
 
   // translateX est en % de la largeur de la div intérieure, pas du conteneur
-  const translateX = -(railStart * (100 / products.length));
+  const translateX = -(railStart * (100 / carouselProducts.length));
 
   return (
     <section className="py-8 md:py-12 border-t border-line">
@@ -104,9 +105,9 @@ export function ProductFeature() {
             <button
               type="button" aria-label="Modèle précédent"
               onClick={() => {
-                const i = products.findIndex((p) => p.slug === activeSlug);
-                const prev = products[(i - 1 + products.length) % products.length];
-                select(prev.slug, (i - 1 + products.length) % products.length);
+                const i = carouselProducts.findIndex((p) => p.slug === activeSlug);
+                const prev = products[(i - 1 + carouselProducts.length) % carouselProducts.length];
+                select(prev.slug, (i - 1 + carouselProducts.length) % carouselProducts.length);
               }}
               className="shrink-0 w-9 h-9 rounded-full border border-line flex items-center justify-center text-muted hover:text-ink hover:border-ink hover:bg-paper-2 transition-all duration-200 press"
             >
@@ -116,9 +117,9 @@ export function ProductFeature() {
               <h2 className="display text-2xl md:text-3xl mb-2">{product.name}</h2>
               <p className="text-muted leading-relaxed text-sm">{product.description}</p>
               <div className="flex items-center justify-center gap-1.5 mt-3">
-                {products.map((p) => (
+                {carouselProducts.map((p) => (
                   <button key={p.slug} type="button" aria-label={p.name}
-                    onClick={() => select(p.slug, products.findIndex((x) => x.slug === p.slug))}
+                    onClick={() => select(p.slug, carouselProducts.findIndex((x) => x.slug === p.slug))}
                     className={`rounded-full transition-all duration-300 press ${activeSlug === p.slug ? "w-5 h-1.5 bg-ink" : "w-1.5 h-1.5 bg-line hover:bg-muted-soft"}`}
                   />
                 ))}
@@ -127,9 +128,9 @@ export function ProductFeature() {
             <button
               type="button" aria-label="Modèle suivant"
               onClick={() => {
-                const i = products.findIndex((p) => p.slug === activeSlug);
-                const next = products[(i + 1) % products.length];
-                select(next.slug, (i + 1) % products.length);
+                const i = carouselProducts.findIndex((p) => p.slug === activeSlug);
+                const next = products[(i + 1) % carouselProducts.length];
+                select(next.slug, (i + 1) % carouselProducts.length);
               }}
               className="shrink-0 w-9 h-9 rounded-full border border-line flex items-center justify-center text-muted hover:text-ink hover:border-ink hover:bg-paper-2 transition-all duration-200 press"
             >
@@ -216,10 +217,10 @@ export function ProductFeature() {
           <div className="flex-1 overflow-hidden" ref={railRef}>
             <div
               className="flex transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]"
-              style={{ transform: `translateX(${translateX}%)`, width: `${(products.length / VISIBLE) * 100}%` }}
+              style={{ transform: `translateX(${translateX}%)`, width: `${(carouselProducts.length / VISIBLE) * 100}%` }}
             >
-              {products.map((p, i) => (
-                <div key={p.slug} style={{ width: `${100 / products.length}%` }} className="px-1">
+              {carouselProducts.map((p, i) => (
+                <div key={p.slug} style={{ width: `${100 / carouselProducts.length}%` }} className="px-1">
                   <button
                     type="button"
                     onClick={() => select(p.slug, i)}
