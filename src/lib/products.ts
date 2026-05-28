@@ -251,7 +251,15 @@ export const products: Product[] = [
       "Longueur standard — compatible tous bridons",
     ],
     colours: [
-      { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a", images: [] },
+      {
+        key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a",
+        images: [
+          "/products/renes-1/renes-1-havana-brown-detail-boucle.png",
+          "/products/renes-1/renes-1-havana-brown-studio-01.png",
+          "/products/renes-1/renes-1-havana-brown-detail-grip.png",
+          "/products/renes-1/renes-1-havana-brown-studio-02.png",
+        ],
+      },
       { key: "noir", label: "Noir", swatch: "#0a0a0a", images: [] },
     ],
     sizes: ["Full", "Cob"],
