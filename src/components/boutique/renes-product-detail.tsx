@@ -186,31 +186,35 @@ export function RenesProductDetail({ product, initialColour }: { product: Produc
             </div>
           </div>
 
-          <div className="relative flex min-h-[520px] items-center justify-center">
-            <div className="absolute inset-x-0 top-1/2 h-px bg-line" />
-            {!activeColour.images[0] && (
-              <div className="absolute left-0 top-1/2 hidden -translate-y-1/2 writing-vertical font-mono text-xs uppercase tracking-[0.22em] text-muted-soft md:block">
-                Remplacer par vos photos
+          <div className="relative min-h-[520px] flex items-stretch">
+            {activeColour.images[0] ? (
+              <div className={`w-full grid grid-cols-3 gap-0 ${stockQty === 0 ? "opacity-40 blur-[3px]" : ""} transition-all duration-300`}>
+                {[activeColour.images[0], activeColour.images[2], activeColour.images[3]].map((src, i) => (
+                  <div key={i} className="relative aspect-[3/4] overflow-hidden">
+                    {src ? (
+                      <Image src={src} alt={product.name} fill sizes="33vw" className="object-cover" priority={i === 0} />
+                    ) : (
+                      <div className={`w-full h-full ${leatherClass}`} />
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="relative flex w-full min-h-[520px] items-center justify-center">
+                <div className="absolute inset-x-0 top-1/2 h-px bg-line" />
+                <div className="absolute left-0 top-1/2 hidden -translate-y-1/2 writing-vertical font-mono text-xs uppercase tracking-[0.22em] text-muted-soft md:block">
+                  Remplacer par vos photos
+                </div>
+                <ProductPhotoPlaceholder leatherClass={leatherClass} />
               </div>
             )}
-            <div className="relative">
-              <div className={stockQty === 0 ? "opacity-40 blur-[3px] transition-all duration-300" : "transition-all duration-300"}>
-                {activeColour.images[0] ? (
-                  <div className="relative aspect-[4/5] w-[min(78vw,520px)] overflow-hidden">
-                    <Image src={activeColour.images[0]} alt={product.name} fill sizes="(min-width: 768px) 520px, 78vw" className="object-cover" priority />
-                  </div>
-                ) : (
-                  <ProductPhotoPlaceholder leatherClass={leatherClass} />
-                )}
+            {stockQty === 0 && (
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <span className="bg-ink/85 text-on-ink text-xs tracking-[0.2em] uppercase font-semibold px-6 py-2 shadow-lg" style={{ transform: "rotate(-35deg)", whiteSpace: "nowrap" }}>
+                  Rupture de stock
+                </span>
               </div>
-              {stockQty === 0 && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <span className="bg-ink/85 text-on-ink text-xs tracking-[0.2em] uppercase font-semibold px-6 py-2 shadow-lg" style={{ transform: "rotate(-35deg)", whiteSpace: "nowrap" }}>
-                    Rupture de stock
-                  </span>
-                </div>
-              )}
-            </div>
+            )}
           </div>
 
           <div className="border-t border-line py-5 space-y-5">
