@@ -150,9 +150,9 @@ export function ProductFeature() {
           </div>
           <div className="flex flex-col items-center gap-3">
             <div className="w-full aspect-[4/5] relative overflow-hidden rounded-xl bg-paper-2">
-              {product.colours[0]?.images[0] ? (
+              {(product.heroImage ?? product.colours[0]?.images[0]) ? (
                 <Image
-                  src={product.colours[0].images[0]}
+                  src={product.heroImage ?? product.colours[0].images[0]}
                   alt={product.name}
                   fill
                   sizes="290px"

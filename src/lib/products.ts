@@ -23,6 +23,7 @@ export type Product = {
   defaultColour: ColourKey;
   defaultSize: Size;
   hidden?: boolean;
+  heroImage?: string;
 };
 
 export const products: Product[] = [
@@ -81,6 +82,7 @@ export const products: Product[] = [
   {
     slug: "signature",
     name: "Bridon Anatomique Elekka Signature",
+    heroImage: "/products/signature/signature-havana-brown-cheval-01.png",
     category: "Bridons",
     family: "Anatomique",
     tagline: "La pièce maîtresse d'Elekka, entre confort anatomique, précision et élégance.",
@@ -103,6 +105,7 @@ export const products: Product[] = [
         swatch: "#4a2a1a",
         images: [
           "/products/signature/signature-havana-brown-studio-01.png",
+          "/products/signature/signature-havana-brown-cheval-01.png",
           "/products/signature/signature-havana-brown-detail-tetiere.png",
           "/products/signature/signature-havana-brown-detail-muserolle.png",
           "/products/signature/signature-havana-brown-detail-frontal.png",
