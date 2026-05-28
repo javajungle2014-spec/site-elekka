@@ -439,7 +439,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
     setEquipStockQty(null);
     setEquipAltColour(null);
     if (!selectedEquip || selectedEquip === "aucun") return;
-    const slug = selectedEquip === "tylman" ? "enrenement-1" : "enrenement-2";
+    const slug = selectedEquip === "howlett" ? "enrenement-1" : "enrenement-2";
     const colour = product.colours.find(c => c.key === equipColour)?.label ?? equipColour;
     fetch(`/api/stock/check?slug=${slug}&colour=${encodeURIComponent(colour)}&size=`)
       .then(r => r.json())
@@ -484,7 +484,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
 
   const equipOptions = [
     { key: "aucun",       label: "Sans équipement",    desc: "",                                    note: null,             deltaEUR: 0 },
-    { key: "tylman",      label: "Tylman",              desc: "Enrênement d'aide à la décontraction", note: "-15 %",         deltaEUR: Math.round(59.99 * 0.85 * 100) / 100 },
+    { key: "howlett",      label: "Howlett",              desc: "Enrênement d'aide à la décontraction", note: "-15 %",         deltaEUR: Math.round(59.99 * 0.85 * 100) / 100 },
     { key: "martingale",  label: "Martingale",          desc: "Enrênement fixe réglable",            note: "-15 %",          deltaEUR: Math.round(59.99 * 0.85 * 100) / 100 },
   ];
 
@@ -517,7 +517,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
       const equipColourData = product.colours.find(c => c.key === equipColour) ?? product.colours[0];
       if (equip) {
         addItem({
-          slug: selectedEquip === "tylman" ? "enrenement-1" : "enrenement-2",
+          slug: selectedEquip === "howlett" ? "enrenement-1" : "enrenement-2",
           name: equip.label,
           priceEUR: equip.deltaEUR,
           colour: equipColour,
