@@ -235,7 +235,7 @@ export const products: Product[] = [
   },
   {
     slug: "renes-1",
-    name: "Rênes Elekka N°1",
+    name: "Rênes caoutchouc arrêtoirs en cuir",
     category: "Rênes",
     family: "Classique",
     tagline: "La prise en main, par tous les temps.",
@@ -276,7 +276,7 @@ export const products: Product[] = [
   },
   {
     slug: "renes-2",
-    name: "Rênes Elekka N°2",
+    name: "Rênes Tissu",
     category: "Rênes",
     family: "Classique",
     tagline: "Cuir lisse. Sensation directe. Contact pur.",
