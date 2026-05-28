@@ -313,23 +313,43 @@ function ThumbnailRail({ images, selected, onSelect, productName }: {
   );
 }
 
-/* ─── Strip horizontale mobile ──────────────────────────────────────── */
+/* ─── Strip horizontale mobile (5 max + flèches) ────────────────────── */
+const STRIP_VISIBLE = 5;
 function ThumbnailStrip({ images, selected, onSelect, productName }: {
   images: string[];
   selected: number;
   onSelect: (i: number) => void;
   productName: string;
 }) {
+  const [offset, setOffset] = useState(0);
+  const maxOffset = Math.max(0, images.length - STRIP_VISIBLE);
+  const canPrev = offset > 0;
+  const canNext = offset < maxOffset;
+  const visible = images.slice(offset, offset + STRIP_VISIBLE);
+
   return (
-    <div className="flex md:hidden gap-2 overflow-x-auto scrollbar-none mt-3 pb-1">
-      {images.map((img, i) => (
-        <button key={i} type="button" onClick={() => onSelect(i)}
-          className={`press relative shrink-0 overflow-hidden border-2 transition-all duration-200 rounded-sm`}
-          style={{ width: 56, height: 74, borderColor: selected === i ? "var(--ink)" : "transparent",
-            boxShadow: selected !== i ? "0 0 0 1px #e5e5e5" : undefined }}>
-          <Image src={img} alt={`${productName} vue ${i + 1}`} fill sizes="56px" className="object-cover" />
-        </button>
-      ))}
+    <div className="flex md:hidden items-center gap-1.5 mt-3">
+      <button type="button" onClick={() => setOffset(o => Math.max(0, o - 1))} disabled={!canPrev}
+        className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all ${canPrev ? "border-line text-muted hover:border-ink hover:text-ink" : "border-line/30 text-line/30"}`}>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M7.5 2L4 6l3.5 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+      </button>
+      <div className="flex gap-1.5 flex-1 justify-center">
+        {visible.map((img, j) => {
+          const i = offset + j;
+          return (
+            <button key={i} type="button" onClick={() => onSelect(i)}
+              className="press relative shrink-0 overflow-hidden border-2 transition-all duration-200 rounded-sm"
+              style={{ width: 52, height: 69, borderColor: selected === i ? "var(--ink)" : "transparent",
+                boxShadow: selected !== i ? "0 0 0 1px #e5e5e5" : undefined }}>
+              <Image src={img} alt={`${productName} vue ${i + 1}`} fill sizes="52px" className="object-cover" />
+            </button>
+          );
+        })}
+      </div>
+      <button type="button" onClick={() => setOffset(o => Math.min(maxOffset, o + 1))} disabled={!canNext}
+        className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all ${canNext ? "border-line text-muted hover:border-ink hover:text-ink" : "border-line/30 text-line/30"}`}>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2L8 6l-3.5 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+      </button>
     </div>
   );
 }
