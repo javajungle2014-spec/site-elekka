@@ -927,41 +927,48 @@ export function ProductDetailClient({ product }: { product: Product }) {
                     <div className="border border-line p-5 space-y-4">
                       <p className="kicker-tight text-muted">{reinsOptions.find(r => r.key === selectedReins)?.label}</p>
                       <div className="grid grid-cols-3 gap-2">
-                        {[
-                          { label: "Vue principale" },
-                          { label: "Détail grip" },
-                          { label: "Vue d'ensemble" },
-                        ].map((view, i) => (
-                          <div key={i} className="relative overflow-hidden" style={{ aspectRatio: "4/5" }}>
-                            {selectedReins === "tissu" ? (
-                              <Image
-                                src="/products/renes-1/renes-1-havana-brown-studio-02.png"
-                                alt=""
-                                fill
-                                sizes="150px"
-                                className="object-cover scale-110 blur-lg brightness-75"
-                                aria-hidden
-                              />
-                            ) : (
-                              <div className={`w-full h-full ${reinsStockQty === 0 ? "opacity-40" : ""} ${LEATHER[selectedColour] ?? "bg-paper-2"} transition-opacity duration-300`} />
-                            )}
-                            <div className="absolute inset-0 flex flex-col justify-between p-2 pointer-events-none">
-                              <span className="font-mono text-[8px] tracking-widest text-white/30 uppercase">0{i + 1}</span>
-                              <span className="font-mono text-[8px] tracking-widest text-white/30 uppercase">{view.label}</span>
-                            </div>
-                            {(reinsStockQty === 0 || selectedReins === "tissu") && (
-                              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <span className="bg-ink/85 text-on-ink text-[8px] tracking-[0.2em] uppercase font-medium px-3 py-1 rotate-[-35deg] whitespace-nowrap shadow">
-                                  Rupture de stock
-                                </span>
+                        {(() => {
+                          const col = selectedColour === "noir" ? "noir" : "havana-brown";
+                          const caoutchoucPhotos = [
+                            `/products/renes-1/renes-1-${col}-detail-boucle.png`,
+                            `/products/renes-1/renes-1-${col}-detail-grip.png`,
+                            `/products/renes-1/renes-1-${col}-studio-01.png`,
+                          ];
+                          return [
+                            { label: "Vue principale" },
+                            { label: "Détail grip" },
+                            { label: "Vue d'ensemble" },
+                          ].map((view, i) => (
+                            <div key={i} className="relative overflow-hidden" style={{ aspectRatio: "4/5" }}>
+                              {selectedReins === "tissu" ? (
+                                <Image src="/products/renes-1/renes-1-havana-brown-studio-02.png" alt="" fill sizes="150px"
+                                  className="object-cover scale-110 blur-lg brightness-75" aria-hidden />
+                              ) : selectedReins === "caoutchouc" ? (
+                                <Image src={caoutchoucPhotos[i]} alt={view.label} fill sizes="150px"
+                                  className={`object-cover transition-opacity duration-300 ${reinsStockQty === 0 ? "opacity-40" : ""}`} />
+                              ) : (
+                                <div className={`w-full h-full ${reinsStockQty === 0 ? "opacity-40" : ""} ${LEATHER[selectedColour] ?? "bg-paper-2"} transition-opacity duration-300`} />
+                              )}
+                              <div className="absolute inset-0 flex flex-col justify-between p-2 pointer-events-none">
+                                <span className="font-mono text-[8px] tracking-widest text-white/30 uppercase">0{i + 1}</span>
+                                <span className="font-mono text-[8px] tracking-widest text-white/30 uppercase">{view.label}</span>
                               </div>
-                            )}
-                          </div>
-                        ))}
+                              {(reinsStockQty === 0 || selectedReins === "tissu") && (
+                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                  <span className="bg-ink/85 text-on-ink text-[8px] tracking-[0.2em] uppercase font-medium px-3 py-1 rotate-[-35deg] whitespace-nowrap shadow">
+                                    Rupture de stock
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          ));
+                        })()}
                       </div>
-                      <p className="text-xs text-muted leading-relaxed">
-                        Photo à venir — les rênes seront photographiées avec le filet.
-                      </p>
+                      {selectedReins !== "caoutchouc" && (
+                        <p className="text-xs text-muted leading-relaxed">
+                          Photo à venir — les rênes seront photographiées avec le filet.
+                        </p>
+                      )}
                     </div>
                   </motion.div>
                 )}
