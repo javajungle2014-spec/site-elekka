@@ -81,6 +81,11 @@ export function ProductCard({
               className="object-cover group-hover:scale-[1.04] transition-transform duration-700"
               style={{ transitionTimingFunction: EASE }}
             />
+          ) : compact ? (
+            <div className="w-full h-full bg-paper-2 flex flex-col items-center justify-center gap-3">
+              <span className="text-xs tracking-[0.2em] uppercase font-semibold text-muted-soft">Rupture de stock</span>
+              <span className="text-[10px] text-muted-soft/60 tracking-widest uppercase">Bientôt disponible</span>
+            </div>
           ) : (
             <ProductPlaceholder label={product.name} />
           )}
