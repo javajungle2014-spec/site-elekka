@@ -103,11 +103,11 @@ export const products: Product[] = [
         swatch: "#4a2a1a",
         images: [
           "/products/signature/signature-havana-brown-studio-01.png",
-          "/products/signature/signature-havana-brown-studio-02.png",
           "/products/signature/signature-havana-brown-detail-tetiere.png",
           "/products/signature/signature-havana-brown-detail-muserolle.png",
           "/products/signature/signature-havana-brown-detail-frontal.png",
           "/products/signature/signature-havana-brown-ambiance-01.png",
+          "/products/signature/signature-havana-brown-studio-02.png",
           "/products/signature/signature-havana-brown-detail-boucle.png",
         ],
       },
