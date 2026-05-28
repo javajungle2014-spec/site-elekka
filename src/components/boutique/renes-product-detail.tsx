@@ -121,6 +121,7 @@ function BuyStrip({ product: p, activeColour, colourKey, setColourKey, onAdd, ad
 
 export function RenesProductDetail({ product, initialColour }: { product: Product; initialColour?: ColourKey }) {
   const [colourKey, setColourKey] = useState<ColourKey>(initialColour ?? product.defaultColour);
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
   const [added, setAdded]         = useState(false);
   const [stickyVisible, setStickyVisible] = useState(false);
   const [stockQty, setStockQty]   = useState<number | null>(null);
@@ -186,18 +187,37 @@ export function RenesProductDetail({ product, initialColour }: { product: Produc
             </div>
           </div>
 
-          <div className="relative min-h-[520px] flex items-stretch">
+          {/* Lightbox */}
+          {zoomedImage && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/90 cursor-zoom-out p-4 md:p-10"
+              onClick={() => setZoomedImage(null)}>
+              <div className="relative w-full h-full max-w-2xl">
+                <Image src={zoomedImage} alt={product.name} fill sizes="(min-width: 768px) 672px, 100vw" className="object-contain" />
+              </div>
+              <button type="button" onClick={() => setZoomedImage(null)}
+                className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center text-on-ink hover:text-on-ink/60 transition-colors text-2xl">
+                ×
+              </button>
+            </div>
+          )}
+
+          <div className="relative">
             {activeColour.images[0] ? (
-              <div className={`w-full grid grid-cols-3 gap-0 ${stockQty === 0 ? "opacity-40 blur-[3px]" : ""} transition-all duration-300`}>
-                {[activeColour.images[0], activeColour.images[2], activeColour.images[3]].map((src, i) => (
-                  <div key={i} className="relative aspect-[3/4] overflow-hidden">
-                    {src ? (
-                      <Image src={src} alt={product.name} fill sizes="33vw" className="object-cover" priority={i === 0} />
-                    ) : (
-                      <div className={`w-full h-full ${leatherClass}`} />
-                    )}
-                  </div>
-                ))}
+              <div className={`px-4 md:px-12 py-10 ${stockQty === 0 ? "opacity-40 blur-[3px]" : ""} transition-all duration-300`}>
+                <div className="grid grid-cols-3 gap-3 md:gap-5 max-w-4xl mx-auto">
+                  {[activeColour.images[0], activeColour.images[2], activeColour.images[3]].map((src, i) => (
+                    <div key={i}
+                      className="relative aspect-[3/4] overflow-hidden cursor-zoom-in group"
+                      onClick={() => src && setZoomedImage(src)}>
+                      {src ? (
+                        <Image src={src} alt={product.name} fill sizes="(min-width: 768px) 30vw, 33vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-[1.04]" priority={i === 0} />
+                      ) : (
+                        <div className={`w-full h-full ${leatherClass}`} />
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             ) : (
               <div className="relative flex w-full min-h-[520px] items-center justify-center">
