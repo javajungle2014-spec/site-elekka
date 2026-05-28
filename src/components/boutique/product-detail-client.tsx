@@ -380,11 +380,11 @@ export function ProductDetailClient({ product }: { product: Product }) {
   }
 
   function scrollToFirstMissing() {
-    if (!selectedDiscipline) return scrollToRef(disciplineRef);
-    if (!selectedColour)     return scrollToRef(colourRef);
-    if (!selectedSize)       return scrollToRef(sizeRef);
-    if (!selectedReins)      return scrollToRef(reinsRef);
-    if (!selectedEquip)      return scrollToRef(equipRef);
+    if (!selectedDiscipline)              return scrollToRef(disciplineRef);
+    if (!selectedColour)                  return scrollToRef(colourRef);
+    if (!selectedSize)                    return scrollToRef(sizeRef);
+    if (!selectedReins || reinsStockQty === 0) return scrollToRef(reinsRef);
+    if (!selectedEquip || equipOutOfStock)    return scrollToRef(equipRef);
   }
 
   const currentColour = product.colours.find(c => c.key === selectedColour)!;
@@ -496,7 +496,8 @@ export function ProductDetailClient({ product }: { product: Product }) {
 
   const outOfStock = stockQty === 0;
   const equipOutOfStock = equipStockQty === 0;
-  const complete = !!(selectedDiscipline && selectedColour && selectedSize && selectedReins && selectedEquip) && !outOfStock && !equipOutOfStock;
+  const reinsOutOfStock = reinsStockQty === 0;
+  const complete = !!(selectedDiscipline && selectedColour && selectedSize && selectedReins && selectedEquip) && !outOfStock && !equipOutOfStock && !reinsOutOfStock;
 
   function handleFavorite() {
     if (!userId) { setAuthOpen(true); return; }
