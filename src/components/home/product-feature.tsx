@@ -13,7 +13,7 @@ const featureData: Record<string, { Icon: React.ElementType; title: string; text
   essentiel: [
     { Icon: Leaf,    title: "Cuir pleine fleur",   text: "Souplesse naturelle dès le premier usage, patine progressive dans la durée." },
     { Icon: Star,    title: "Design intemporel",    text: "Codes du bridon anglais classique, sans fioritures inutiles." },
-    { Icon: Wrench,  title: "Quincaillerie inox",   text: "Argentée, robuste, sans altération dans le temps." },
+    { Icon: Tag,     title: "Prix juste",             text: "La qualité d'un grand bridon, sans payer le prestige de la marque." },
     { Icon: Palette, title: "Deux coloris",         text: "Havana Brown ou Noir — tailles Full et Cob." },
   ],
   signature: [
@@ -162,7 +162,7 @@ export function ProductFeature() {
             ))}
           </div>
           <div className="flex flex-col items-center gap-2">
-            <div className="w-full aspect-[3/4] md:aspect-[2/3] relative overflow-hidden rounded-xl bg-paper-2 cursor-zoom-in group"
+            <div className="w-full aspect-[3/4] md:aspect-[1/1] relative overflow-hidden rounded-xl bg-paper-2 cursor-zoom-in group"
               onClick={() => { const img = product.heroImage ?? product.colours[0]?.images[0]; if (img) setZoomedImg(img); }}>
               {(product.heroImage ?? product.colours[0]?.images[0]) ? (
                 <Image
