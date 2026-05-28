@@ -339,9 +339,9 @@ function ThumbnailStrip({ images, selected, onSelect, productName }: {
           return (
             <button key={i} type="button" onClick={() => onSelect(i)}
               className="press relative shrink-0 overflow-hidden border-2 transition-all duration-200 rounded-sm"
-              style={{ width: 52, height: 69, borderColor: selected === i ? "var(--ink)" : "transparent",
+              style={{ width: 62, height: 83, borderColor: selected === i ? "var(--ink)" : "transparent",
                 boxShadow: selected !== i ? "0 0 0 1px #e5e5e5" : undefined }}>
-              <Image src={img} alt={`${productName} vue ${i + 1}`} fill sizes="52px" className="object-cover" />
+              <Image src={img} alt={`${productName} vue ${i + 1}`} fill sizes="62px" className="object-cover" />
             </button>
           );
         })}
