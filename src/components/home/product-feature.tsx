@@ -172,9 +172,17 @@ export function ProductFeature() {
                   sizes="(min-width: 768px) 42vw, 42vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                 />
+              ) : product.category === "Enrênements" ? (
+                <div className="w-full h-full flex flex-col items-center justify-center gap-3 rounded-xl"
+                  style={{ backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 18px, rgba(0,0,0,0.04) 18px, rgba(0,0,0,0.04) 20px)" }}>
+                  <div className="absolute inset-6 border border-line/60 pointer-events-none rounded-lg" />
+                  <span className="kicker text-muted-soft tracking-[0.22em] text-[8px] md:text-[10px]">En cours de création</span>
+                  <p className="text-[9px] md:text-xs text-center text-muted-soft px-4 leading-snug">{product.name}</p>
+                </div>
               ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-soft border border-dashed border-line rounded-xl">
-                  <span className="text-[8px] md:text-xs tracking-widest uppercase">Photo à venir</span>
+                <div className="w-full h-full relative overflow-hidden rounded-xl flex flex-col items-center justify-center gap-2">
+                  <span className="text-[8px] md:text-xs tracking-[0.2em] uppercase font-semibold text-muted-soft">Rupture de stock</span>
+                  <span className="text-[7px] md:text-[10px] tracking-widest uppercase text-muted-soft/60">Bientôt disponible</span>
                 </div>
               )}
             </div>
