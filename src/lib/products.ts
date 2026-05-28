@@ -276,7 +276,7 @@ export const products: Product[] = [
   },
   {
     slug: "renes-2",
-    name: "Rênes Tissus",
+    name: "Rênes en tissu",
     category: "Rênes",
     family: "Classique",
     tagline: "Cuir lisse. Sensation directe. Contact pur.",
