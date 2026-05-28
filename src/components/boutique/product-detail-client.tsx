@@ -336,7 +336,7 @@ function ThumbnailStrip({ images, selected, onSelect, productName }: {
 
 /* ─── Composant principal ────────────────────────────────────────────── */
 export function ProductDetailClient({ product }: { product: Product }) {
-  const [selectedDiscipline, setSelectedDiscipline] = useState<string | null>(null);
+  const [selectedDiscipline, setSelectedDiscipline] = useState<string | null>("multi");
   const [selectedColour, setSelectedColour] = useState(product.defaultColour);
   const [selectedSize, setSelectedSize]     = useState<string | null>(product.defaultSize);
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
