@@ -146,7 +146,7 @@ export function PieceDetail({ piece }: { piece: Piece }) {
                     alt={`${piece.name} — ${activeColour.label}`}
                     fill
                     sizes="(min-width: 768px) 40vw, 100vw"
-                    className="object-cover transition-opacity duration-300"
+                    className="object-cover transition-opacity duration-300" style={{ objectPosition: "center 70%" }}
                     priority
                   />
                 ) : (
