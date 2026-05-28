@@ -123,8 +123,12 @@ export default function BoutiquePage() {
               <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-10 md:gap-x-8 md:gap-y-14">
                 {enrenements.map((product, i) => (
                   <div key={product.slug} className="group block rise" style={{ ["--i" as string]: i + 3 }}>
-                    <div className="relative aspect-[4/5] overflow-hidden bg-paper-2 flex flex-col items-center justify-center gap-4">
-                      <div className="absolute inset-6 border border-line pointer-events-none" />
+                    <div className="relative aspect-[4/5] overflow-hidden flex flex-col items-center justify-center gap-4"
+                      style={{
+                        backgroundColor: "var(--color-paper-2)",
+                        backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 18px, rgba(0,0,0,0.04) 18px, rgba(0,0,0,0.04) 20px)",
+                      }}>
+                      <div className="absolute inset-6 border border-line/60 pointer-events-none" />
                       <span className="kicker text-muted-soft tracking-[0.22em]">Bientôt disponible</span>
                       <p className="text-center text-sm font-semibold text-ink px-6 leading-snug">{product.name}</p>
                     </div>
