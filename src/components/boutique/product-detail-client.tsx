@@ -933,12 +933,23 @@ export function ProductDetailClient({ product }: { product: Product }) {
                           { label: "Vue d'ensemble" },
                         ].map((view, i) => (
                           <div key={i} className="relative overflow-hidden" style={{ aspectRatio: "4/5" }}>
-                            <div className={`w-full h-full ${reinsStockQty === 0 ? "opacity-40" : ""} ${LEATHER[selectedColour] ?? "bg-paper-2"} transition-opacity duration-300`} />
+                            {selectedReins === "tissu" ? (
+                              <Image
+                                src="/products/renes-1/renes-1-havana-brown-studio-02.png"
+                                alt=""
+                                fill
+                                sizes="150px"
+                                className="object-cover scale-110 blur-lg brightness-75"
+                                aria-hidden
+                              />
+                            ) : (
+                              <div className={`w-full h-full ${reinsStockQty === 0 ? "opacity-40" : ""} ${LEATHER[selectedColour] ?? "bg-paper-2"} transition-opacity duration-300`} />
+                            )}
                             <div className="absolute inset-0 flex flex-col justify-between p-2 pointer-events-none">
                               <span className="font-mono text-[8px] tracking-widest text-white/30 uppercase">0{i + 1}</span>
                               <span className="font-mono text-[8px] tracking-widest text-white/30 uppercase">{view.label}</span>
                             </div>
-                            {reinsStockQty === 0 && (
+                            {(reinsStockQty === 0 || selectedReins === "tissu") && (
                               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                 <span className="bg-ink/85 text-on-ink text-[8px] tracking-[0.2em] uppercase font-medium px-3 py-1 rotate-[-35deg] whitespace-nowrap shadow">
                                   Rupture de stock
