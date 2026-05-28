@@ -301,7 +301,7 @@ export const products: Product[] = [
   },
   {
     slug: "enrenement-1",
-    name: "Enrênement Elekka N°1",
+    name: "Howlett",
     hidden: true,
     category: "Enrênements",
     family: "Classique",
@@ -327,7 +327,7 @@ export const products: Product[] = [
   },
   {
     slug: "enrenement-2",
-    name: "Enrênement Elekka N°2",
+    name: "Martingale",
     hidden: true,
     category: "Enrênements",
     family: "Classique",
