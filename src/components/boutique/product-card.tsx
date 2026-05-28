@@ -115,9 +115,9 @@ export function ProductCard({
         </div>
 
         {/* ── Pill miniatures ───────────────────────────────────────────── */}
-        <div className="absolute bottom-3 left-3 right-3 z-20">
+        <div className={`absolute z-20 ${compact ? "bottom-2 left-2 right-2" : "bottom-3 left-3 right-3"}`}>
           <div
-            className="flex gap-[6px] p-[6px] rounded-2xl"
+            className={`flex rounded-2xl ${compact ? "gap-[4px] p-[4px]" : "gap-[6px] p-[6px]"}`}
             style={{ background: "rgba(0,0,0,0.48)", backdropFilter: "blur(12px)" }}
           >
             {slots.map((img, i) => {
@@ -140,7 +140,7 @@ export function ProductCard({
                     e.stopPropagation();
                     setActiveIdx(i);
                   }}
-                  className="relative flex-1 aspect-square rounded-[10px] overflow-hidden cursor-pointer"
+                  className={`relative flex-1 aspect-square overflow-hidden cursor-pointer ${compact ? "rounded-[7px]" : "rounded-[10px]"}`}
                   style={{
                     opacity,
                     transform: `scale(${scale})`,
