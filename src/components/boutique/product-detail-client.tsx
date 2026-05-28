@@ -1033,23 +1033,24 @@ export function ProductDetailClient({ product }: { product: Product }) {
                         { label: "Détail attache" },
                         { label: "Vue d'ensemble" },
                       ].map((view, i) => (
-                        <div key={i} className="relative overflow-hidden" style={{ aspectRatio: "4/5" }}>
-                          <div className={`w-full h-full ${equipOutOfStock ? "opacity-40" : ""} ${LEATHER[equipColour] ?? "bg-paper-2"} transition-opacity duration-300`} />
+                        <div key={i} className="relative overflow-hidden" style={{
+                          aspectRatio: "4/5",
+                          backgroundColor: "var(--color-paper-2)",
+                          backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 18px, rgba(0,0,0,0.04) 18px, rgba(0,0,0,0.04) 20px)",
+                        }}>
                           <div className="absolute inset-0 flex flex-col justify-between p-2 pointer-events-none">
-                            <span className="font-mono text-[8px] tracking-widest text-white/30 uppercase">0{i + 1}</span>
-                            <span className="font-mono text-[8px] tracking-widest text-white/30 uppercase">{view.label}</span>
+                            <span className="font-mono text-[8px] tracking-widest text-muted-soft/50 uppercase">0{i + 1}</span>
+                            <span className="font-mono text-[8px] tracking-widest text-muted-soft/50 uppercase">{view.label}</span>
                           </div>
-                          {equipOutOfStock && (
-                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                              <span className="bg-ink/85 text-on-ink text-[8px] tracking-[0.2em] uppercase font-medium px-3 py-1 rotate-[-35deg] whitespace-nowrap shadow">
-                                Rupture de stock
-                              </span>
-                            </div>
-                          )}
+                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <span className="bg-ink/80 text-on-ink text-[8px] tracking-[0.2em] uppercase font-medium px-3 py-1 rotate-[-35deg] whitespace-nowrap shadow">
+                              Bientôt disponible
+                            </span>
+                          </div>
                         </div>
                       ))}
                     </div>
-                    <p className="text-[10px] text-muted-soft italic">Photos à venir — emplacement réservé</p>
+                    <p className="text-[10px] text-muted-soft italic">En cours de création — photos à venir</p>
                   </div>
 
                   {/* Couleur */}
