@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
 import type { Product, ColourKey } from "@/lib/products";
@@ -120,6 +121,7 @@ function BuyStrip({ product: p, activeColour, colourKey, setColourKey, onAdd, ad
 
 export function RenesProductDetail({ product, initialColour }: { product: Product; initialColour?: ColourKey }) {
   const [colourKey, setColourKey] = useState<ColourKey>(initialColour ?? product.defaultColour);
+  const [imgIdx, setImgIdx]       = useState(0);
   const [added, setAdded]         = useState(false);
   const [stickyVisible, setStickyVisible] = useState(false);
   const [stockQty, setStockQty]   = useState<number | null>(null);
@@ -130,6 +132,8 @@ export function RenesProductDetail({ product, initialColour }: { product: Produc
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => { setImgIdx(0); }, [colourKey]);
 
   useEffect(() => {
     const colour = product.colours.find(c => c.key === colourKey)?.label ?? "";
@@ -185,14 +189,34 @@ export function RenesProductDetail({ product, initialColour }: { product: Produc
             </div>
           </div>
 
-          <div className="relative flex min-h-[520px] items-center justify-center">
+          <div className="relative flex min-h-[420px] items-center justify-center">
             <div className="absolute inset-x-0 top-1/2 h-px bg-line" />
-            <div className="absolute left-0 top-1/2 hidden -translate-y-1/2 writing-vertical font-mono text-xs uppercase tracking-[0.22em] text-muted-soft md:block">
-              Remplacer par vos photos
-            </div>
             <div className="relative">
               <div className={stockQty === 0 ? "opacity-40 blur-[3px] transition-all duration-300" : "transition-all duration-300"}>
-                <ProductPhotoPlaceholder leatherClass={leatherClass} />
+                {activeColour.images.length > 0 ? (
+                  <div className="relative w-[min(62vw,380px)] aspect-[3/4] overflow-hidden bg-paper-2">
+                    <Image
+                      src={activeColour.images[imgIdx] ?? activeColour.images[0]}
+                      alt={product.name}
+                      fill
+                      sizes="(min-width: 768px) 380px, 62vw"
+                      className="object-cover"
+                      priority
+                    />
+                    {activeColour.images.length > 1 && (
+                      <div className="absolute bottom-3 left-3 right-3 flex gap-1.5 p-1.5 rounded-xl" style={{ background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)" }}>
+                        {activeColour.images.map((_, i) => (
+                          <button key={i} type="button" onClick={() => setImgIdx(i)}
+                            className="flex-1 h-1 rounded-full transition-all duration-200"
+                            style={{ background: i === imgIdx ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.3)" }}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <ProductPhotoPlaceholder leatherClass={leatherClass} />
+                )}
               </div>
               {stockQty === 0 && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
