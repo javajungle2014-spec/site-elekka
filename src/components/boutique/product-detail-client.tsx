@@ -359,6 +359,20 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const [reinsStockQty, setReinsStockQty]   = useState<number | null>(null);
   const ctaRef        = useRef<HTMLDivElement>(null);
   const disciplineRef = useRef<HTMLDivElement>(null);
+  const touchStartX   = useRef<number | null>(null);
+
+  function handleTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0].clientX;
+  }
+  function handleTouchEnd(e: React.TouchEvent) {
+    if (touchStartX.current === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(delta) < 50) return;
+    const imgs = currentColour.images;
+    if (delta < 0) setSelectedImageIdx(i => Math.min(i + 1, imgs.length - 1));
+    else           setSelectedImageIdx(i => Math.max(i - 1, 0));
+  }
   const colourRef     = useRef<HTMLDivElement>(null);
   const sizeRef       = useRef<HTMLDivElement>(null);
   const reinsRef      = useRef<HTMLDivElement>(null);
@@ -641,6 +655,8 @@ export function ProductDetailClient({ product }: { product: Product }) {
                     className={`relative aspect-[3/4] overflow-hidden ${
                       currentColour.images.length > 0 ? "bg-paper-2 cursor-zoom-in" : (LEATHER[selectedColour] ?? "bg-paper-2")
                     }`}
+                    onTouchStart={handleTouchStart}
+                    onTouchEnd={handleTouchEnd}
                     onDoubleClick={() => {
                       if (currentColour.images.length > 0) {
                         setZoomedImage(currentColour.images[selectedImageIdx] ?? currentColour.images[0]);
