@@ -71,6 +71,7 @@ const VISIBLE = 4;
 export function ProductFeature() {
   const [activeSlug, setActiveSlug] = useState(products[0].slug);
   const [railStart, setRailStart] = useState(0);
+  const [zoomedImg, setZoomedImg] = useState<string | null>(null);
   const railRef = useRef<HTMLDivElement>(null);
 
   const product = products.find((p) => p.slug === activeSlug)!;
@@ -137,50 +138,58 @@ export function ProductFeature() {
           </div>
         </div>
 
-        {/* Cartes arguments */}
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_290px_1fr] gap-4 items-center">
-          <div className="flex flex-col gap-3">
+        {/* Lightbox */}
+        {zoomedImg && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/90 cursor-zoom-out p-4"
+            onClick={() => setZoomedImg(null)}>
+            <div className="relative w-full h-full max-w-lg">
+              <Image src={zoomedImg} alt={product.name} fill sizes="(min-width: 768px) 512px, 100vw" className="object-contain" />
+            </div>
+            <button type="button" onClick={() => setZoomedImg(null)}
+              className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center text-on-ink text-2xl hover:text-on-ink/60">×</button>
+          </div>
+        )}
+
+        {/* Cartes arguments — même layout mobile et desktop */}
+        <div className="grid grid-cols-[1fr_42%_1fr] gap-2 md:gap-4 items-center">
+          <div className="flex flex-col gap-2">
             {features.slice(0, 2).map(({ Icon, title, text }) => (
-              <div key={title} className="border border-line rounded-xl p-3">
-                <Icon size={16} weight="regular" className="text-muted mb-1.5" />
-                <h3 className="font-semibold text-xs tracking-wide uppercase mb-1">{title}</h3>
-                <p className="text-xs text-muted leading-relaxed">{text}</p>
+              <div key={title} className="border border-line rounded-lg p-2 md:p-3">
+                <Icon size={12} weight="regular" className="text-muted mb-1" />
+                <h3 className="font-semibold text-[8px] md:text-xs tracking-wide uppercase mb-0.5">{title}</h3>
+                <p className="text-[8px] md:text-xs text-muted leading-relaxed">{text}</p>
               </div>
             ))}
           </div>
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-full aspect-[4/5] relative overflow-hidden rounded-xl bg-paper-2">
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-full aspect-[3/4] relative overflow-hidden rounded-xl bg-paper-2 cursor-zoom-in group"
+              onClick={() => { const img = product.heroImage ?? product.colours[0]?.images[0]; if (img) setZoomedImg(img); }}>
               {(product.heroImage ?? product.colours[0]?.images[0]) ? (
                 <Image
                   src={product.heroImage ?? product.colours[0].images[0]}
                   alt={product.name}
                   fill
-                  sizes="290px"
-                  className="object-cover"
+                  sizes="(min-width: 768px) 42vw, 42vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                 />
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-soft border border-dashed border-line rounded-xl">
-                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" className="opacity-30">
-                    <rect x="4" y="4" width="32" height="32" rx="4" stroke="currentColor" strokeWidth="1.5" />
-                    <circle cx="14" cy="15" r="3" stroke="currentColor" strokeWidth="1.5" />
-                    <path d="M4 26l9-7 7 6 5-4 11 9" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-                  </svg>
-                  <span className="text-xs tracking-widest uppercase">Photo à venir</span>
+                  <span className="text-[8px] md:text-xs tracking-widest uppercase">Photo à venir</span>
                 </div>
               )}
             </div>
             <Link href={`/boutique/${product.slug}`}
-              className="inline-flex items-center gap-2 bg-ink text-on-ink px-6 py-3 text-sm tracking-wide press hover:bg-ink-soft"
+              className="inline-flex items-center gap-1.5 bg-ink text-on-ink px-3 md:px-6 py-2 md:py-3 text-[9px] md:text-sm tracking-wide press hover:bg-ink-soft"
             >
               Voir le produit <span aria-hidden>→</span>
             </Link>
           </div>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2">
             {features.slice(2, 4).map(({ Icon, title, text }) => (
-              <div key={title} className="border border-line rounded-xl p-3">
-                <Icon size={16} weight="regular" className="text-muted mb-1.5" />
-                <h3 className="font-semibold text-xs tracking-wide uppercase mb-1">{title}</h3>
-                <p className="text-xs text-muted leading-relaxed">{text}</p>
+              <div key={title} className="border border-line rounded-lg p-2 md:p-3">
+                <Icon size={12} weight="regular" className="text-muted mb-1" />
+                <h3 className="font-semibold text-[8px] md:text-xs tracking-wide uppercase mb-0.5">{title}</h3>
+                <p className="text-[8px] md:text-xs text-muted leading-relaxed">{text}</p>
               </div>
             ))}
           </div>
