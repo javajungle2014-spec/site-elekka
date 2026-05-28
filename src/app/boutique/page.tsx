@@ -92,6 +92,7 @@ export default function BoutiquePage() {
                           product={product}
                           colourOverride={c.key}
                           index={ci}
+                          compact
                         />
                       ))
                     )

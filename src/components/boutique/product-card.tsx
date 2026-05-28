@@ -16,10 +16,12 @@ export function ProductCard({
   product,
   index = 0,
   colourOverride,
+  compact = false,
 }: {
   product: Product;
   index?: number;
   colourOverride?: ColourKey;
+  compact?: boolean;
 }) {
   const { isFavorite, toggle, userId } = useFavorites();
   const favourite = isFavorite(product.slug);
@@ -60,7 +62,7 @@ export function ProductCard({
       style={{ ["--i" as string]: index + 3 }}
     >
       {/* ── Image principale ─────────────────────────────────────────────── */}
-      <div className="relative aspect-[4/5] overflow-hidden bg-paper-2">
+      <div className={`relative overflow-hidden bg-paper-2 ${compact ? "aspect-[1/1]" : "aspect-[4/5]"}`}>
 
         {/* Zoom subtil au survol de la carte */}
         <div
