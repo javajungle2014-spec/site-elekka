@@ -151,7 +151,7 @@ export const faqCategories: FaqCategory[] = [
     items: [
       {
         q: "Comment contacter le service client ?",
-        a: "Par email à elekka.sellier@gmail.com. Nous répondons sous 24 à 48 heures en jours ouvrés.",
+        a: "Par email à elekka.sellier@gmail.com. Nous répondons sous 24 à 48 heures ouvrées.",
       },
       {
         q: "Qui contacter en cas de problème ?",
@@ -159,7 +159,7 @@ export const faqCategories: FaqCategory[] = [
       },
       {
         q: "Quel est le délai de réponse du service client ?",
-        a: "Nous nous engageons à répondre à toutes les demandes sous 48 heures en jours ouvrés.",
+        a: "Nous nous engageons à répondre à toutes les demandes sous 48 heures ouvrées.",
       },
     ],
   },

@@ -24,7 +24,7 @@ export function Manifesto() {
           <div className="md:col-span-7 md:pr-10">
             <p className="kicker text-on-ink-muted">Manifeste</p>
             <p className="display mt-6 text-3xl md:text-5xl text-on-ink leading-[1.02]">
-              Le prix ne fait pas la qualité d'une bride.
+              Le prix ne fait pas la qualité d'un bridon.
               <br />
               <span className="text-on-ink-muted">
                 Ce sont le cuir, la technologie et le savoir-faire de l'artisan qui font la différence.

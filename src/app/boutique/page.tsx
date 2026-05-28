@@ -114,7 +114,7 @@ export default function BoutiquePage() {
                 <p className="kicker text-muted rise">Enrênements</p>
                 <h2 className="display mt-4 text-5xl md:text-7xl rise">
                   Nos enrênements.<br />
-                  <span className="text-muted">Bientôt disponibles.</span>
+                  <span className="text-muted">En cours de création.</span>
                 </h2>
                 <p className="mt-6 text-base text-muted leading-relaxed max-w-[52ch] rise">
                   Conçus pour accompagner le travail monté et en main. Même exigence de cuir et de finition que l'ensemble de la gamme Elekka.
@@ -129,7 +129,7 @@ export default function BoutiquePage() {
                         backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 18px, rgba(0,0,0,0.04) 18px, rgba(0,0,0,0.04) 20px)",
                       }}>
                       <div className="absolute inset-6 border border-line/60 pointer-events-none" />
-                      <span className="kicker text-muted-soft tracking-[0.22em]">Bientôt disponible</span>
+                      <span className="kicker text-muted-soft tracking-[0.22em]">En cours de création</span>
                       <p className="text-center text-sm font-semibold text-ink px-6 leading-snug">{product.name}</p>
                     </div>
                     <div className="mt-5">

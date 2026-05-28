@@ -445,7 +445,7 @@ export const blog: Article[] = [
       },
       {
         heading: "Aujourd'hui",
-        body: "Elekka grandit avec une ambition claire : proposer des filets élégants, fiables et accessibles, sans compromis sur le respect du cheval. Une marque construite autour d'une idée essentielle : le prix ne fait pas la qualité d'une bride. Le produit, lui, doit la prouver.",
+        body: "Elekka grandit avec une ambition claire : proposer des filets élégants, fiables et accessibles, sans compromis sur le respect du cheval. Une marque construite autour d'une idée essentielle : le prix ne fait pas la qualité d'un bridon. Le produit, lui, doit la prouver.",
       },
     ],
   },

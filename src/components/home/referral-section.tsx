@@ -46,7 +46,7 @@ export function ReferralSection() {
             </h2>
             <div className="space-y-2 text-sm text-muted leading-relaxed">
               <p>
-                <span className="text-ink font-medium">Votre ami</span> — reçoit <span className="text-ink font-medium">-20%</span> sur sa première commande, appliqués automatiquement via votre lien.
+                <span className="text-ink font-medium">Votre ami</span> — reçoit <span className="text-ink font-medium">-20%</span> sur sa première commande, appliquée automatiquement via votre lien.
               </p>
               <p>
                 <span className="text-ink font-medium">Vous</span> — recevez <span className="text-ink font-medium">-30€</span> sur votre prochain filet dès qu'il a commandé.

@@ -102,7 +102,7 @@ export function ContactSection() {
               <span className="text-muted">Écrivez-nous.</span>
             </h2>
             <p className="mt-6 text-base md:text-lg text-muted leading-relaxed max-w-[42ch]">
-              Conseil sur la taille, la coupe, une sellerie partenaire près de chez vous ou toutes autres demandes — on vous répond en personne et en moins de 48h.
+              Conseil sur la taille, la coupe, une sellerie partenaire près de chez vous ou toutes autres demandes — on vous répond en personne et en moins de 48 h.
             </p>
             <ul className="mt-10 space-y-5">
               <li className="flex items-center gap-4">
@@ -113,7 +113,7 @@ export function ContactSection() {
               </li>
               <li className="flex items-center gap-4">
                 <Clock size={18} className="text-ink" />
-                <span className="text-sm text-muted">Réponse en moins de 48h</span>
+                <span className="text-sm text-muted">Réponse en moins de 48 h</span>
               </li>
               <li className="flex items-center gap-4">
                 <MapPin size={18} className="text-ink" />
@@ -132,7 +132,7 @@ export function ContactSection() {
                   <CheckCircle size={18} weight="fill" className="shrink-0" />
                   <div>
                     <p className="text-sm font-medium">Message envoyé — merci.</p>
-                    <p className="text-xs text-on-ink-muted mt-0.5">Nous vous répondons en moins de 48h.</p>
+                    <p className="text-xs text-on-ink-muted mt-0.5">Nous vous répondons en moins de 48 h.</p>
                   </div>
                   <button type="button" onClick={reset} className="ml-auto text-xs text-on-ink-muted hover:text-on-ink underline underline-offset-4 press shrink-0">
                     Nouveau message

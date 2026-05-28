@@ -39,13 +39,13 @@ En cas de doute entre deux tailles, le Full reste souvent le choix le plus sûr 
 
 Référez-vous principalement à la hauteur au garrot de votre cheval, mais tenez aussi compte de sa morphologie générale : tête fine, tête forte, cheval compact ou grand modèle.
 
-Si votre cheval se situe à la limite entre deux tailles, nous recommandons de choisir la taille supérieure afin de conserver plus de latitude d'ajustement.
+Si votre cheval se situe à la limite entre deux tailles, nous recommandons de choisir la taille supérieure afin de garder une marge de réglage confortable.
 
 Vous n'êtes pas sûr ? Écrivez-nous à elekka.sellier@gmail.com avec la race, la hauteur au garrot et quelques photos de votre cheval. Nous vous répondrons sous 48 h.`,
 
   composition: `**Cuir**
 
-Pleine fleur, pleine épaisseur. C'est la couche supérieure de la peau, la plus dense, la plus résistante, celle qui se bonifie à l'usage. Elle est sélectionnée pour sa souplesse naturelle dès le premier contact et sa capacité à développer une patine propre au fil des années.
+Pleine fleur, pleine épaisseur de peau. C'est la couche supérieure de la peau, la plus dense, la plus résistante, celle qui se bonifie à l'usage. Elle est sélectionnée pour sa souplesse naturelle dès le premier contact et sa capacité à développer une patine propre au fil des années.
 
 **Rembourrage** (modèles Signature et Fusion)
 
