@@ -60,7 +60,7 @@ export function ProductCard({
       style={{ ["--i" as string]: index + 3 }}
     >
       {/* ── Image principale ─────────────────────────────────────────────── */}
-      <div className="relative aspect-[3/4] overflow-hidden bg-paper-2">
+      <div className="relative aspect-[4/5] overflow-hidden bg-paper-2">
 
         {/* Zoom subtil au survol de la carte */}
         <div

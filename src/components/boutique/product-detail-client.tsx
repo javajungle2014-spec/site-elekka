@@ -636,7 +636,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
 
           <div className="grid grid-cols-12 gap-8 md:gap-12 items-start">
             {/* Image + thumbnails */}
-            <div className="col-span-12 md:col-span-5">
+            <div className="col-span-12 md:col-span-6">
               <div className="flex gap-3 items-start">
 
                 {/* Rail miniatures avec carrousel si > 6 */}
@@ -714,7 +714,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
             </div>
 
             {/* Titre + CTA Composer */}
-            <div className="col-span-12 md:col-span-7 flex flex-col gap-8 md:pb-2">
+            <div className="col-span-12 md:col-span-6 flex flex-col gap-8 md:pb-2">
               <div>
                 <h1 className="display text-[3.5rem] md:text-[4.5rem] xl:text-[5rem] text-ink" style={{ lineHeight: 0.92 }}>
                   {product.name.replace("Bridon Elekka ", "").replace("Filet Anatomique Elekka ", "")}
