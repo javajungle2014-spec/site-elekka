@@ -120,6 +120,7 @@ export const products: Product[] = [
         swatch: "#0a0a0a",
         images: [
           "/products/signature/signature-noir-studio-01.png",
+          "/products/signature/signature-noir-cheval-01.png",
           "/products/signature/signature-noir-detail-tetiere.png",
           "/products/signature/signature-noir-detail-muserolle.png",
           "/products/signature/signature-noir-detail-frontal.png",
