@@ -27,6 +27,9 @@ export async function generateMetadata({
       description: product.description,
       type: "website",
       url: `https://elekka-sellier.fr/boutique/${slug}`,
+      ...(product.colours[0]?.images?.[0] && {
+        images: [{ url: `https://elekka-sellier.fr${product.colours[0].images[0]}`, width: 1200, height: 630 }],
+      }),
     },
   };
 }
