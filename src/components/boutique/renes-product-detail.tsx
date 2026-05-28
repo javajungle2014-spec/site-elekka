@@ -178,12 +178,12 @@ export function RenesProductDetail({ product, initialColour }: { product: Produc
           <div className="grid gap-6 py-8 lg:grid-cols-[1fr_430px] lg:py-12">
             <div>
               <p className="kicker text-muted">{product.category} / {product.family}</p>
-              <h1 className="display mt-4 max-w-4xl text-6xl leading-[0.88] md:text-8xl lg:text-9xl">
+              <h1 className="display mt-4 max-w-4xl text-4xl leading-[0.9] md:text-5xl lg:text-6xl">
                 {product.name}
               </h1>
             </div>
             <div className="max-w-xl lg:pt-10">
-              <p className="text-xl leading-8 text-muted md:text-2xl md:leading-9">{product.tagline}</p>
+              <p className="text-base leading-7 text-muted md:text-lg md:leading-8">{product.tagline}</p>
             </div>
           </div>
 
@@ -264,11 +264,11 @@ export function RenesProductDetail({ product, initialColour }: { product: Produc
       {/* Story */}
       <section id="histoire" className="bg-ink text-on-ink">
         <div className="mx-auto grid max-w-[1600px] gap-0 lg:grid-cols-2">
-          <div className="flex min-h-[760px] items-center px-4 py-20 md:px-12 lg:px-20">
+          <div className="flex min-h-[520px] items-center px-4 py-14 md:px-12 lg:px-20">
             <div className="max-w-2xl">
               <p className="kicker text-white/45">Le produit</p>
-              <h2 className="display mt-6 text-5xl leading-[0.94] md:text-8xl">Du quotidien, mais avec une vraie présence.</h2>
-              <p className="mt-10 text-xl leading-9 text-white/72">{product.longDescription}</p>
+              <h2 className="display mt-4 text-3xl leading-[0.94] md:text-5xl">Du quotidien, mais avec une vraie présence.</h2>
+              <p className="mt-6 text-sm leading-7 text-white/72">{product.longDescription}</p>
             </div>
           </div>
           <div className="relative flex min-h-[760px] items-center justify-center bg-white overflow-hidden">
@@ -292,15 +292,15 @@ export function RenesProductDetail({ product, initialColour }: { product: Produc
           <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
             <div className="lg:sticky lg:top-24 lg:self-start">
               <p className="kicker text-muted">Détails</p>
-              <h2 className="display mt-5 max-w-lg text-5xl leading-[0.96] md:text-7xl">Ce que le produit offre.</h2>
+              <h2 className="display mt-4 max-w-lg text-3xl leading-[0.96] md:text-5xl">Ce que le produit offre.</h2>
             </div>
             <div>
               {chapters.map((chapter) => (
                 <article key={chapter.title} className="grid gap-6 border-t border-line py-12 md:grid-cols-[180px_1fr]">
                   <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted">{chapter.eyebrow}</p>
                   <div>
-                    <h3 className="display text-4xl leading-none md:text-6xl">{chapter.title}</h3>
-                    <p className="mt-5 max-w-2xl text-lg leading-8 text-muted">{chapter.copy}</p>
+                    <h3 className="display text-2xl leading-none md:text-4xl">{chapter.title}</h3>
+                    <p className="mt-4 max-w-2xl text-sm leading-7 text-muted">{chapter.copy}</p>
                   </div>
                 </article>
               ))}
@@ -315,14 +315,14 @@ export function RenesProductDetail({ product, initialColour }: { product: Produc
           <div className="mb-12 flex items-end justify-between gap-8">
             <div>
               <p className="kicker text-muted">Fiche produit</p>
-              <h2 className="display mt-4 text-5xl leading-none md:text-7xl">Spécifications</h2>
+              <h2 className="display mt-4 text-3xl leading-none md:text-5xl">Spécifications</h2>
             </div>
           </div>
           <div className="grid border-y border-line md:grid-cols-2 lg:grid-cols-3">
             {specs.map(([label, value]) => (
               <div key={label} className="border-b border-line py-6 md:border-r md:px-6">
                 <p className="kicker-tight text-muted">{label}</p>
-                <p className="mt-3 text-xl font-semibold">{value}</p>
+                <p className="mt-2 text-base font-semibold">{value}</p>
               </div>
             ))}
           </div>
