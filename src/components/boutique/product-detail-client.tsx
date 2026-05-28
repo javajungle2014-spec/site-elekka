@@ -787,9 +787,12 @@ export function ProductDetailClient({ product }: { product: Product }) {
                   return (
                     <button key={c.key} type="button" onClick={() => { setSelectedColour(c.key); scrollToNext(sizeRef, !!(selectedDiscipline && c.key && selectedSize && selectedReins && selectedEquip)); }}
                       className={`choice press text-left ${isActive ? "choice--active" : ""}`}>
-                      {/* Grande image filet + deux petits carrés couleur unie */}
+                      {/* Grande image filet + petite photo détail + swatch couleur */}
                       <div className="flex gap-1.5 p-1.5">
-                        <div className={`flex-[3] aspect-[3/4] relative ${LEATHER[c.key] ?? "bg-paper-2"}`}>
+                        <div className={`flex-[3] aspect-[3/4] relative overflow-hidden ${!c.images[0] ? (LEATHER[c.key] ?? "bg-paper-2") : ""}`}>
+                          {c.images[0] && (
+                            <Image src={c.images[0]} alt={c.label} fill sizes="150px" className="object-cover" />
+                          )}
                           {isActive && (
                             <span className="absolute top-2 right-2 w-5 h-5 bg-on-ink text-ink rounded-full flex items-center justify-center">
                               <IcoCheck size={9} stroke={2.5} />
@@ -797,8 +800,14 @@ export function ProductDetailClient({ product }: { product: Product }) {
                           )}
                         </div>
                         <div className="flex-1 flex flex-col gap-1.5">
+                          <div className="flex-1 rounded-sm relative overflow-hidden">
+                            {c.images[1] ? (
+                              <Image src={c.images[1]} alt={`${c.label} détail`} fill sizes="60px" className="object-cover" />
+                            ) : (
+                              <div className="w-full h-full" style={{ backgroundColor: c.swatch }} />
+                            )}
+                          </div>
                           <div className="flex-1 rounded-sm" style={{ backgroundColor: c.swatch }} />
-                          <div className="flex-1 rounded-sm opacity-60" style={{ backgroundColor: c.swatch }} />
                         </div>
                       </div>
                       <div className="px-3 pb-3 pt-1"><p className="display text-sm">{c.label}</p></div>
