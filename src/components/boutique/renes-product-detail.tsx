@@ -203,20 +203,30 @@ export function RenesProductDetail({ product, initialColour }: { product: Produc
 
           <div className="relative">
             {activeColour.images[0] ? (
-              <div className={`px-4 md:px-12 py-10 ${stockQty === 0 ? "opacity-40 blur-[3px]" : ""} transition-all duration-300`}>
-                <div className="grid grid-cols-3 gap-3 md:gap-5 max-w-4xl mx-auto">
-                  {[activeColour.images[0], activeColour.images[2], activeColour.images[3]].map((src, i) => (
-                    <div key={i}
-                      className="relative aspect-[3/4] overflow-hidden cursor-zoom-in group"
-                      onClick={() => src && setZoomedImage(src)}>
-                      {src ? (
-                        <Image src={src} alt={product.name} fill sizes="(min-width: 768px) 30vw, 33vw"
-                          className="object-cover transition-transform duration-500 group-hover:scale-[1.04]" priority={i === 0} />
-                      ) : (
-                        <div className={`w-full h-full ${leatherClass}`} />
-                      )}
-                    </div>
-                  ))}
+              <div className={`px-4 md:px-16 py-12 md:py-20 ${stockQty === 0 ? "opacity-40 blur-[3px]" : ""} transition-all duration-300`}>
+                <div className="flex gap-3 md:gap-4 max-w-5xl mx-auto" style={{ height: "min(80vh, 680px)" }}>
+                  {/* Grande image gauche */}
+                  <div className="flex-[2] relative overflow-hidden cursor-zoom-in group"
+                    onClick={() => activeColour.images[0] && setZoomedImage(activeColour.images[0])}>
+                    <Image src={activeColour.images[0]} alt={product.name} fill
+                      sizes="(min-width: 768px) 55vw, 65vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-[1.03]" priority />
+                  </div>
+                  {/* Colonne droite — 2 images empilées */}
+                  <div className="flex-[1] flex flex-col gap-3 md:gap-4">
+                    {[activeColour.images[2], activeColour.images[3]].map((src, i) => (
+                      <div key={i} className="flex-1 relative overflow-hidden cursor-zoom-in group"
+                        onClick={() => src && setZoomedImage(src)}>
+                        {src ? (
+                          <Image src={src} alt={product.name} fill
+                            sizes="(min-width: 768px) 25vw, 33vw"
+                            className="object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
+                        ) : (
+                          <div className={`w-full h-full ${leatherClass}`} />
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             ) : (
