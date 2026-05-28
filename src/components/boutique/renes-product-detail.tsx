@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
 import type { Product, ColourKey } from "@/lib/products";
@@ -187,12 +188,20 @@ export function RenesProductDetail({ product, initialColour }: { product: Produc
 
           <div className="relative flex min-h-[520px] items-center justify-center">
             <div className="absolute inset-x-0 top-1/2 h-px bg-line" />
-            <div className="absolute left-0 top-1/2 hidden -translate-y-1/2 writing-vertical font-mono text-xs uppercase tracking-[0.22em] text-muted-soft md:block">
-              Remplacer par vos photos
-            </div>
+            {!activeColour.images[0] && (
+              <div className="absolute left-0 top-1/2 hidden -translate-y-1/2 writing-vertical font-mono text-xs uppercase tracking-[0.22em] text-muted-soft md:block">
+                Remplacer par vos photos
+              </div>
+            )}
             <div className="relative">
               <div className={stockQty === 0 ? "opacity-40 blur-[3px] transition-all duration-300" : "transition-all duration-300"}>
-                <ProductPhotoPlaceholder leatherClass={leatherClass} />
+                {activeColour.images[0] ? (
+                  <div className="relative aspect-[4/5] w-[min(78vw,520px)] overflow-hidden">
+                    <Image src={activeColour.images[0]} alt={product.name} fill sizes="(min-width: 768px) 520px, 78vw" className="object-cover" priority />
+                  </div>
+                ) : (
+                  <ProductPhotoPlaceholder leatherClass={leatherClass} />
+                )}
               </div>
               {stockQty === 0 && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -228,11 +237,17 @@ export function RenesProductDetail({ product, initialColour }: { product: Produc
               <p className="mt-10 text-xl leading-9 text-white/72">{product.longDescription}</p>
             </div>
           </div>
-          <div className="relative flex min-h-[760px] items-center justify-center bg-white">
-            <div className="absolute left-8 top-8 font-mono text-xs uppercase tracking-[0.22em] text-muted-soft">photo secondaire</div>
-            <div className="scale-75 md:scale-90">
-              <ProductPhotoPlaceholder leatherClass={leatherClass} />
-            </div>
+          <div className="relative flex min-h-[760px] items-center justify-center bg-white overflow-hidden">
+            {!activeColour.images[1] && (
+              <div className="absolute left-8 top-8 font-mono text-xs uppercase tracking-[0.22em] text-muted-soft">photo secondaire</div>
+            )}
+            {activeColour.images[1] ? (
+              <Image src={activeColour.images[1]} alt={product.name} fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
+            ) : (
+              <div className="scale-75 md:scale-90">
+                <ProductPhotoPlaceholder leatherClass={leatherClass} />
+              </div>
+            )}
           </div>
         </div>
       </section>
