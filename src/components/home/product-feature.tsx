@@ -23,9 +23,9 @@ const featureData: Record<string, { Icon: React.ElementType; title: string; text
     { Icon: Leaf,   title: "Rênes caoutchouc",      text: "Incluses — adhérence optimale en toutes conditions." },
   ],
   fusion: [
-    { Icon: Ruler,                  title: "Browband anatomique",  text: "Large 5,5 cm — répartit la pression sur tout le front." },
-    { Icon: ArrowsCounterClockwise, title: "Triple attache",       text: "Épaisse, ovale ou rectangulaire — interchangeable selon le cheval." },
-    { Icon: Star,                   title: "Conception modulaire", text: "Un seul bridon, trois configurations muserolle différentes." },
+    { Icon: Ruler,                  title: "Frontal élargi",       text: "Dimensions réinventées — sans pression latérale." },
+    { Icon: ArrowsCounterClockwise, title: "Triple attache",       text: "Large, épaisse et ovale, pour un confort et une efficacité maximale." },
+    { Icon: Star,                   title: "Conception modulaire", text: "Tous nos composants de filet sont interchangeables pour une personnalisation infinie." },
     { Icon: Leaf,                   title: "Rênes caoutchouc",     text: "Incluses — adhérence optimale en toutes conditions." },
   ],
   "licol-1": [
@@ -220,7 +220,13 @@ export function ProductFeature() {
                     }`}
                   >
                     <p className="text-xs font-semibold tracking-wide leading-snug line-clamp-1">{p.name}</p>
-                    <p className={`text-xs ${activeSlug === p.slug ? "text-on-ink-muted" : "text-muted"}`}>{formatPrice(p.priceEUR)}</p>
+                    {p.category === "Enrênements" ? (
+                      <p className={`text-[9px] italic ${activeSlug === p.slug ? "text-on-ink-muted" : "text-muted"}`}>En cours de création</p>
+                    ) : p.colours.every(c => c.images.length === 0) && p.category === "Rênes" ? (
+                      <p className={`text-[9px] italic ${activeSlug === p.slug ? "text-on-ink-muted" : "text-muted"}`}>Rupture de stock</p>
+                    ) : (
+                      <p className={`text-xs ${activeSlug === p.slug ? "text-on-ink-muted" : "text-muted"}`}>{formatPrice(p.priceEUR)}</p>
+                    )}
                   </button>
                 </div>
               ))}

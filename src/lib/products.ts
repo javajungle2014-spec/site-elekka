@@ -62,7 +62,7 @@ export const products: Product[] = [
     tagline: "La pièce maîtresse d'Elekka, entre confort anatomique, précision et élégance.",
     priceEUR: 175,
     description:
-      "Têtière anatomique incurvée, muserolle rembourrée de 2,5 à 3 cm. Un filet pensé pour préserver les zones sensibles du cheval.",
+      "Têtière anatomique incurvée, muserolle redessinée. Un filet pensé pour préserver les zones sensibles du cheval.",
     longDescription:
       "Le Signature a été dessiné par Lucas, fondateur d'Elekka, à partir des contraintes observées sur ses propres chevaux de concours. La têtière anatomique se creuse pour libérer la nuque ; la muserolle rembourrée de 2,5 à 3 cm ferme sur le côté gauche.",
     highlights: [
@@ -116,7 +116,7 @@ export const products: Product[] = [
     tagline: "Un filet, trois configurations. Anatomique, modulable, taillé pour durer.",
     priceEUR: 175,
     description:
-      "Le Fusion réunit l'anatomie du Signature et une muserolle à triple attache interchangeable. Un seul bridon, trois formes de contact — épaisse, ovale, rectangulaire — pour s'adapter à chaque cheval.",
+      "Le Fusion réunit les éléments anatomiques des filets nouvelle génération, fusionnés avec un visuel moderne et élégant. Un seul bridon, un concentré de technologie et de surépaisseur pour s'adapter à toutes les morphologies.",
     longDescription:
       "Le Fusion est né d'une conviction : un bridon de qualité devrait s'adapter au cheval, pas l'inverse. Sa muserolle à triple attache se change sans outil, en quelques secondes, pour répondre à des morphologies et des sensibilités très différentes. Le browband anatomique large de 5,5 cm répartit la pression sur tout le front, sans point de compression. Comme le Signature, la fermeture est côté gauche pour conserver une ligne propre. Les rênes caoutchouc sont incluses. C'est le choix des cavaliers qui cherchent un bridon anatomique complet, polyvalent, et pensé pour évoluer avec leur pratique.",
     highlights: [
