@@ -127,7 +127,7 @@ export function ProductCard({
         </div>
 
         {/* ── Pill miniatures ───────────────────────────────────────────── */}
-        <div className={`absolute z-20 ${compact ? "bottom-2 left-2 right-2" : "bottom-3 left-3 right-3"}`}>
+        {images.length > 0 && <div className={`absolute z-20 ${compact ? "bottom-2 left-2 right-2" : "bottom-3 left-3 right-3"}`}>
           <div
             className={`flex rounded-2xl ${compact ? "gap-[4px] p-[4px]" : "gap-[6px] p-[6px]"}`}
             style={{ background: "rgba(0,0,0,0.48)", backdropFilter: "blur(12px)" }}
@@ -198,7 +198,7 @@ export function ProductCard({
               );
             })}
           </div>
-        </div>
+        </div>}
 
       </div>
 
