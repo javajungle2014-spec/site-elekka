@@ -49,9 +49,9 @@ export const products: Product[] = [
       {
         key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a",
         images: [
+          "/products/essentiel/essentiel-havana-brown-studio-03.png",
           "/products/essentiel/essentiel-havana-brown-studio-01.png",
           "/products/essentiel/essentiel-havana-brown-studio-02.png",
-          "/products/essentiel/essentiel-havana-brown-studio-03.png",
           "/products/essentiel/essentiel-havana-brown-detail-frontal.png",
           "/products/essentiel/essentiel-havana-brown-detail-tetiere.png",
           "/products/essentiel/essentiel-havana-brown-detail-muserolle.png",
