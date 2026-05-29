@@ -413,6 +413,14 @@ export function ProductDetailClient({ product }: { product: Product }) {
     setTimeout(() => scrollToRef(next), 60);
   }
 
+  // Auto-sélectionne couleur et taille quand il n'y a qu'une seule option
+  useEffect(() => {
+    if (product.colours.length === 1) setSelectedColour(product.colours[0].key);
+  }, [product.colours]);
+  useEffect(() => {
+    if (product.sizes.length === 1) setSelectedSize(product.sizes[0]);
+  }, [product.sizes]);
+
   function scrollToFirstMissing() {
     if (!selectedDiscipline)              return scrollToRef(disciplineRef);
     if (!selectedColour)                  return scrollToRef(colourRef);
@@ -826,6 +834,13 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 done={!!selectedColour} value={selectedColour ? currentColour.label : null} />
             </div>
             <div className="col-span-12 md:col-span-8">
+              {product.colours.length === 1 ? (
+                <div className="border border-line p-4 flex items-center gap-4">
+                  <div className="w-5 h-5 rounded-full border border-line/80 shrink-0" style={{ backgroundColor: product.colours[0].swatch }} />
+                  <p className="text-sm font-semibold">{product.colours[0].label}</p>
+                  <span className="text-xs text-muted ml-auto">Coloris unique</span>
+                </div>
+              ) : (
               <div className="grid grid-cols-2 gap-2">
                 {product.colours.map(c => {
                   const isActive = selectedColour === c.key;
@@ -860,6 +875,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                   );
                 })}
               </div>
+              )}
             </div>
           </div>
 
@@ -874,6 +890,13 @@ export function ProductDetailClient({ product }: { product: Product }) {
               </button>
             </div>
             <div className="col-span-12 md:col-span-8">
+              {product.sizes.length === 1 ? (
+                <div className="border border-line p-4 flex items-center gap-4">
+                  <p className="display text-2xl">{product.sizes[0]}</p>
+                  <p className="text-xs text-muted">{product.sizes[0] === "Full" ? "Taille idéale pour cheval standard" : "Pour poneys et petits chevaux"}</p>
+                  <span className="text-xs text-muted ml-auto">Taille unique</span>
+                </div>
+              ) : (
               <div className="grid grid-cols-2 gap-2">
                 {product.sizes.map(size => {
                   const isActive = selectedSize === size;
@@ -892,6 +915,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                   );
                 })}
               </div>
+              )}
             </div>
           </div>
 

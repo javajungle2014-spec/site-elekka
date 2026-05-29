@@ -47,9 +47,8 @@ export const products: Product[] = [
     ],
     colours: [
       { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a", images: [] },
-      { key: "noir", label: "Noir", swatch: "#0a0a0a", images: [] },
     ],
-    sizes: ["Full", "Cob"],
+    sizes: ["Full"],
     defaultColour: "havana-brown",
     defaultSize: "Full",
   },
