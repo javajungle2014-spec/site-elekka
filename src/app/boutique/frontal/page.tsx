@@ -24,8 +24,8 @@ export default function FrontalPage() {
           "noir":         ["/products/pieces/frontal/frontal-anatomique-noir-01.png",         "/products/pieces/frontal/frontal-anatomique-noir-02.png",         "/products/pieces/frontal/frontal-anatomique-noir-03.png"],
         }},
         { key: "signature", label: "Signature", desc: "Large 5,5 cm — répartit la pression, finitions soignées — Fusion", priceEUR: 38.75, stockSlug: "frontal-signature", images: {
-          "havana-brown": ["/products/pieces/frontal/frontal-signature-havana-brown-01.png", "/products/pieces/frontal/frontal-signature-havana-brown-02.png", "/products/pieces/frontal/frontal-signature-havana-brown-03.png"],
-          "noir":         ["/products/pieces/frontal/frontal-signature-noir-01.png",         "/products/pieces/frontal/frontal-signature-noir-02.png",         "/products/pieces/frontal/frontal-signature-noir-03.png"],
+          "havana-brown": ["/products/pieces/frontal/frontal-signature-havana-brown-01.png"],
+          "noir":         ["/products/pieces/frontal/frontal-signature-noir-01.png"],
         }},
       ],
       colours: [
