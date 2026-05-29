@@ -40,6 +40,7 @@ export default function FrontalPage() {
         ["Expédition",    "2 à 4 jours ouvrés"],
         ["Tailles",       "Full, Cob"],
       ],
+      imagePosition: "center 25%",
     }} />
   );
 }

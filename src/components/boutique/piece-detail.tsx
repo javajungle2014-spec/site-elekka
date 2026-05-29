@@ -27,6 +27,7 @@ export type Piece = {
   colours: { key: ColourKey; label: string; swatch: string; images?: string[] }[];
   sizes: Size[];
   specs: [string, string][];
+  imagePosition?: string;
 };
 
 const leatherClass: Record<ColourKey, string> = {
@@ -63,7 +64,8 @@ function ThumbnailRail({ images, selected, onSelect, name }: {
   );
 }
 
-export function PieceDetail({ piece }: { piece: Piece }) {
+export function PieceDetail({ piece }: { piece: Piece; }) {
+  const imgPos = piece.imagePosition ?? "center 70%";
   const [model, setModel]           = useState<string>(piece.models[0]?.key ?? "");
   const [colour, setColour]         = useState<ColourKey>(piece.colours[0].key);
   const [size, setSize]             = useState<Size>(piece.sizes[0]);
@@ -146,7 +148,7 @@ export function PieceDetail({ piece }: { piece: Piece }) {
                     alt={`${piece.name} — ${activeColour.label}`}
                     fill
                     sizes="(min-width: 768px) 40vw, 100vw"
-                    className="object-cover transition-opacity duration-300" style={{ objectPosition: "center 70%" }}
+                    className="object-cover transition-opacity duration-300" style={{ objectPosition: imgPos }}
                     priority
                   />
                 ) : (
