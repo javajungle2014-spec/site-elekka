@@ -140,8 +140,11 @@ export function PieceDetail({ piece }: { piece: Piece; }) {
             {/* Image principale */}
             <div className="flex-1">
               <div className={`relative aspect-square w-full overflow-hidden ${
-                images.length > 0 ? "bg-paper-2" : leatherClass[colour]
-              }`}>
+                images.length > 0 ? "bg-paper-2" : ""
+              }`} style={images.length === 0 ? {
+                backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 18px, rgba(0,0,0,0.04) 18px, rgba(0,0,0,0.04) 20px)",
+                backgroundColor: "var(--color-paper-2)",
+              } : {}}>
                 {images.length > 0 ? (
                   <Image
                     src={images[selectedImg] ?? images[0]}
@@ -152,10 +155,10 @@ export function PieceDetail({ piece }: { piece: Piece; }) {
                     priority
                   />
                 ) : (
-                  <div className="w-full h-full flex items-end p-6">
-                    <span className="font-mono text-[10px] text-white/30 tracking-widest uppercase">
-                      {piece.name} · {activeModel?.label} · {activeColour.label}
-                    </span>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                    <div className="absolute inset-6 border border-line/60 pointer-events-none" />
+                    <span className="kicker text-muted-soft tracking-[0.22em] text-[9px]">Rupture de stock</span>
+                    <p className="text-xs text-center text-muted-soft px-6 leading-snug">{activeModel?.label} · {activeColour.label}</p>
                   </div>
                 )}
               </div>
