@@ -179,7 +179,15 @@ export const products: Product[] = [
       "Tailles Full et Cob",
     ],
     colours: [
-      { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a", images: [] },
+      {
+        key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a",
+        images: [
+          "/products/licol-1/licol-1-havana-brown-studio-01.png",
+          "/products/licol-1/licol-1-havana-brown-detail-museau.png",
+          "/products/licol-1/licol-1-havana-brown-detail-boucle.png",
+          "/products/licol-1/licol-1-havana-brown-detail-plaque.png",
+        ],
+      },
       { key: "noir", label: "Noir", swatch: "#0a0a0a", images: [] },
     ],
     sizes: ["Full", "Cob"],
