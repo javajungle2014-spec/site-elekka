@@ -93,7 +93,7 @@ function ProductRail({ leatherClass, selectedGalleryImage, setSelectedGalleryIma
           aria-label={`Afficher photo ${index + 1}`} aria-pressed={selectedGalleryImage === index}>
           <span className="absolute left-3 top-3 z-10 font-mono text-[0.65rem] text-muted-soft">0{index + 1}</span>
           {src ? (
-            <Image src={src} alt="" fill sizes="140px" className="object-cover" />
+            <Image src={src} alt="" fill sizes="140px" className="object-contain p-2" />
           ) : (
             <BridleIllustration leatherClass={leatherClass} size="thumb" />
           )}
@@ -313,7 +313,7 @@ export function LicolProductDetail({ product }: { product: Product }) {
               <p className="mt-2 font-mono text-xs text-muted-soft">Remplacer par vos photos</p>
             </div>
             {activeColour.images[selectedGalleryImage] ? (
-              <Image src={activeColour.images[selectedGalleryImage]} alt={product.name} fill sizes="(min-width: 1024px) 60vw, 100vw" className="object-cover" />
+              <Image src={activeColour.images[selectedGalleryImage]} alt={product.name} fill sizes="(min-width: 1024px) 60vw, 100vw" className="object-contain p-8" />
             ) : (
               <>
                 <div className="absolute inset-x-10 top-1/2 h-px bg-line" />
