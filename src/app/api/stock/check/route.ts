@@ -15,6 +15,12 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Paramètres manquants" }, { status: 400 });
   }
 
+  // Articles toujours indisponibles (pas de stock, quelle que soit la couleur)
+  const ALWAYS_OUT_OF_STOCK = ["enrenement-1", "enrenement-2", "renes-2"];
+  if (ALWAYS_OUT_OF_STOCK.includes(slug)) {
+    return NextResponse.json({ quantity: 0, inStock: false });
+  }
+
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
