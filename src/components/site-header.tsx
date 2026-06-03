@@ -86,6 +86,17 @@ export function SiteHeader() {
   const [hoveredIcon, setHoveredIcon] = useState(-1);
   const [barReady, setBarReady] = useState(false);
 
+  function handleContactClick(e: React.MouseEvent) {
+    if (pathname === "/") {
+      e.preventDefault();
+      const el = document.getElementById("contact");
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY - 96;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    }
+  }
+
   const iconRefs = useRef<(HTMLButtonElement | HTMLAnchorElement | null)[]>([]);
   const iconBarRef = useRef<HTMLDivElement | null>(null);
 
@@ -124,7 +135,7 @@ export function SiteHeader() {
           {/* Gauche : navigation + dropdown Ressources */}
           <div className="flex items-center">
             <LimelightNav
-              items={nav.map((item) => ({ id: item.href, label: item.label, href: item.href }))}
+              items={nav.map((item) => ({ id: item.href, label: item.label, href: item.href, onClick: item.href === "/#contact" ? handleContactClick : undefined }))}
               activeIndex={nav.findIndex((item) =>
                 item.href === "/"
                   ? pathname === "/"

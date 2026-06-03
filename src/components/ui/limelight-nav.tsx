@@ -7,6 +7,7 @@ export type LimelightNavItem = {
   id: string;
   label: string;
   href: string;
+  onClick?: (e: React.MouseEvent) => void;
 };
 
 type LimelightNavProps = {
@@ -33,11 +34,12 @@ export function LimelightNav({ items, activeIndex, className }: LimelightNavProp
 
   return (
     <nav className={`relative flex items-center ${className ?? ""}`}>
-      {items.map(({ id, label, href }, index) => (
+      {items.map(({ id, label, href, onClick }, index) => (
         <Link
           key={id}
           ref={(el) => { itemRefs.current[index] = el; }}
           href={href}
+          onClick={onClick}
           className={`relative z-20 px-4 py-2 text-sm tracking-wide transition-colors duration-200 ${
             activeIndex === index ? "text-ink" : "text-muted hover:text-ink"
           }`}
