@@ -76,6 +76,15 @@ export function ProductCard({
           }}
         >
           {activeImage ? (
+            activeImage.includes("|") ? (
+              <div className="absolute inset-0 flex flex-col gap-1">
+                {activeImage.split("|").map((src, i) => (
+                  <div key={i} className="relative flex-1 overflow-hidden">
+                    <Image src={src} alt={product.name} fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover" />
+                  </div>
+                ))}
+              </div>
+            ) : (
             <Image
               src={activeImage}
               alt={product.name}
@@ -84,6 +93,7 @@ export function ProductCard({
               className="object-cover group-hover:scale-[1.04] transition-transform duration-700"
               style={{ transitionTimingFunction: EASE }}
             />
+            )
           ) : compact ? (
             <div className="relative w-full h-full overflow-hidden">
               {fallbackImage && (
