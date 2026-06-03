@@ -163,8 +163,7 @@ export function ProductFeature() {
             ))}
           </div>
           <div className="flex flex-col items-center gap-2">
-            <div className="w-full aspect-[3/4] md:aspect-[5/6] relative overflow-hidden rounded-xl bg-paper-2 cursor-zoom-in group"
-              onClick={() => { const img = product.heroImage ?? product.colours[0]?.images[0]; if (img) setZoomedImg(img); }}>
+            <Link href={`/boutique/${product.slug}`} className="w-full aspect-[3/4] md:aspect-[5/6] relative overflow-hidden rounded-xl bg-paper-2 cursor-pointer group block">
               {(product.heroImage ?? product.colours[0]?.images[0]) ? (
                 <Image
                   src={product.heroImage ?? product.colours[0].images[0]}
@@ -186,7 +185,7 @@ export function ProductFeature() {
                   <span className="text-[7px] md:text-[10px] tracking-widest uppercase text-muted-soft/60">Bientôt disponible</span>
                 </div>
               )}
-            </div>
+            </Link>
             <Link href={`/boutique/${product.slug}`}
               className="inline-flex items-center gap-1.5 bg-ink text-on-ink px-3 md:px-6 py-2 md:py-3 text-[9px] md:text-sm tracking-wide press hover:bg-ink-soft"
             >
