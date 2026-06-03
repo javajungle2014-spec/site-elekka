@@ -305,8 +305,9 @@ function ThumbnailRail({ images, selected, onSelect, productName }: {
                 }}>
                 {img.includes("|") ? (
                   <div className="absolute inset-0 flex flex-col gap-px">
-                    <div className="relative flex-1 overflow-hidden"><Image src={img.split("|")[0]} alt="" fill sizes="76px" className="object-cover" /></div>
-                    <div className="relative flex-1 overflow-hidden"><Image src={img.split("|")[1]} alt="" fill sizes="76px" className="object-cover" /></div>
+                    {img.split("|").map((p, pi) => (
+                      <div key={pi} className="relative flex-1 overflow-hidden"><Image src={p} alt="" fill sizes="76px" className="object-cover" /></div>
+                    ))}
                   </div>
                 ) : (
                   <Image src={img} alt={`${productName} vue ${i + 1}`} fill sizes="76px" className="object-cover" />
@@ -356,8 +357,9 @@ function ThumbnailStrip({ images, selected, onSelect, productName }: {
                 boxShadow: selected !== i ? "0 0 0 1px #e5e5e5" : undefined }}>
               {img.includes("|") ? (
                 <div className="absolute inset-0 flex flex-col gap-px">
-                  <div className="relative flex-1 overflow-hidden"><Image src={img.split("|")[0]} alt="" fill sizes="62px" className="object-cover" /></div>
-                  <div className="relative flex-1 overflow-hidden"><Image src={img.split("|")[1]} alt="" fill sizes="62px" className="object-cover" /></div>
+                  {img.split("|").map((p, pi) => (
+                    <div key={pi} className="relative flex-1 overflow-hidden"><Image src={p} alt="" fill sizes="62px" className="object-cover" /></div>
+                  ))}
                 </div>
               ) : (
                 <Image src={img} alt={`${productName} vue ${i + 1}`} fill sizes="62px" className="object-cover" />
@@ -726,15 +728,14 @@ export function ProductDetailClient({ product }: { product: Product }) {
                           {(() => {
                             const src = currentColour.images[selectedImageIdx] ?? currentColour.images[0];
                             const pair = src?.split("|");
-                            if (pair?.length === 2) {
+                            if (pair?.length >= 2) {
                               return (
                                 <div className="absolute inset-0 flex flex-col gap-1">
-                                  <div className="relative flex-1 overflow-hidden">
-                                    <Image src={pair[0]} alt={`${product.name} — ${currentColour.label}`} fill sizes="(min-width: 768px) 40vw, 100vw" className="object-cover object-center" />
-                                  </div>
-                                  <div className="relative flex-1 overflow-hidden">
-                                    <Image src={pair[1]} alt={`${product.name} — ${currentColour.label}`} fill sizes="(min-width: 768px) 40vw, 100vw" className="object-cover object-center" />
-                                  </div>
+                                  {pair.map((p, pi) => (
+                                    <div key={pi} className="relative flex-1 overflow-hidden">
+                                      <Image src={p} alt={`${product.name} — ${currentColour.label}`} fill sizes="(min-width: 768px) 40vw, 100vw" className="object-cover object-center" />
+                                    </div>
+                                  ))}
                                 </div>
                               );
                             }
