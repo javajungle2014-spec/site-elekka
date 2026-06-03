@@ -865,9 +865,9 @@ export function ProductDetailClient({ product }: { product: Product }) {
                       className={`choice press text-left ${isActive ? "choice--active" : ""}`}>
                       {/* Grande image filet + petite photo détail + swatch couleur */}
                       <div className="flex gap-1.5 p-1.5">
-                        <div className={`flex-[3] aspect-[3/4] relative overflow-hidden ${!c.images[0] ? (LEATHER[c.key] ?? "bg-paper-2") : ""}`}>
-                          {c.images[0] && (
-                            <Image src={c.images[0]} alt={c.label} fill sizes="(max-width: 768px) 40vw, 300px" className="object-cover" />
+                        <div className={`flex-[3] aspect-[3/4] relative overflow-hidden ${!c.images[1] ? (LEATHER[c.key] ?? "bg-paper-2") : ""}`}>
+                          {c.images[1] && (
+                            <Image src={c.images[1]} alt={c.label} fill sizes="(max-width: 768px) 40vw, 300px" className="object-cover" />
                           )}
                           {isActive && (
                             <span className="absolute top-2 right-2 w-5 h-5 bg-on-ink text-ink rounded-full flex items-center justify-center">
@@ -877,8 +877,8 @@ export function ProductDetailClient({ product }: { product: Product }) {
                         </div>
                         <div className="flex-1 flex flex-col gap-1.5">
                           <div className="flex-1 rounded-sm relative overflow-hidden">
-                            {c.images[1] ? (
-                              <Image src={c.images[1]} alt={`${c.label} détail`} fill sizes="(max-width: 768px) 15vw, 100px" className="object-cover" />
+                            {c.images[2] ? (
+                              <Image src={c.images[2]} alt={`${c.label} détail`} fill sizes="(max-width: 768px) 15vw, 100px" className="object-cover" />
                             ) : (
                               <div className="w-full h-full" style={{ backgroundColor: c.swatch }} />
                             )}
