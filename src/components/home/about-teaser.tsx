@@ -9,7 +9,7 @@ export function AboutTeaser() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-center">
           <div className="md:col-span-5 relative aspect-[4/5] overflow-hidden bg-paper-2">
             <Image
-              src="/products/essentiel/essentiel-ambiance-01.png"
+              src="/products/atelier.png"
               alt="Atelier — détail d'un bridon Elekka"
               fill
               sizes="(min-width: 768px) 42vw, 100vw"
