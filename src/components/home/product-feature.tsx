@@ -24,7 +24,7 @@ const featureData: Record<string, { Icon: React.ElementType; title: string; text
   ],
   fusion: [
     { Icon: Ruler,                  title: "Frontal élargi",       text: "Dimensions réinventées — sans pression latérale." },
-    { Icon: ArrowsCounterClockwise, title: "Triple attache",       text: "Large, épaisse et ovale, pour un confort et une efficacité maximale." },
+    { Icon: ArrowsCounterClockwise, title: "Muserolle élargie",     text: "Pad de protection large, épais et ovale, pour un confort et une efficacité maximale." },
     { Icon: Star,                   title: "Conception modulaire", text: "Tous nos composants de filet sont interchangeables pour une personnalisation infinie." },
     { Icon: Leaf,                   title: "Rênes caoutchouc",     text: "Incluses — adhérence optimale en toutes conditions." },
   ],
