@@ -378,6 +378,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const [equipAltColour, setEquipAltColour] = useState<string | null>(null);
   const [reinsStockQty, setReinsStockQty]   = useState<number | null>(null);
   const ctaRef        = useRef<HTMLDivElement>(null);
+  const heroRef       = useRef<HTMLElement>(null);
   const disciplineRef = useRef<HTMLDivElement>(null);
   const touchStartX   = useRef<number | null>(null);
 
@@ -621,7 +622,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
         </div>
 
         {/* ── /01 Hero ── */}
-        <section className="px-6 md:px-12 pt-10 md:pt-16">
+        <section ref={heroRef} className="px-6 md:px-12 pt-10 md:pt-16">
           <div className="flex items-center justify-between mb-10 md:mb-14">
             <div className="flex items-center gap-6 text-muted">
               <span className="kicker-tight">{product.family}</span>
@@ -861,7 +862,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 {product.colours.map(c => {
                   const isActive = selectedColour === c.key;
                   return (
-                    <button key={c.key} type="button" onClick={() => { setSelectedColour(c.key); scrollToNext(sizeRef, !!(selectedDiscipline && c.key && selectedSize && selectedReins && selectedEquip)); }}
+                    <button key={c.key} type="button" onClick={() => { setSelectedColour(c.key); scrollToRef(heroRef as React.RefObject<HTMLDivElement>); scrollToNext(sizeRef, !!(selectedDiscipline && c.key && selectedSize && selectedReins && selectedEquip)); }}
                       className={`choice press text-left ${isActive ? "choice--active" : ""}`}>
                       {/* Grande image filet + petite photo détail + swatch couleur */}
                       <div className="flex gap-1.5 p-1.5">
