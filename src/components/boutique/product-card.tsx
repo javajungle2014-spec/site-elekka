@@ -41,12 +41,13 @@ export function ProductCard({
 
   const images =
     product.colours.find((c) => c.key === activeColour)?.images ?? [];
+  const defaultIdx = product.cardImageIndex ?? 0;
   const colourLabel = product.colours.find((c) => c.key === activeColour)?.label;
   const href = colourOverride
     ? `/boutique/${product.slug}?couleur=${colourOverride}`
     : `/boutique/${product.slug}`;
 
-  const [activeIdx, setActiveIdx] = useState(0);
+  const [activeIdx, setActiveIdx] = useState(defaultIdx);
   const [hoveredThumb, setHoveredThumb] = useState<number | null>(null);
 
   const activeImage = images[activeIdx] ?? null;
