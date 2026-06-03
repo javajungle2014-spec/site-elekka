@@ -31,43 +31,6 @@ export type Product = {
 
 export const products: Product[] = [
   {
-    slug: "essentiel",
-    name: "Bridon Elekka Essentiel",
-    category: "Bridons",
-    family: "Classique",
-    tagline: "Le classique, sans compromis.",
-    priceEUR: 99.99,
-    description:
-      "Essentiel incarne l'élégance du bridon anglais dans sa forme la plus pure : une ligne sobre, un cuir pleine fleur soigneusement sélectionné et des finitions pensées pour durer.",
-    longDescription:
-      "L'Essentiel reprend les codes du bridon anglais classique : une muserolle française simple, une frontière rectiligne, une quincaillerie argentée sobre. Le cuir pleine fleur est sélectionné pour sa souplesse au premier usage et sa patine dans la durée.",
-    highlights: [
-      "Cuir pleine fleur pleine épaisseur",
-      "Muserolle française, fermeture classique",
-      "Quincaillerie inox argentée",
-      "Coloris Havana Brown ou Noir",
-      "Tailles Full et Cob",
-    ],
-    colours: [
-      {
-        key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a",
-        images: [
-          "/products/essentiel/essentiel-havana-brown-studio-03.png",
-          "/products/essentiel/essentiel-havana-brown-studio-01.png",
-          "/products/essentiel/essentiel-havana-brown-studio-02.png",
-          "/products/essentiel/essentiel-havana-brown-detail-frontal.png",
-          "/products/essentiel/essentiel-havana-brown-detail-tetiere.png",
-          "/products/essentiel/essentiel-havana-brown-detail-muserolle.png",
-          "/products/essentiel/essentiel-havana-brown-detail-muserolle-02.png",
-          "/products/essentiel/essentiel-havana-brown-detail-collage.png",
-        ],
-      },
-    ],
-    sizes: ["Full"],
-    defaultColour: "havana-brown",
-    defaultSize: "Full",
-  },
-  {
     slug: "signature",
     name: "Bridon Anatomique Elekka Signature",
     heroImage: "/products/signature/signature-havana-brown-cheval-01.png",
@@ -172,6 +135,43 @@ export const products: Product[] = [
       },
     ],
     sizes: ["Full", "Cob"],
+    defaultColour: "havana-brown",
+    defaultSize: "Full",
+  },
+  {
+    slug: "essentiel",
+    name: "Bridon Elekka Essentiel",
+    category: "Bridons",
+    family: "Classique",
+    tagline: "Le classique, sans compromis.",
+    priceEUR: 99.99,
+    description:
+      "Essentiel incarne l'élégance du bridon anglais dans sa forme la plus pure : une ligne sobre, un cuir pleine fleur soigneusement sélectionné et des finitions pensées pour durer.",
+    longDescription:
+      "L'Essentiel reprend les codes du bridon anglais classique : une muserolle française simple, une frontière rectiligne, une quincaillerie argentée sobre. Le cuir pleine fleur est sélectionné pour sa souplesse au premier usage et sa patine dans la durée.",
+    highlights: [
+      "Cuir pleine fleur pleine épaisseur",
+      "Muserolle française, fermeture classique",
+      "Quincaillerie inox argentée",
+      "Coloris Havana Brown ou Noir",
+      "Tailles Full et Cob",
+    ],
+    colours: [
+      {
+        key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a",
+        images: [
+          "/products/essentiel/essentiel-havana-brown-studio-03.png",
+          "/products/essentiel/essentiel-havana-brown-studio-01.png",
+          "/products/essentiel/essentiel-havana-brown-studio-02.png",
+          "/products/essentiel/essentiel-havana-brown-detail-frontal.png",
+          "/products/essentiel/essentiel-havana-brown-detail-tetiere.png",
+          "/products/essentiel/essentiel-havana-brown-detail-muserolle.png",
+          "/products/essentiel/essentiel-havana-brown-detail-muserolle-02.png",
+          "/products/essentiel/essentiel-havana-brown-detail-collage.png",
+        ],
+      },
+    ],
+    sizes: ["Full"],
     defaultColour: "havana-brown",
     defaultSize: "Full",
   },
