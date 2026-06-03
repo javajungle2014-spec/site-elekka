@@ -47,9 +47,9 @@ const featureData: Record<string, { Icon: React.ElementType; title: string; text
     { Icon: Ruler,        title: "Longueur standard",   text: "Adaptée à toutes les disciplines, Full et Cob disponibles." },
   ],
   "renes-2": [
-    { Icon: Leaf,         title: "Cuir lisse pleine fleur", text: "Sensation directe dans la main, pour les cavaliers qui privilégient le contact pur." },
-    { Icon: Star,         title: "Finition soignée",        text: "Surface lisse et régulière, sans couture apparente sur la longueur." },
-    { Icon: Wrench,       title: "Boucles inox",            text: "Finition soignée, compatible avec tous les bridons Elekka." },
+    { Icon: Leaf,         title: "Arrêtoirs en cuir",       text: "Points d'appui fermes et confortables, pour une prise en main sûre et précise." },
+    { Icon: Star,         title: "Résistance éprouvée",     text: "Matière robuste et durable, conçue pour encaisser les séances intensives sans s'user." },
+    { Icon: Wrench,       title: "Compatible tous filets",  text: "S'adaptent à l'ensemble de la gamme Elekka et à la majorité des bridons du marché." },
     { Icon: Ruler,        title: "Longueur standard",       text: "Adaptée à toutes les disciplines, Full et Cob disponibles." },
   ],
   "enrenement-1": [
