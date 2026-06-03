@@ -249,7 +249,7 @@ function FaqItem({ item }: { item: FaqItem }) {
 }
 
 /* ─── Rail de miniatures avec carrousel ─────────────────────────────── */
-const THUMB_VISIBLE = 4;
+const THUMB_VISIBLE = 6;
 
 function ArrowBtn({ dir, disabled, onClick }: { dir: "up" | "down"; disabled: boolean; onClick: () => void }) {
   return (
@@ -717,6 +717,22 @@ export function ProductDetailClient({ product }: { product: Product }) {
                           <span className="kicker-tight text-on-ink/60">Profil</span>
                           <span className="font-mono text-[10px] tracking-wider text-on-ink/60 tabular-nums">01 / 01</span>
                         </div>
+                      </>
+                    )}
+
+                    {/* Flèches navigation desktop */}
+                    {currentColour.images.length > 1 && (
+                      <>
+                        <button type="button" aria-label="Image précédente"
+                          onClick={() => setSelectedImageIdx(i => Math.max(0, i - 1))}
+                          className={`hidden md:flex absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 items-center justify-center bg-paper/80 backdrop-blur-sm border border-line hover:border-ink transition-all duration-200 press ${selectedImageIdx === 0 ? "opacity-30 cursor-not-allowed" : ""}`}>
+                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        </button>
+                        <button type="button" aria-label="Image suivante"
+                          onClick={() => setSelectedImageIdx(i => Math.min(currentColour.images.length - 1, i + 1))}
+                          className={`hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 items-center justify-center bg-paper/80 backdrop-blur-sm border border-line hover:border-ink transition-all duration-200 press ${selectedImageIdx === currentColour.images.length - 1 ? "opacity-30 cursor-not-allowed" : ""}`}>
+                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        </button>
                       </>
                     )}
                   </div>
