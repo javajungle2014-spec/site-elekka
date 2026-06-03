@@ -279,17 +279,17 @@ export const products: Product[] = [
     name: "Rênes en tissu",
     category: "Rênes",
     family: "Classique",
-    tagline: "Cuir lisse. Sensation directe. Contact pur.",
+    tagline: "Légèreté et résistance, pour une prise en main naturelle.",
     priceEUR: 50,
     description:
-      "Rênes en cuir pleine fleur lisse, sans grip. Pour les cavaliers qui privilégient la sensation directe dans la main.",
+      "Rênes en tissu avec arrêtoirs en cuir. Légères, résistantes et confortables pour toutes les disciplines.",
     longDescription:
-      "Les Rênes N°2 s'adressent aux cavaliers qui veulent sentir le cuir — rien d'autre. En pleine fleur lisse, elles offrent un contact direct, délicat et précis. Elles s'assouplissent à l'usage et développent une patine personnelle. Pour ceux qui travaillent à la légèreté et cherchent un contact qui ne ment pas.",
+      "Les Rênes en tissu allient légèreté et résistance. Les arrêtoirs en cuir garantissent une prise en main ferme et précise à chaque passage de rênes. Compatibles avec tous les bridons Elekka et la majorité des bridons du marché.",
     highlights: [
-      "Cuir pleine fleur lisse — patine naturelle à l'usage",
-      "Contact direct, sans intermédiaire",
-      "Arrêtoirs en cuir",
-      "Finition soignée — longueur standard",
+      "Matière tissu légère et résistante",
+      "Arrêtoirs en cuir — prise en main ferme",
+      "Compatible tous bridons Elekka",
+      "Longueur standard — Full et Cob",
     ],
     colours: [
       { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a", images: [] },
