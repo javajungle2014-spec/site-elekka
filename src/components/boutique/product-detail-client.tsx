@@ -916,11 +916,11 @@ export function ProductDetailClient({ product }: { product: Product }) {
                         ); })()}
                         <div className="flex-1 flex flex-col gap-1.5">
                           <div className="flex-1 rounded-sm relative overflow-hidden">
-                            {c.images[2] ? (
-                              <Image src={c.images[2]} alt={`${c.label} détail`} fill sizes="(max-width: 768px) 15vw, 100px" className="object-cover" />
+                            {(() => { const detailSrc = c.cardDetailImage ?? (c.images[2]?.includes("|") ? undefined : c.images[2]); return detailSrc ? (
+                              <Image src={detailSrc} alt={`${c.label} détail`} fill sizes="(max-width: 768px) 15vw, 100px" className="object-cover" />
                             ) : (
                               <div className="w-full h-full" style={{ backgroundColor: c.swatch }} />
-                            )}
+                            ); })()}
                           </div>
                           <div className="flex-1 rounded-sm" style={{ backgroundColor: c.swatch }} />
                         </div>

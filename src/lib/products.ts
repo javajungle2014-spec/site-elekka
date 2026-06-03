@@ -7,6 +7,7 @@ export type ColourVariant = {
   swatch: string;
   images: string[];
   cardImageIndex?: number;
+  cardDetailImage?: string;
 };
 
 export type Product = {
@@ -145,6 +146,7 @@ export const products: Product[] = [
         key: "havana-brown",
         label: "Havana Brown",
         swatch: "#4a2a1a",
+        cardDetailImage: "/products/fusion/fusion-havana-brown-studio-frontal.png",
         images: [
           "/products/fusion/fusion-havana-brown-cheval-01.png",
           "/products/fusion/fusion-havana-brown-studio-01.png",
