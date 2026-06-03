@@ -43,7 +43,7 @@ const featureData: Record<string, { Icon: React.ElementType; title: string; text
   "renes-1": [
     { Icon: Barbell, title: "Grip caoutchouc",     text: "Prise en main sûre et précise, même par temps humide ou en transpiration." },
     { Icon: Leaf,         title: "Cuir pleine fleur",   text: "Légères et résistantes, elles s'assouplissent progressivement à l'usage." },
-    { Icon: Wrench,       title: "Boucles inox",        text: "Finition soignée, compatible avec tous les bridons Elekka." },
+    { Icon: Star,         title: "Esthétique soignée",  text: "Coutures apparentes, galons tressés et finitions qui font la différence au premier regard." },
     { Icon: Ruler,        title: "Longueur standard",   text: "Adaptée à toutes les disciplines, Full et Cob disponibles." },
   ],
   "renes-2": [
