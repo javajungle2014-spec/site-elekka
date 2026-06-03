@@ -123,6 +123,7 @@ export const products: Product[] = [
   {
     slug: "fusion",
     name: "Bridon Anatomique Elekka Fusion",
+    cardImageIndex: 1,
     category: "Bridons",
     family: "Anatomique",
     tagline: "Un filet, trois configurations. Anatomique, modulable, taillé pour durer.",
