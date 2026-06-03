@@ -116,6 +116,12 @@ const LEATHER: Record<string, string> = {
   "dark-brown": "leather-dark-brown",
 };
 
+/* ─── Recadrage par image ────────────────────────────────────────────── */
+const IMAGE_POSITION: Record<string, string> = {
+  "fusion-havana-brown-cheval-01.png": "center 25%",
+  "fusion-havana-brown-cheval-02.png": "center 25%",
+};
+
 /* ─── Icônes SVG (fidèles à index.html) ─────────────────────────────── */
 function Icon({ children, size = 16, stroke = 1.4, className = "", ...rest }: {
   children: React.ReactNode; size?: number; stroke?: number; className?: string; [k: string]: unknown;
@@ -732,8 +738,10 @@ export function ProductDetailClient({ product }: { product: Product }) {
                                 </div>
                               );
                             }
+                            const filename = src.split("/").pop() ?? "";
+                            const imgPos = IMAGE_POSITION[filename] ?? "center";
                             return (
-                              <Image src={src} alt={`${product.name} — ${currentColour.label}`} fill sizes="(min-width: 768px) 40vw, 100vw" className="object-cover" priority />
+                              <Image src={src} alt={`${product.name} — ${currentColour.label}`} fill sizes="(min-width: 768px) 40vw, 100vw" className="object-cover" style={{ objectPosition: imgPos }} priority />
                             );
                           })()}
                         </motion.div>
