@@ -160,6 +160,7 @@ export const products: Product[] = [
         key: "dark-brown",
         label: "Dark Brown",
         swatch: "#2b1710",
+        cardImageIndex: 0,
         images: [
           "/products/fusion/fusion-dark-brown-studio-01.png",
           "/products/fusion/fusion-dark-brown-studio-02.png",
