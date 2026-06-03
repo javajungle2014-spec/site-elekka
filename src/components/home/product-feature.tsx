@@ -31,7 +31,7 @@ const featureData: Record<string, { Icon: React.ElementType; title: string; text
   "licol-1": [
     { Icon: Leaf,   title: "Cuir pleine fleur",  text: "Résistant et souple dès le premier usage, pour un usage quotidien durable." },
     { Icon: Heart,  title: "Licol anatomique",    text: "Conçu pour respecter les zones sensibles — nuque, joues et chanfrein." },
-    { Icon: Ruler,  title: "Réglage nuque",       text: "Ajustable pour s'adapter précisément à la morphologie du cheval." },
+    { Icon: Ruler,  title: "Mousqueton rapide",    text: "Pose et retrait en quelques secondes — plus de temps perdu, plus de confort au quotidien." },
     { Icon: Tag,    title: "Tailles Full et Cob", text: "Adapté aux chevaux de sport comme aux poneys de compétition." },
   ],
   "licol-2": [
