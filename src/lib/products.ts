@@ -163,11 +163,11 @@ export const products: Product[] = [
         cardImageIndex: 0,
         images: [
           "/products/fusion/fusion-dark-brown-studio-01.png",
-          "/products/fusion/fusion-dark-brown-studio-02.png",
+          "/products/fusion/fusion-dark-brown-studio-03.png",
           "/products/fusion/fusion-dark-brown-detail-frontal.png",
           "/products/fusion/fusion-dark-brown-detail-boucle.png",
           "/products/fusion/fusion-dark-brown-detail-tetiere.png",
-          "/products/fusion/fusion-dark-brown-studio-03.png",
+          "/products/fusion/fusion-dark-brown-studio-02.png",
         ],
       },
     ],
