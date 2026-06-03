@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
 import type { Product, ColourKey, Size } from "@/lib/products";
@@ -82,22 +83,27 @@ const galleryImages = [
 
 /* ─── Visuels ───────────────────────────────────────────────────────────── */
 
-function ProductRail({ leatherClass, selectedGalleryImage, setSelectedGalleryImage }: { leatherClass: string; selectedGalleryImage: number; setSelectedGalleryImage: (i: number) => void }) {
+function ProductRail({ leatherClass, selectedGalleryImage, setSelectedGalleryImage, images }: { leatherClass: string; selectedGalleryImage: number; setSelectedGalleryImage: (i: number) => void; images: string[] }) {
+  const items = images.length > 0 ? images : galleryImages.map(() => "");
   return (
     <div className="hidden gap-4 lg:grid">
-      {galleryImages.map((item, index) => (
-        <button key={item.label} type="button" onClick={() => setSelectedGalleryImage(index)}
+      {items.map((src, index) => (
+        <button key={index} type="button" onClick={() => setSelectedGalleryImage(index)}
           className={`press relative flex h-40 items-center justify-center overflow-hidden bg-white text-left transition ${selectedGalleryImage === index ? "outline outline-2 outline-ink" : "hover:opacity-75"}`}
-          aria-label={`Afficher ${item.label}`} aria-pressed={selectedGalleryImage === index}>
-          <span className="absolute left-3 top-3 font-mono text-[0.65rem] text-muted-soft">0{index + 1}</span>
-          <BridleIllustration leatherClass={leatherClass} size="thumb" />
+          aria-label={`Afficher photo ${index + 1}`} aria-pressed={selectedGalleryImage === index}>
+          <span className="absolute left-3 top-3 z-10 font-mono text-[0.65rem] text-muted-soft">0{index + 1}</span>
+          {src ? (
+            <Image src={src} alt="" fill sizes="140px" className="object-cover" />
+          ) : (
+            <BridleIllustration leatherClass={leatherClass} size="thumb" />
+          )}
         </button>
       ))}
     </div>
   );
 }
 
-function ThreePhotoHero({ leatherClass, activeColour }: { leatherClass: string; activeColour: string }) {
+function ThreePhotoHero({ leatherClass, activeColour, images }: { leatherClass: string; activeColour: string; images: string[] }) {
   return (
     <div className="grid min-h-[calc(100vh-6rem)] content-start gap-4">
       <div className="grid gap-4 pb-0 md:grid-cols-3 lg:pb-40">
@@ -110,9 +116,15 @@ function ThreePhotoHero({ leatherClass, activeColour }: { leatherClass: string; 
                 <p className="mt-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-soft">{activeColour}</p>
               </div>
               <span className="absolute right-0 top-0 z-10 font-mono text-xs text-muted-soft">0{index + 1}</span>
-              <div className="absolute inset-x-1 top-1/2 h-px bg-line" />
-              <div className="absolute inset-y-8 left-1/2 w-px bg-line" />
-              <BridleIllustration leatherClass={leatherClass} size="card" />
+              {images[index] ? (
+                <Image src={images[index]} alt={section.label} fill sizes="(min-width: 1024px) 20vw, 33vw" className="object-cover" />
+              ) : (
+                <>
+                  <div className="absolute inset-x-1 top-1/2 h-px bg-line" />
+                  <div className="absolute inset-y-8 left-1/2 w-px bg-line" />
+                  <BridleIllustration leatherClass={leatherClass} size="card" />
+                </>
+              )}
             </div>
             <div className="relative z-10 bg-white/92 pt-5">
               <h2 className="display text-3xl leading-none md:text-4xl">{section.title}</h2>
@@ -267,14 +279,14 @@ export function LicolProductDetail({ product }: { product: Product }) {
       </div>
 
       <section className="mx-auto grid max-w-[1680px] gap-4 px-4 pt-6 md:px-8 lg:grid-cols-[1fr_520px] lg:pt-10">
-        <ThreePhotoHero leatherClass={leatherClass} activeColour={activeColour.label} />
+        <ThreePhotoHero leatherClass={leatherClass} activeColour={activeColour.label} images={activeColour.images} />
         <PurchasePanel product={product} activeColour={activeColour} colourKey={colourKey} setColourKey={setColourKey} size={size} setSize={setSize} onAdd={handleAdd} added={added} />
       </section>
 
       {/* Galerie */}
       <section className="mx-auto max-w-[1680px] px-4 py-16 md:px-8 lg:py-24">
         <div className="grid gap-4 lg:grid-cols-[140px_1fr]">
-          <ProductRail leatherClass={leatherClass} selectedGalleryImage={selectedGalleryImage} setSelectedGalleryImage={setSelectedGalleryImage} />
+          <ProductRail leatherClass={leatherClass} selectedGalleryImage={selectedGalleryImage} setSelectedGalleryImage={setSelectedGalleryImage} images={activeColour.images} />
           <div className="relative min-h-[560px] overflow-hidden bg-white md:min-h-[700px]">
             <div className="absolute left-6 top-6 z-10">
               <p className="kicker text-muted">{product.category}</p>
@@ -284,11 +296,17 @@ export function LicolProductDetail({ product }: { product: Product }) {
               <p className="kicker-tight text-muted">Elekka studio</p>
               <p className="mt-2 font-mono text-xs text-muted-soft">Remplacer par vos photos</p>
             </div>
-            <div className="absolute inset-x-10 top-1/2 h-px bg-line" />
-            <div className="absolute inset-y-10 left-1/2 w-px bg-line" />
-            <div className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 ${selectedImage.scale}`}>
-              <BridleIllustration leatherClass={leatherClass} size="hero" />
-            </div>
+            {activeColour.images[selectedGalleryImage] ? (
+              <Image src={activeColour.images[selectedGalleryImage]} alt={product.name} fill sizes="(min-width: 1024px) 60vw, 100vw" className="object-cover" />
+            ) : (
+              <>
+                <div className="absolute inset-x-10 top-1/2 h-px bg-line" />
+                <div className="absolute inset-y-10 left-1/2 w-px bg-line" />
+                <div className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 ${selectedImage.scale}`}>
+                  <BridleIllustration leatherClass={leatherClass} size="hero" />
+                </div>
+              </>
+            )}
             <div className="absolute bottom-6 left-6 right-6 grid items-end gap-4 border-t border-line pt-5 md:grid-cols-[1fr_auto_auto]">
               <p className="max-w-sm text-sm leading-6 text-muted">{product.description}</p>
               <button type="button" onClick={handleAdd} className="cta-shine press h-11 bg-ink px-6 text-xs font-bold uppercase tracking-[0.18em] text-on-ink">{added ? "Ajouté ✓" : "Ajouter au panier"}</button>
