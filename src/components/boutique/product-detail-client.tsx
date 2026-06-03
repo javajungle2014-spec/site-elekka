@@ -297,7 +297,14 @@ function ThumbnailRail({ images, selected, onSelect, productName }: {
                   borderColor: selected === i ? "var(--ink)" : "transparent",
                   boxShadow: selected !== i ? "0 0 0 1px #e5e5e5" : undefined,
                 }}>
-                <Image src={img} alt={`${productName} vue ${i + 1}`} fill sizes="76px" className="object-cover" />
+                {img.includes("|") ? (
+                  <div className="absolute inset-0 flex flex-col gap-px">
+                    <div className="relative flex-1 overflow-hidden"><Image src={img.split("|")[0]} alt="" fill sizes="76px" className="object-cover" /></div>
+                    <div className="relative flex-1 overflow-hidden"><Image src={img.split("|")[1]} alt="" fill sizes="76px" className="object-cover" /></div>
+                  </div>
+                ) : (
+                  <Image src={img} alt={`${productName} vue ${i + 1}`} fill sizes="76px" className="object-cover" />
+                )}
               </button>
             ))}
           </div>
@@ -341,7 +348,14 @@ function ThumbnailStrip({ images, selected, onSelect, productName }: {
               className="press relative shrink-0 overflow-hidden border-2 transition-all duration-200 rounded-sm"
               style={{ width: 62, height: 83, borderColor: selected === i ? "var(--ink)" : "transparent",
                 boxShadow: selected !== i ? "0 0 0 1px #e5e5e5" : undefined }}>
-              <Image src={img} alt={`${productName} vue ${i + 1}`} fill sizes="62px" className="object-cover" />
+              {img.includes("|") ? (
+                <div className="absolute inset-0 flex flex-col gap-px">
+                  <div className="relative flex-1 overflow-hidden"><Image src={img.split("|")[0]} alt="" fill sizes="62px" className="object-cover" /></div>
+                  <div className="relative flex-1 overflow-hidden"><Image src={img.split("|")[1]} alt="" fill sizes="62px" className="object-cover" /></div>
+                </div>
+              ) : (
+                <Image src={img} alt={`${productName} vue ${i + 1}`} fill sizes="62px" className="object-cover" />
+              )}
             </button>
           );
         })}
@@ -687,8 +701,9 @@ export function ProductDetailClient({ product }: { product: Product }) {
                     onTouchStart={handleTouchStart}
                     onTouchEnd={handleTouchEnd}
                     onDoubleClick={() => {
-                      if (currentColour.images.length > 0) {
-                        setZoomedImage(currentColour.images[selectedImageIdx] ?? currentColour.images[0]);
+                      const src = currentColour.images[selectedImageIdx] ?? currentColour.images[0];
+                      if (currentColour.images.length > 0 && !src?.includes("|")) {
+                        setZoomedImage(src);
                       }
                     }}
                   >
@@ -702,13 +717,25 @@ export function ProductDetailClient({ product }: { product: Product }) {
                           transition={{ duration: 0.35, ease: "easeInOut" }}
                           className="absolute inset-0"
                         >
-                          <Image
-                            src={currentColour.images[selectedImageIdx] ?? currentColour.images[0]}
-                            alt={`${product.name} — ${currentColour.label}`}
-                            fill sizes="(min-width: 768px) 40vw, 100vw"
-                            className="object-cover"
-                            priority
-                          />
+                          {(() => {
+                            const src = currentColour.images[selectedImageIdx] ?? currentColour.images[0];
+                            const pair = src?.split("|");
+                            if (pair?.length === 2) {
+                              return (
+                                <div className="absolute inset-0 flex flex-col gap-1">
+                                  <div className="relative flex-1 overflow-hidden">
+                                    <Image src={pair[0]} alt={`${product.name} — ${currentColour.label}`} fill sizes="(min-width: 768px) 40vw, 100vw" className="object-cover object-center" />
+                                  </div>
+                                  <div className="relative flex-1 overflow-hidden">
+                                    <Image src={pair[1]} alt={`${product.name} — ${currentColour.label}`} fill sizes="(min-width: 768px) 40vw, 100vw" className="object-cover object-center" />
+                                  </div>
+                                </div>
+                              );
+                            }
+                            return (
+                              <Image src={src} alt={`${product.name} — ${currentColour.label}`} fill sizes="(min-width: 768px) 40vw, 100vw" className="object-cover" priority />
+                            );
+                          })()}
                         </motion.div>
                       </AnimatePresence>
                     ) : (
