@@ -120,6 +120,7 @@ const LEATHER: Record<string, string> = {
 const IMAGE_POSITION: Record<string, string> = {
   "fusion-havana-brown-cheval-01.png": "center 25%",
   "fusion-havana-brown-cheval-02.png": "center 25%",
+  "fusion-dark-brown-studio-02.png": "center 30%",
 };
 
 /* ─── Icônes SVG (fidèles à index.html) ─────────────────────────────── */
