@@ -902,9 +902,10 @@ export function ProductDetailClient({ product }: { product: Product }) {
                       className={`choice press text-left ${isActive ? "choice--active" : ""}`}>
                       {/* Grande image filet + petite photo détail + swatch couleur */}
                       <div className="flex gap-1.5 p-1.5">
-                        <div className={`flex-[3] aspect-[3/4] relative overflow-hidden ${!c.images[1] ? (LEATHER[c.key] ?? "bg-paper-2") : ""}`}>
-                          {c.images[1] && (
-                            <Image src={c.images[1]} alt={c.label} fill sizes="(max-width: 768px) 40vw, 300px" className="object-cover" />
+                        {(() => { const mainIdx = c.cardImageIndex ?? 1; const mainSrc = c.images[mainIdx] ?? c.images[0]; return (
+                        <div className={`flex-[3] aspect-[3/4] relative overflow-hidden ${!mainSrc ? (LEATHER[c.key] ?? "bg-paper-2") : ""}`}>
+                          {mainSrc && (
+                            <Image src={mainSrc} alt={c.label} fill sizes="(max-width: 768px) 40vw, 300px" className="object-cover" />
                           )}
                           {isActive && (
                             <span className="absolute top-2 right-2 w-5 h-5 bg-on-ink text-ink rounded-full flex items-center justify-center">
@@ -912,6 +913,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                             </span>
                           )}
                         </div>
+                        ); })()}
                         <div className="flex-1 flex flex-col gap-1.5">
                           <div className="flex-1 rounded-sm relative overflow-hidden">
                             {c.images[2] ? (
