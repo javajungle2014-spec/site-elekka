@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
@@ -103,33 +103,39 @@ function ProductRail({ leatherClass, selectedGalleryImage, setSelectedGalleryIma
   );
 }
 
-function ThreePhotoHero({ leatherClass, activeColour, images }: { leatherClass: string; activeColour: string; images: string[] }) {
+function ThreePhotoHero({ leatherClass, activeColour, images, onPhotoClick }: {
+  leatherClass: string; activeColour: string; images: string[];
+  onPhotoClick: (index: number) => void;
+}) {
   return (
     <div className="grid min-h-[calc(100vh-6rem)] content-start gap-4">
       <div className="grid gap-4 pb-0 md:grid-cols-3 lg:pb-40">
         {sections.map((section, index) => (
           <article key={section.title}
-            className={`relative grid min-h-[500px] grid-rows-[1fr_auto] overflow-hidden bg-white p-5 md:min-h-[560px] xl:min-h-[620px] ${index === 1 ? "lg:translate-y-20" : index === 2 ? "lg:translate-y-40" : ""}`}>
+            onClick={() => onPhotoClick(index)}
+            className={`relative grid min-h-[500px] grid-rows-[1fr_auto] overflow-hidden bg-white p-5 md:min-h-[560px] xl:min-h-[620px] cursor-pointer ${index === 1 ? "lg:translate-y-20" : index === 2 ? "lg:translate-y-40" : ""}`}>
             <div className="relative flex min-h-0 items-center justify-center overflow-hidden">
-              <div className="absolute left-0 top-0 z-10">
-                <p className="kicker-tight text-muted">{section.label}</p>
-                <p className="mt-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-soft">{activeColour}</p>
-              </div>
-              <span className="absolute right-0 top-0 z-10 font-mono text-xs text-muted-soft">0{index + 1}</span>
               {images[index] ? (
                 <Image src={images[index]} alt={section.label} fill sizes="(min-width: 1024px) 20vw, 33vw" className="object-cover" />
               ) : (
                 <>
+                  <div className="absolute left-0 top-0 z-10">
+                    <p className="kicker-tight text-muted">{section.label}</p>
+                    <p className="mt-2 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-muted-soft">{activeColour}</p>
+                  </div>
+                  <span className="absolute right-0 top-0 z-10 font-mono text-xs text-muted-soft">0{index + 1}</span>
                   <div className="absolute inset-x-1 top-1/2 h-px bg-line" />
                   <div className="absolute inset-y-8 left-1/2 w-px bg-line" />
                   <BridleIllustration leatherClass={leatherClass} size="card" />
                 </>
               )}
             </div>
-            <div className="relative z-10 bg-white/92 pt-5">
-              <h2 className="display text-3xl leading-none md:text-4xl">{section.title}</h2>
-              <p className="mt-4 line-clamp-3 text-sm leading-6 text-muted">{section.copy}</p>
-            </div>
+            {!images[index] && (
+              <div className="relative z-10 bg-white/92 pt-5">
+                <h2 className="display text-3xl leading-none md:text-4xl">{section.title}</h2>
+                <p className="mt-4 line-clamp-3 text-sm leading-6 text-muted">{section.copy}</p>
+              </div>
+            )}
           </article>
         ))}
       </div>
@@ -241,7 +247,17 @@ export function LicolProductDetail({ product }: { product: Product }) {
   const [stickyVisible, setStickyVisible] = useState(false);
   const [openBenefit, setOpenBenefit] = useState<number | null>(0);
   const [selectedGalleryImage, setSelectedGalleryImage] = useState(0);
+  const galleryRef = useRef<HTMLElement>(null);
   const { addItem }                 = useCart();
+
+  function scrollToGallery(index: number) {
+    setSelectedGalleryImage(index);
+    setTimeout(() => {
+      const el = galleryRef.current;
+      if (!el) return;
+      window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: "smooth" });
+    }, 50);
+  }
 
   useEffect(() => {
     const onScroll = () => setStickyVisible(window.scrollY > 400);
@@ -279,12 +295,12 @@ export function LicolProductDetail({ product }: { product: Product }) {
       </div>
 
       <section className="mx-auto grid max-w-[1680px] gap-4 px-4 pt-6 md:px-8 lg:grid-cols-[1fr_520px] lg:pt-10">
-        <ThreePhotoHero leatherClass={leatherClass} activeColour={activeColour.label} images={activeColour.images} />
+        <ThreePhotoHero leatherClass={leatherClass} activeColour={activeColour.label} images={activeColour.images} onPhotoClick={scrollToGallery} />
         <PurchasePanel product={product} activeColour={activeColour} colourKey={colourKey} setColourKey={setColourKey} size={size} setSize={setSize} onAdd={handleAdd} added={added} />
       </section>
 
       {/* Galerie */}
-      <section className="mx-auto max-w-[1680px] px-4 py-16 md:px-8 lg:py-24">
+      <section ref={galleryRef} className="mx-auto max-w-[1680px] px-4 py-16 md:px-8 lg:py-24">
         <div className="grid gap-4 lg:grid-cols-[140px_1fr]">
           <ProductRail leatherClass={leatherClass} selectedGalleryImage={selectedGalleryImage} setSelectedGalleryImage={setSelectedGalleryImage} images={activeColour.images} />
           <div className="relative min-h-[560px] overflow-hidden bg-white md:min-h-[700px]">
