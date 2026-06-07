@@ -14,7 +14,8 @@ export type PieceModel = {
   desc: string;
   priceEUR?: number;
   images?: Partial<Record<ColourKey, string[]>>;
-  stockSlug?: string; // slug unique pour la vérification de stock
+  stockSlug?: string;
+  colours?: { key: ColourKey; label: string; swatch: string }[];
 };
 
 export type Piece = {
@@ -74,13 +75,24 @@ export function PieceDetail({ piece }: { piece: Piece; }) {
   const [stockQty, setStockQty]     = useState<number | null>(null);
   const { addItem }                 = useCart();
 
-  const activeColour = piece.colours.find(c => c.key === colour) ?? piece.colours[0];
   const activeModel  = piece.models.find(m => m.key === model) ?? piece.models[0];
+  const displayColours = activeModel.colours ?? piece.colours;
+  const activeColour = displayColours.find(c => c.key === colour) ?? displayColours[0];
   const price        = activeModel?.priceEUR ?? piece.priceEUR;
-  const images = activeModel.images?.[colour] ?? activeColour.images ?? [];
+  const fallbackImages = piece.colours.find(c => c.key === colour)?.images;
+  const images = activeModel.images?.[colour] ?? fallbackImages ?? [];
 
   // Reset image sélectionnée au changement de couleur OU de modèle
   useEffect(() => { setSelectedImg(0); }, [colour, model]);
+
+  // Reset couleur si elle n'est pas disponible dans le nouveau modèle
+  useEffect(() => {
+    const available = activeModel.colours ?? piece.colours;
+    if (!available.find(c => c.key === colour)) {
+      setColour(available[0].key);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [model]);
 
   // Vérification stock : utilise le stockSlug du modèle si disponible
   useEffect(() => {
@@ -232,7 +244,7 @@ export function PieceDetail({ piece }: { piece: Piece; }) {
             <div>
               <p className="kicker-tight text-muted mb-3">Coloris — {activeColour.label}</p>
               <div className="flex gap-3">
-                {piece.colours.map(c => (
+                {displayColours.map(c => (
                   <button key={c.key} type="button"
                     onClick={() => setColour(c.key)}
                     aria-label={c.label}

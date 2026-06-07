@@ -25,8 +25,11 @@ export default function TetierePage() {
         }},
         { key: "fusion", label: "Anatomique Fusion", desc: "Double rembourrage — confort maximal sur la nuque", priceEUR: 62, stockSlug: "tetiere-fusion", images: {
           "havana-brown": ["/products/pieces/tetiere/tetiere-fusion-havana-brown-01.png", "/products/pieces/tetiere/tetiere-fusion-havana-brown-02.png", "/products/pieces/tetiere/tetiere-fusion-havana-brown-03.png"],
-          "noir":         ["/products/pieces/tetiere/tetiere-fusion-noir-01.png",         "/products/pieces/tetiere/tetiere-fusion-noir-02.png",         "/products/pieces/tetiere/tetiere-fusion-noir-03.png"],
-        }},
+          "dark-brown":   ["/products/pieces/tetiere/tetiere-fusion-dark-brown-01.png",   "/products/pieces/tetiere/tetiere-fusion-dark-brown-02.png",   "/products/pieces/tetiere/tetiere-fusion-dark-brown-03.png"],
+        }, colours: [
+          { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
+          { key: "dark-brown",   label: "Dark Brown",   swatch: "#2b1710" },
+        ]},
       ],
       colours: [
         { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
