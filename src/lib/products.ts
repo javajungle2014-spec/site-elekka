@@ -277,6 +277,7 @@ export const products: Product[] = [
   {
     slug: "renes-2",
     name: "Rênes en tissu",
+    hidden: true,
     category: "Rênes",
     family: "Classique",
     tagline: "Légèreté et résistance, pour une prise en main naturelle.",
