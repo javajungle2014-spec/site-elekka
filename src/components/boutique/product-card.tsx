@@ -50,10 +50,10 @@ export function ProductCard({
   const [activeIdx, setActiveIdx] = useState(defaultIdx);
   const [hoveredThumb, setHoveredThumb] = useState<number | null>(null);
 
-  const activeImage = images[activeIdx] ?? null;
+  const activeImage = (images[activeIdx] ?? null)?.split("|")[0] ?? null;
 
   const slots: (string | null)[] = Array.from({ length: THUMB_COUNT }).map(
-    (_, i) => images[i] ?? null
+    (_, i) => (images[i] ?? null)?.split("|")[0] ?? null
   );
 
   return (
