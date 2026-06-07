@@ -50,10 +50,10 @@ export function ProductCard({
   const [activeIdx, setActiveIdx] = useState(defaultIdx);
   const [hoveredThumb, setHoveredThumb] = useState<number | null>(null);
 
-  const activeImage = (images[activeIdx] ?? null)?.split("|")[0] ?? null;
+  const activeImage = images[activeIdx] ?? null;
 
   const slots: (string | null)[] = Array.from({ length: THUMB_COUNT }).map(
-    (_, i) => (images[i] ?? null)?.split("|")[0] ?? null
+    (_, i) => images[i] ?? null
   );
 
   return (
@@ -175,13 +175,17 @@ export function ProductCard({
                 >
                   {/* Contenu miniature */}
                   {img ? (
-                    <Image
-                      src={img as string}
-                      alt=""
-                      fill
-                      sizes="72px"
-                      className="object-cover"
-                    />
+                    img.includes("|") ? (
+                      <div className="absolute inset-0 flex flex-col gap-px">
+                        {img.split("|").map((src, pi) => (
+                          <div key={pi} className="relative flex-1 overflow-hidden">
+                            <Image src={src} alt="" fill sizes="72px" className="object-cover" />
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <Image src={img} alt="" fill sizes="72px" className="object-cover" />
+                    )
                   ) : (
                     <div
                       className="w-full h-full flex items-center justify-center"
