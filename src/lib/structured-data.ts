@@ -50,9 +50,10 @@ export function productSchema(product: Product, inStock?: boolean) {
       name: "Elekka",
     },
     url: `${BASE}/boutique/${product.slug}`,
-    image: product.colours[0]?.images?.[0]
-      ? `${BASE}${product.colours[0].images[0]}`
-      : `${BASE}/brand/hero.jpg`,
+    image: (() => {
+      const firstClean = product.colours[0]?.images?.find(img => !img.includes("|"));
+      return firstClean ? `${BASE}${firstClean}` : `${BASE}/brand/hero.jpg`;
+    })(),
     offers: {
       "@type": "Offer",
       price: product.priceEUR,

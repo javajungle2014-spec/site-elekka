@@ -254,8 +254,8 @@ export const products: Product[] = [
       {
         key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a",
         images: [
-          "/products/renes-1/renes-1-havana-brown-detail-boucle.png",
           "/products/renes-1/renes-1-havana-brown-studio-01.png",
+          "/products/renes-1/renes-1-havana-brown-detail-boucle.png",
           "/products/renes-1/renes-1-havana-brown-detail-grip.png",
           "/products/renes-1/renes-1-havana-brown-studio-02.png",
         ],
@@ -263,8 +263,8 @@ export const products: Product[] = [
       {
         key: "noir", label: "Noir", swatch: "#0a0a0a",
         images: [
-          "/products/renes-1/renes-1-noir-detail-boucle.png",
           "/products/renes-1/renes-1-noir-studio-01.png",
+          "/products/renes-1/renes-1-noir-detail-boucle.png",
           "/products/renes-1/renes-1-noir-detail-grip.png",
           "/products/renes-1/renes-1-noir-studio-02.png",
         ],
