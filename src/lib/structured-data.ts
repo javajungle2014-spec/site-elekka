@@ -51,8 +51,9 @@ export function productSchema(product: Product, inStock?: boolean) {
     },
     url: `${BASE}/boutique/${product.slug}`,
     image: (() => {
-      const firstClean = product.colours[0]?.images?.find(img => !img.includes("|"));
-      return firstClean ? `${BASE}${firstClean}` : `${BASE}/brand/hero.jpg`;
+      const defaultColour = product.colours.find(c => c.key === product.defaultColour) ?? product.colours[0];
+      const cleanImages = defaultColour?.images?.filter(img => !img.includes("|")).map(img => `${BASE}${img}`) ?? [];
+      return cleanImages.length > 0 ? (cleanImages.length === 1 ? cleanImages[0] : cleanImages) : undefined;
     })(),
     offers: {
       "@type": "Offer",
