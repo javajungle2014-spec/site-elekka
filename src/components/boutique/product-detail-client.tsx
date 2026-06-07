@@ -537,7 +537,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
   }, []);
 
   const disciplines = [
-    { key: "obstacle",      label: "Saut d'obstacle",  sub: "Travail sur l'obstacle & cross" },
+    { key: "obstacle",      label: "Saut d'obstacle",  sub: "Travail sur l'obstacle" },
     { key: "dressage",      label: "Dressage",          sub: "Travail sur le plat" },
     { key: "multi",         label: "Multi-discipline",  sub: "Toutes pratiques" },
   ];
