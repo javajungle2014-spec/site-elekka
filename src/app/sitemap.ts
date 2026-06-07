@@ -4,7 +4,7 @@ import { products } from "@/lib/products";
 const BASE = "https://elekka-sellier.fr";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const productUrls = products.map((p) => ({
+  const productUrls = products.filter((p) => !p.hidden).map((p) => ({
     url: `${BASE}/boutique/${p.slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
