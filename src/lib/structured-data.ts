@@ -52,8 +52,8 @@ export function productSchema(product: Product, inStock?: boolean) {
     url: `${BASE}/boutique/${product.slug}`,
     image: (() => {
       const defaultColour = product.colours.find(c => c.key === product.defaultColour) ?? product.colours[0];
-      const cleanImages = defaultColour?.images?.filter(img => !img.includes("|")).map(img => `${BASE}${img}`) ?? [];
-      return cleanImages.length > 0 ? (cleanImages.length === 1 ? cleanImages[0] : cleanImages) : undefined;
+      const main = defaultColour?.images?.find(img => !img.includes("|"));
+      return main ? `${BASE}${main}` : undefined;
     })(),
     offers: {
       "@type": "Offer",
