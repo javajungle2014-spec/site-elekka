@@ -145,7 +145,7 @@ export const BRIDLE_CATALOG = {
     },
     {
       id: "re1",
-      name: "Rênes N°1",
+      name: "Rênes caoutchouc",
       desc: "Cuir pleine fleur, grip caoutchouc intégré. Prise en main assurée par tous temps.",
       price: 39.99,
       stock: "in" as StockStatus,

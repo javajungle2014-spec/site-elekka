@@ -243,7 +243,7 @@ export const products: Product[] = [
     description:
       "Rênes en cuir pleine fleur avec grip caoutchouc intégré. Légères, précises, confortables pour toutes les disciplines.",
     longDescription:
-      "Les Rênes N°1 sont taillées dans le même cuir pleine fleur que nos bridons — sélectionné pour sa souplesse naturelle et sa patine dans la durée. Le grip caoutchouc intégré assure une prise en main ferme et stable par tous les temps, sans rugueux excessif sur les doigts. Les arrêtoirs en cuir renforcent les points de fixation. Des rênes pensées pour travailler, pas seulement pour paraître.",
+      "Ces rênes caoutchouc sont taillées dans le même cuir pleine fleur que nos bridons — sélectionné pour sa souplesse naturelle et sa patine dans la durée. Le grip caoutchouc intégré assure une prise en main ferme et stable par tous les temps, sans rugueux excessif sur les doigts. Les arrêtoirs en cuir renforcent les points de fixation. Des rênes pensées pour travailler, pas seulement pour paraître.",
     highlights: [
       "Cuir pleine fleur souple et résistant",
       "Grip caoutchouc — prise sûre par temps humide",
