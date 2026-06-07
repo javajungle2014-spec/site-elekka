@@ -177,7 +177,7 @@ export const products: Product[] = [
   },
   {
     slug: "licol-1",
-    name: "Licol Elekka N°1",
+    name: "Licol Elekka Horizon",
     category: "Licoles",
     family: "Classique",
     tagline: "Le quotidien, en cuir pleine fleur.",
@@ -185,7 +185,7 @@ export const products: Product[] = [
     description:
       "Licol en cuir pleine fleur, quincaillerie inox argentée. Réglable, robuste, conçu pour durer au fil des séances.",
     longDescription:
-      "Le Licol N°1 est taillé dans le même cuir pleine fleur que nos bridons. Sobre et bien construit, il s'adapte à toutes les morphologies grâce à ses réglages en nuque et en museau. La quincaillerie inox argentée résiste à l'humidité et à l'usure. Un licol fiable, sans superflu — pour les propriétaires qui préfèrent la qualité à l'accumulation.",
+      "Le Licol Horizon est taillé dans le même cuir pleine fleur que nos bridons. Sobre et bien construit, il s'adapte à toutes les morphologies grâce à ses réglages en nuque et en museau. La quincaillerie inox argentée résiste à l'humidité et à l'usure. Un licol fiable, sans superflu — pour les propriétaires qui préfèrent la qualité à l'accumulation.",
     highlights: [
       "Cuir pleine fleur pleine épaisseur",
       "Quincaillerie inox argentée — résistante à l'humidité",
@@ -218,7 +218,7 @@ export const products: Product[] = [
     description:
       "Licol en cuir pleine fleur avec museau rembourré. Doux sur la tête du cheval, robuste au quotidien.",
     longDescription:
-      "Le Licol N°2 ajoute un rembourrage sur le museau pour plus de confort lors des longues séances d'attache ou de transport. Même qualité de cuir et de quincaillerie que le N°1.",
+      "Le Licol N°2 ajoute un rembourrage sur le museau pour plus de confort lors des longues séances d'attache ou de transport. Même qualité de cuir et de quincaillerie que l'Horizon.",
     highlights: [
       "Cuir pleine fleur",
       "Museau rembourré",
