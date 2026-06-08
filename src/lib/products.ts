@@ -150,7 +150,7 @@ export const products: Product[] = [
     longDescription:
       "L'Essentiel reprend les codes du bridon anglais classique : une muserolle française simple, une frontière rectiligne, une quincaillerie argentée sobre. Le cuir pleine fleur est sélectionné pour sa souplesse au premier usage et sa patine dans la durée.",
     highlights: [
-      "Cuir pleine fleur pleine épaisseur",
+      "Cuir pleine fleur, pleine épaisseur",
       "Muserolle française, fermeture classique",
       "Quincaillerie inox argentée",
       "Coloris Havana Brown ou Noir",
@@ -187,7 +187,7 @@ export const products: Product[] = [
     longDescription:
       "Le Licol Horizon est taillé dans le même cuir pleine fleur que nos bridons. Sobre et bien construit, il s'adapte à toutes les morphologies grâce à ses réglages en nuque et en museau. La quincaillerie inox argentée résiste à l'humidité et à l'usure. Un licol fiable, sans superflu — pour les propriétaires qui préfèrent la qualité à l'accumulation.",
     highlights: [
-      "Cuir pleine fleur pleine épaisseur",
+      "Cuir pleine fleur, pleine épaisseur",
       "Quincaillerie inox argentée — résistante à l'humidité",
       "Réglage précis en nuque et museau",
       "Tailles Full et Cob",
