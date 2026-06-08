@@ -57,11 +57,11 @@ export const products: Product[] = [
         swatch: "#4a2a1a",
         images: [
           "/products/signature/signature-havana-brown-cheval-01.png",
-          "/products/signature/signature-havana-brown-studio-01.png",
           "/products/signature/signature-havana-brown-cheval-muserolle.png",
+          "/products/signature/signature-havana-brown-cheval-tetiere.png",
+          "/products/signature/signature-havana-brown-studio-01.png",
           "/products/signature/signature-havana-brown-detail-muserolle.png",
           "/products/signature/signature-havana-brown-detail-frontal.png",
-          "/products/signature/signature-havana-brown-cheval-tetiere.png",
           "/products/signature/signature-havana-brown-detail-tetiere.png",
         ],
       },
@@ -112,11 +112,11 @@ export const products: Product[] = [
         cardDetailImage: "/products/fusion/fusion-havana-brown-studio-frontal.png",
         images: [
           "/products/fusion/fusion-havana-brown-cheval-01.png",
+          "/products/fusion/fusion-havana-brown-cheval-02.png",
+          "/products/fusion/fusion-havana-brown-cheval-montants.png",
           "/products/fusion/fusion-havana-brown-studio-01.png",
           "/products/fusion/fusion-havana-brown-cheval-tetiere.png|/products/fusion/fusion-havana-brown-cheval-muserolle.png",
-          "/products/fusion/fusion-havana-brown-cheval-02.png",
           "/products/fusion/fusion-havana-brown-cheval-frontal.png|/products/fusion/fusion-havana-brown-cheval-triple.png|/products/fusion/fusion-havana-brown-studio-frontal-paysage.png",
-          "/products/fusion/fusion-havana-brown-cheval-montants.png",
         ],
       },
       {
