@@ -79,12 +79,12 @@ export function CartDrawer() {
                         {/* Qty */}
                         <div className="flex items-center gap-2 mt-3">
                           <button type="button" onClick={() => updateQty(item.slug, item.colour, item.size, item.quantity - 1)}
-                            className="press w-7 h-7 border border-line flex items-center justify-center text-muted hover:text-ink hover:border-ink transition-colors">
+                            className="press w-10 h-10 border border-line flex items-center justify-center text-muted hover:text-ink hover:border-ink transition-colors">
                             <Minus size={12} />
                           </button>
                           <span className="text-sm font-medium w-5 text-center">{item.quantity}</span>
                           <button type="button" onClick={() => updateQty(item.slug, item.colour, item.size, item.quantity + 1)}
-                            className="press w-7 h-7 border border-line flex items-center justify-center text-muted hover:text-ink hover:border-ink transition-colors">
+                            className="press w-10 h-10 border border-line flex items-center justify-center text-muted hover:text-ink hover:border-ink transition-colors">
                             <Plus size={12} />
                           </button>
                         </div>

@@ -31,14 +31,15 @@ function SizeGuideModal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        <div className="px-7 py-6 space-y-6">
+        <div className="px-5 md:px-7 py-6 space-y-6">
           {/* Intro */}
           <p className="text-sm text-muted leading-relaxed">
             La taille de votre filet se choisit principalement selon la <strong className="text-ink font-medium">hauteur au garrot</strong> de votre cheval et sa morphologie générale.
           </p>
 
           {/* Tableau */}
-          <table className="w-full border-collapse">
+          <div className="overflow-x-auto -mx-1">
+          <table className="w-full border-collapse min-w-[320px]">
             <thead>
               <tr className="border-b-2 border-ink">
                 <th className="text-left kicker-tight text-muted pb-3 pr-6 font-medium w-[70px]">Taille</th>
@@ -82,6 +83,7 @@ function SizeGuideModal({ onClose }: { onClose: () => void }) {
               </tr>
             </tbody>
           </table>
+          </div>
 
           {/* Conseil */}
           <div className="border-l-2 border-ink pl-4 py-1 space-y-1">
@@ -345,7 +347,7 @@ function ThumbnailStrip({ images, selected, onSelect, productName }: {
   return (
     <div className="flex md:hidden items-center gap-1.5 mt-3">
       <button type="button" onClick={() => setOffset(o => Math.max(0, o - 1))} disabled={!canPrev}
-        className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all ${canPrev ? "border-line text-muted hover:border-ink hover:text-ink" : "border-line/30 text-line/30"}`}>
+        className={`shrink-0 w-9 h-9 rounded-full border flex items-center justify-center transition-all ${canPrev ? "border-line text-muted hover:border-ink hover:text-ink" : "border-line/30 text-line/30"}`}>
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M7.5 2L4 6l3.5 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
       </button>
       <div className="flex gap-1.5 flex-1 justify-center">
@@ -370,7 +372,7 @@ function ThumbnailStrip({ images, selected, onSelect, productName }: {
         })}
       </div>
       <button type="button" onClick={() => setOffset(o => Math.min(maxOffset, o + 1))} disabled={!canNext}
-        className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center transition-all ${canNext ? "border-line text-muted hover:border-ink hover:text-ink" : "border-line/30 text-line/30"}`}>
+        className={`shrink-0 w-9 h-9 rounded-full border flex items-center justify-center transition-all ${canNext ? "border-line text-muted hover:border-ink hover:text-ink" : "border-line/30 text-line/30"}`}>
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2L8 6l-3.5 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
       </button>
     </div>
@@ -866,7 +868,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 value={selectedDiscipline ? disciplines.find(d => d.key === selectedDiscipline)?.label ?? null : null} />
             </div>
             <div className="col-span-12 md:col-span-8">
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 {disciplines.map(d => {
                   const isActive = selectedDiscipline === d.key;
                   return (
