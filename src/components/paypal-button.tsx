@@ -3,6 +3,19 @@
 import { useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase";
 
+interface PayPalButtonsInstance {
+  render: (el: HTMLElement) => void;
+  close: () => void;
+}
+
+interface PayPalSDK {
+  Buttons: (config: Record<string, unknown>) => PayPalButtonsInstance;
+}
+
+declare global {
+  interface Window { paypal?: PayPalSDK }
+}
+
 type Item = { name: string; colourLabel: string; size: string; priceEUR: number; quantity: number; slug: string };
 type Address = { firstName: string; lastName: string; email: string; phone: string; line1: string; line2: string; city: string; postalCode: string; country: string };
 
@@ -11,11 +24,12 @@ type Props = {
   address: Address;
   promoCode: string | null;
   discountEUR: number;
+  referralCode?: string | null;
   onValidate: () => boolean;
   onError: (msg: string) => void;
 };
 
-export function PayPalButton({ items, address, promoCode, discountEUR, onValidate, onError }: Props) {
+export function PayPalButton({ items, address, promoCode, discountEUR, referralCode, onValidate, onError }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Refs pour toujours avoir les valeurs à jour dans les callbacks
@@ -23,6 +37,7 @@ export function PayPalButton({ items, address, promoCode, discountEUR, onValidat
   const addressRef = useRef(address);
   const promoRef = useRef(promoCode);
   const discountRef = useRef(discountEUR);
+  const referralRef = useRef(referralCode);
   const validateRef = useRef(onValidate);
   const errorRef = useRef(onError);
 
@@ -30,6 +45,7 @@ export function PayPalButton({ items, address, promoCode, discountEUR, onValidat
   addressRef.current = address;
   promoRef.current = promoCode;
   discountRef.current = discountEUR;
+  referralRef.current = referralCode;
   validateRef.current = onValidate;
   errorRef.current = onError;
 
@@ -37,14 +53,12 @@ export function PayPalButton({ items, address, promoCode, discountEUR, onValidat
     const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
     if (!clientId || !containerRef.current) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const w = window as any;
-    let buttonsInstance: { close: () => void } | null = null;
+    let buttonsInstance: PayPalButtonsInstance | null = null;
 
     const initButtons = () => {
-      if (!containerRef.current || !w.paypal) return;
+      if (!containerRef.current || !window.paypal) return;
 
-      buttonsInstance = w.paypal.Buttons({
+      buttonsInstance = window.paypal.Buttons({
         style: { layout: "horizontal", color: "gold", shape: "rect", label: "paypal", height: 48 },
 
         onClick: (_data: unknown, actions: { reject: () => Promise<void>; resolve: () => Promise<void> }) => {
@@ -64,6 +78,7 @@ export function PayPalButton({ items, address, promoCode, discountEUR, onValidat
               userId: data.user?.id ?? null,
               promoCode: promoRef.current,
               discountEUR: discountRef.current,
+              referralCode: referralRef.current ?? null,
             }),
           });
           const json = await res.json();
@@ -84,6 +99,7 @@ export function PayPalButton({ items, address, promoCode, discountEUR, onValidat
               userId: authData.user?.id ?? null,
               discountEUR: discountRef.current,
               promoCode: promoRef.current,
+              referralCode: referralRef.current ?? null,
             }),
           });
           const json = await res.json();
@@ -100,13 +116,13 @@ export function PayPalButton({ items, address, promoCode, discountEUR, onValidat
       });
 
       if (buttonsInstance && containerRef.current) {
-        (buttonsInstance as unknown as { render: (el: HTMLElement) => void }).render(containerRef.current);
+        buttonsInstance.render(containerRef.current);
       }
     };
 
     const existingScript = document.getElementById("paypal-sdk");
     if (existingScript) {
-      if (w.paypal) initButtons();
+      if (window.paypal) initButtons();
       else existingScript.addEventListener("load", initButtons);
     } else {
       const script = document.createElement("script");

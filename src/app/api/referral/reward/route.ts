@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
+import { insertUniquePromoCode } from "@/lib/prices";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -10,15 +11,6 @@ function supabaseAdmin() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
-}
-
-function generateCode(): string {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let code = "PARRAIN-";
-  for (let i = 0; i < 6; i++) {
-    code += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return code;
 }
 
 export async function POST(req: Request) {
@@ -49,25 +41,7 @@ export async function POST(req: Request) {
       reward_sent: true,
     });
 
-    // Générer le code -30€
-    let code = generateCode();
-    let attempts = 0;
-    while (attempts < 5) {
-      const { data } = await supabase.from("promo_codes").select("code").eq("code", code).single();
-      if (!data) break;
-      code = generateCode();
-      attempts++;
-    }
-
-    await supabase.from("promo_codes").insert({
-      code,
-      discount_type: "fixed",
-      discount_value: 30,
-      max_uses: 1,
-      used_count: 0,
-      active: true,
-      product_restriction: "filets",
-    });
+    const code = await insertUniquePromoCode(supabase, "PARRAIN", "fixed", 30, { product_restriction: "filets" });
 
     // Ajouter le code dans user_promotions du parrain
     await supabase.from("user_promotions").insert({

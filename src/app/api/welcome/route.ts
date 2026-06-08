@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
+import { insertUniquePromoCode, generatePromoCode } from "@/lib/prices";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -12,48 +13,9 @@ function supabaseAdmin() {
   );
 }
 
-function generateWelcomeCode(): string {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let code = "BIENVENUE-";
-  for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
-  return code;
-}
-
-function generateParrainCode(): string {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let code = "PARRAIN-";
-  for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
-  return code;
-}
-
 function generateReferralCode(firstName: string): string {
   const clean = firstName.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 6);
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let suffix = "";
-  for (let i = 0; i < 4; i++) suffix += chars[Math.floor(Math.random() * chars.length)];
-  return `${clean}-${suffix}`;
-}
-
-async function insertUniqueCode(
-  supabase: ReturnType<typeof supabaseAdmin>,
-  generate: () => string,
-  discountValue: number
-): Promise<string> {
-  let code = generate();
-  for (let i = 0; i < 5; i++) {
-    const { data } = await supabase.from("promo_codes").select("code").eq("code", code).single();
-    if (!data) break;
-    code = generate();
-  }
-  await supabase.from("promo_codes").insert({
-    code,
-    discount_type: "percent",
-    discount_value: discountValue,
-    max_uses: 1,
-    used_count: 0,
-    active: true,
-  });
-  return code;
+  return `${clean}-${generatePromoCode("").slice(1, 5)}`;
 }
 
 export async function POST(req: Request) {
@@ -78,7 +40,7 @@ export async function POST(req: Request) {
     }
 
     // Générer code bienvenue -15% dans promo_codes + user_promotions
-    const welcomeCode = await insertUniqueCode(supabase, generateWelcomeCode, 15);
+    const welcomeCode = await insertUniquePromoCode(supabase, "BIENVENUE", "percent", 15);
     if (userId) {
       await supabase.from("user_promotions").insert({
         user_id: userId,
@@ -92,7 +54,7 @@ export async function POST(req: Request) {
     // Générer code parrainage -20% si applicable
     let parrainCode: string | null = null;
     if (referralCode && userId) {
-      parrainCode = await insertUniqueCode(supabase, generateParrainCode, 20);
+      parrainCode = await insertUniquePromoCode(supabase, "PARRAIN", "percent", 20);
       await supabase.from("user_promotions").insert({
         user_id: userId,
         code: parrainCode,

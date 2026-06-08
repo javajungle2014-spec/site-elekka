@@ -69,8 +69,9 @@ export async function GET(req: Request) {
     "Articles", "Total", "Statut", "Numéro de suivi", "Transporteur",
   ];
 
+  const csvCell = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""').replace(/\n/g, " ").replace(/\r/g, "")}"`;
   const csv = [headers, ...rows]
-    .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(";"))
+    .map((row) => row.map(csvCell).join(";"))
     .join("\n");
 
   const monthLabel = new Date(year, mon - 1, 1).toLocaleDateString("fr-FR", { month: "long", year: "numeric" });

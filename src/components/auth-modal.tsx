@@ -41,7 +41,7 @@ export function AuthModal({ isOpen, onClose }: Props) {
                 <div className="flex items-center gap-3">
                   <Image
                     src="/brand/ek-monogram.png"
-                    alt="EK"
+                    alt="Logo Elekka"
                     width={40}
                     height={40}
                     className="invert [mix-blend-mode:screen] h-8 w-auto"

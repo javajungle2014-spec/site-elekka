@@ -301,6 +301,7 @@ export default function CheckoutPage() {
                   address={address}
                   promoCode={promo.status === "valid" ? promo.code : null}
                   discountEUR={promo.discountEUR}
+                  referralCode={referral?.code ?? null}
                   onValidate={() => { const ok = validate(); if (ok) { setCheckoutError(null); saveAddressToProfile(); } return ok; }}
                   onError={(msg) => setCheckoutError(msg)}
                 />

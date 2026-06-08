@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
+import { insertUniquePromoCode } from "@/lib/prices";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -12,15 +13,6 @@ function supabaseAdmin() {
   );
 }
 
-function generateCode(): string {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let code = "MERCI-";
-  for (let i = 0; i < 6; i++) {
-    code += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return code;
-}
-
 export async function POST(req: Request) {
   try {
     const { email, firstName } = await req.json();
@@ -30,27 +22,7 @@ export async function POST(req: Request) {
     }
 
     const supabase = supabaseAdmin();
-
-    // Générer un code unique
-    let code = generateCode();
-    let attempts = 0;
-    while (attempts < 5) {
-      const { data } = await supabase.from("promo_codes").select("code").eq("code", code).single();
-      if (!data) break;
-      code = generateCode();
-      attempts++;
-    }
-
-    // Insérer le code avec restriction filets
-    await supabase.from("promo_codes").insert({
-      code,
-      discount_type: "fixed",
-      discount_value: 25,
-      max_uses: 1,
-      used_count: 0,
-      active: true,
-      product_restriction: "filets",
-    });
+    const code = await insertUniquePromoCode(supabase, "MERCI", "fixed", 25, { product_restriction: "filets" });
 
     // Envoyer l'email de remerciement
     const resend = new Resend(process.env.RESEND_API_KEY);
