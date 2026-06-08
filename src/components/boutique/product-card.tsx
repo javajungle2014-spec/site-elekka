@@ -118,11 +118,18 @@ export function ProductCard({
           }}
         />
 
-        {/* Badge famille */}
-        <div className="absolute top-3 left-3 z-20 bg-paper/90 backdrop-blur-sm px-2 py-1 text-[8px] tracking-[0.12em] uppercase">
-          {product.category === "Rênes"
-            ? product.slug === "renes-1" ? "Caoutchouc" : "Tissu"
-            : product.family}
+        {/* Badges top-left */}
+        <div className="absolute top-3 left-3 z-20 flex flex-col gap-1.5">
+          <div className="bg-paper/90 backdrop-blur-sm px-2 py-1 text-[8px] tracking-[0.12em] uppercase">
+            {product.category === "Rênes"
+              ? product.slug === "renes-1" ? "Caoutchouc" : "Tissu"
+              : product.family}
+          </div>
+          {product.highlights.some(h => h.toLowerCase().includes("rênes") && h.toLowerCase().includes("incluses")) && (
+            <div className="bg-ink text-on-ink px-2 py-1 text-[8px] tracking-[0.12em] uppercase">
+              Rênes incluses
+            </div>
+          )}
         </div>
 
         {/* Bouton favori */}
