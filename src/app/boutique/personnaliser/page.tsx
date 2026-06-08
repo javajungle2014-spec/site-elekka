@@ -1097,34 +1097,6 @@ export default function PersonnaliserPage() {
                   </div>
                 ))}
               </div>
-              {/* Gravure — optionnelle */}
-              <div style={{ borderTop: "1px solid #e8e4db", paddingTop: 14 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 }}>
-                  <span style={{ fontFamily: "var(--font-geist-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5a5a63" }}>
-                    Gravure
-                  </span>
-                  <span style={{ fontFamily: "var(--font-geist-mono)", fontSize: 10, color: "#5a5a63" }}>
-                    {s.grav ? `+ 25 €` : "optionnel"}
-                  </span>
-                </div>
-                <input
-                  placeholder="Initiales ou prénom (ex : L.M.)"
-                  value={s.grav}
-                  onChange={(e) => set("grav", e.target.value.slice(0, 14))}
-                  style={{
-                    width: "100%", height: 42, padding: "0 12px",
-                    border: "1px solid #d8d3c7", borderRadius: 6,
-                    background: "#fff", fontSize: 14, fontStyle: s.grav ? "normal" : "italic",
-                    color: "#14141a", outline: "none", boxSizing: "border-box",
-                    fontFamily: "var(--font-geist-sans)",
-                  }}
-                  onFocus={(e) => { e.target.style.borderColor = "#14141a"; e.target.style.fontStyle = "normal"; }}
-                  onBlur={(e) => { e.target.style.borderColor = "#d8d3c7"; if (!s.grav) e.target.style.fontStyle = "italic"; }}
-                />
-                <div style={{ fontSize: 11, color: "#8a8a92", marginTop: 5 }}>
-                  Gravure laser sur la têtière · 14 caractères max
-                </div>
-              </div>
             </Panel>
           </div>
 

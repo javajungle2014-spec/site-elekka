@@ -7,6 +7,7 @@ export type Article = {
   category: string;
   content: { heading?: string; body: string }[];
   keywords: string[];
+  ctaProduct?: { href: string; label: string };
 };
 
 export const conseils: Article[] = [
@@ -27,6 +28,7 @@ export const conseils: Article[] = [
       "choisir bridon équitation",
       "filet cheval discipline",
     ],
+    ctaProduct: { href: "/boutique", label: "Voir tous les bridons" },
     content: [
       {
         body: "Choisir un filet de bridon ne s'improvise pas. Entre les matières, les tailles, les formes anatomiques et les styles de monte, les critères sont nombreux. Ce guide vous accompagne pas à pas.",
@@ -109,6 +111,7 @@ export const conseils: Article[] = [
       "filet anatomique équitation",
       "confort cheval travail bridé",
     ],
+    ctaProduct: { href: "/boutique/signature", label: "Découvrir le Signature" },
     content: [
       {
         body: "De plus en plus utilisé par les cavaliers professionnels comme amateurs, le filet anatomique répond à une exigence simple : mieux respecter la morphologie du cheval pendant le travail. Contrairement à un filet classique, il ne se contente pas de maintenir le mors en place. Il cherche à limiter les points de pression, améliorer le confort et permettre au cheval de se déplacer avec plus de liberté. Chez Elekka, nous pensons qu'un bon filet doit se faire oublier. Il doit accompagner le cheval, jamais le gêner.",
@@ -184,6 +187,7 @@ export const conseils: Article[] = [
       "taille bridon cheval poney",
       "mesurer chanfrein cheval",
     ],
+    ctaProduct: { href: "/boutique", label: "Voir tous les bridons" },
     content: [
       {
         body: "Le choix entre Full et Cob est souvent source d'hésitation. Voici comment procéder méthodiquement pour ne pas se tromper.",
@@ -305,6 +309,7 @@ export const conseils: Article[] = [
       "quel type de rênes cheval",
       "rênes dressage saut obstacles",
     ],
+    ctaProduct: { href: "/boutique/renes-1", label: "Voir les rênes Elekka" },
     content: [
       {
         body: "Les rênes sont le lien direct entre le cavalier et la bouche du cheval. Un mauvais choix peut nuire à la qualité du contact, fatiguer les mains et perturber le cheval. Pourtant, le marché propose tellement de variantes que le choix devient rapidement confus. Voici les critères qui comptent vraiment.",
@@ -343,6 +348,7 @@ export const conseils: Article[] = [
       "licol durable cheval",
       "licol poney adulte",
     ],
+    ctaProduct: { href: "/boutique/licol-1", label: "Voir le Licol Horizon" },
     content: [
       {
         body: "Le licol est souvent le premier équipement qu'un propriétaire achète — et l'un des plus utilisés, puisqu'il sert au quotidien : au pré, au box, pour le pansage, le transport, l'attache. Pourtant, peu de cavaliers prennent le temps de bien le choisir. Cuir ou synthétique : le débat est simple si on pose les bonnes questions.",
@@ -381,6 +387,7 @@ export const conseils: Article[] = [
       "bridon simple débutant",
       "équipement débutant cheval",
     ],
+    ctaProduct: { href: "/boutique/essentiel", label: "Découvrir l'Essentiel" },
     content: [
       {
         body: "Acheter un bridon pour la première fois peut être intimidant. Têtière, muserolle, frontal, rênes, mors — les termes s'accumulent et les choix sont nombreux. Ce guide vous explique l'essentiel sans jargon inutile, pour que vous puissiez choisir en confiance.",
@@ -573,6 +580,7 @@ export const blog: Article[] = [
       "Fusion bridon anatomique",
       "choisir muserolle cheval",
     ],
+    ctaProduct: { href: "/boutique/fusion", label: "Découvrir le Fusion" },
     content: [
       {
         body: "La muserolle à triple attache est la pièce maîtresse du Fusion. Elle permet de changer la forme de contact sur le chanfrein du cheval sans devoir acheter un nouveau bridon. Voici comment elle fonctionne et dans quel cas choisir chaque configuration.",

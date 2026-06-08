@@ -11,7 +11,7 @@ export interface BridleState {
   enrenement: number;
   cuir: CuirOption["id"] | null;
   taille: string | null;
-  grav: string;
+
 }
 
 export function emptyState(): BridleState {
@@ -24,7 +24,7 @@ export function emptyState(): BridleState {
     enrenement: 0,
     cuir: null,
     taille: null,
-    grav: "",
+
   };
 }
 
@@ -54,7 +54,7 @@ export function encodeConfig(s: BridleState): string {
     r: s.rene,
     c: s.cuir,
     ta: s.taille,
-    g: s.grav || "",
+
     e: s.enrenementOn ? 1 : 0,
   };
   return btoa(JSON.stringify(o)).replace(/=+$/, "");
@@ -70,7 +70,7 @@ export function decodeConfig(code: string): BridleState | null {
       rene: o.r ?? null,
       cuir: o.c ?? null,
       taille: o.ta ?? null,
-      grav: o.g ?? "",
+
       enrenementOn: o.e === 1,
       enrenement: 0,
     };

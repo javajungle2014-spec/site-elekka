@@ -77,8 +77,8 @@ export default async function ConseilArticlePage({ params }: { params: Promise<{
       </div>
 
       <div className="border-t border-line pt-8 flex items-center justify-between">
-        <Link href="/boutique" className="press inline-flex items-center gap-2 bg-ink text-on-ink px-5 py-3 text-sm font-medium hover:bg-ink-soft transition-colors">
-          Découvrir nos filets
+        <Link href={article.ctaProduct?.href ?? "/boutique"} className="press inline-flex items-center gap-2 bg-ink text-on-ink px-5 py-3 text-sm font-medium hover:bg-ink-soft transition-colors">
+          {article.ctaProduct?.label ?? "Découvrir nos bridons"}
         </Link>
         <Link href="/ressources/conseils" className="press text-sm text-muted hover:text-ink underline underline-offset-4 transition-colors">
           Autres conseils

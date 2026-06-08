@@ -130,6 +130,11 @@ export function ProductCard({
               Rênes incluses
             </div>
           )}
+          {product.highlights.some(h => h.toLowerCase().includes("rênes") && h.toLowerCase().includes("offertes")) && (
+            <div className="bg-ink text-on-ink px-2 py-1 text-[8px] tracking-[0.12em] uppercase">
+              Rênes offertes
+            </div>
+          )}
         </div>
 
         {/* Bouton favori */}

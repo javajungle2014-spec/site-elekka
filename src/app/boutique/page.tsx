@@ -8,7 +8,7 @@ import { CategoryNav } from "@/components/boutique/category-nav";
 export const metadata: Metadata = {
   title: "Boutique",
   description:
-    "Découvrez la gamme Elekka : bridons, licoles, rênes et enrênements en cuir pleine fleur.",
+    "Boutique Elekka — Bridons cuir classiques et anatomiques (99 € à 175 €), licoles, rênes. Rênes offertes pour tout bridon acheté. Livraison gratuite, retours 14 jours.",
 };
 
 const categories = [

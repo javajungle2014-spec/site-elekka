@@ -155,6 +155,7 @@ export const products: Product[] = [
       "Quincaillerie inox argentée",
       "Coloris Havana Brown ou Noir",
       "Tailles Full et Cob",
+      "Rênes caoutchouc offertes",
     ],
     colours: [
       {

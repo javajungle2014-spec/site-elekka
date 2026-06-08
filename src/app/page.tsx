@@ -11,10 +11,10 @@ import { ScrollTop } from "@/components/scroll-top";
 
 export const metadata: Metadata = {
   title: "Elekka — Bridons en cuir pour chevaux",
-  description: "Bridons en cuir pleine fleur conçus par des cavaliers. Qualité des grandes marques équestres, prix juste. Livraison offerte, retours 14 jours.",
+  description: "Elekka — Bridons en cuir pleine fleur, classiques et anatomiques. Qualité des grandes marques équestres à prix juste. À partir de 99 €. Livraison offerte, retours 14 jours.",
   openGraph: {
     title: "Elekka — Bridons en cuir pour chevaux",
-    description: "Bridons en cuir pleine fleur conçus par des cavaliers. Qualité des grandes marques équestres, prix juste.",
+    description: "Bridons en cuir pleine fleur, classiques et anatomiques. Qualité des grandes marques à prix juste. À partir de 99 €, livraison offerte.",
     type: "website",
     url: "https://elekka-sellier.fr",
   },
