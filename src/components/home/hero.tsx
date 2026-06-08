@@ -206,7 +206,7 @@ function MarqueeStrap() {
     "Conçu pour gagner.",
     "Pensé pour le cheval. Pas pour le marketing.",
     "Livraison gratuite en France & en Europe",
-    "Tu payes le produit. Pas la marque.",
+    "Tu paies le produit. Pas la marque.",
   ];
   const track = [...items, ...items];
   return (

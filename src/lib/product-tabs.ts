@@ -37,7 +37,7 @@ En cas de doute entre deux tailles, le Full reste souvent le choix le plus sûr 
 
 **Comment choisir ?**
 
-Référez-vous principalement à la hauteur au garrot de votre cheval, mais tenez aussi compte de sa morphologie générale : tête fine, tête forte, cheval compact ou grand modèle.
+Reportez-vous principalement à la hauteur au garrot de votre cheval, mais tenez aussi compte de sa morphologie générale : tête fine, tête forte, cheval compact ou grand modèle.
 
 Si votre cheval se situe à la limite entre deux tailles, nous recommandons de choisir la taille supérieure afin de garder une marge de réglage confortable.
 
