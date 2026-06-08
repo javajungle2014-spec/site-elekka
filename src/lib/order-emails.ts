@@ -60,12 +60,13 @@ export async function createOrderAndGetNumber({
   // Récompenser le parrain si applicable
   if (referralCode && data) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace("http://localhost:3000", "https://elekka-sellier.fr") ?? "https://elekka-sellier.fr";
-    fetch(`${siteUrl}/api/referral/reward`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ referralCode, orderId: data.id }),
-    }).catch(() => {});
-    // Supprimer le code de parrainage utilisé côté client se fait dans le checkout
+    try {
+      await fetch(`${siteUrl}/api/referral/reward`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ referralCode, orderId: data.id }),
+      });
+    } catch { /* non-bloquant */ }
   }
 
   // Déduire le stock automatiquement

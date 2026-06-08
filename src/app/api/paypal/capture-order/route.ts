@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createOrderAndGetNumber, sendOrderEmails, incrementPromoUsage } from "@/lib/order-emails";
+import { getServerPrice } from "@/lib/prices";
 import type { OrderItem, OrderAddress } from "@/lib/order-emails";
 
 export const runtime = "nodejs";
@@ -29,14 +30,22 @@ async function getAccessToken(): Promise<string> {
 
 export async function POST(req: Request) {
   try {
-    const { orderId, items, address, userId, discountEUR = 0, promoCode } = await req.json() as {
+    const { orderId, items, address, userId, discountEUR = 0, promoCode, referralCode } = await req.json() as {
       orderId: string;
       items: OrderItem[];
       address: OrderAddress;
       userId: string | null;
       discountEUR?: number;
       promoCode?: string;
+      referralCode?: string;
     };
+
+    // Validation et remplacement des prix côté serveur
+    const validatedItems: OrderItem[] = items.map((item) => {
+      const serverPrice = getServerPrice(item.slug);
+      if (!serverPrice) throw new Error(`Produit inconnu : ${item.slug}`);
+      return { ...item, priceEUR: serverPrice };
+    });
 
     if (!orderId) {
       return NextResponse.json({ error: "Order ID manquant" }, { status: 400 });
@@ -67,15 +76,15 @@ export async function POST(req: Request) {
 
     const totalEUR = Math.max(
       0,
-      items.reduce((sum, item) => sum + item.priceEUR * item.quantity, 0) - discountEUR
+      validatedItems.reduce((sum, item) => sum + item.priceEUR * item.quantity, 0) - discountEUR
     );
 
     if (promoCode) await incrementPromoUsage(promoCode);
 
-    const orderNumber = await createOrderAndGetNumber({ userId, items, address, totalEUR });
+    const orderNumber = await createOrderAndGetNumber({ userId, items: validatedItems, address, totalEUR, referralCode: referralCode ?? null });
 
     if (address?.email) {
-      await sendOrderEmails({ orderNumber, items, address, totalEUR });
+      await sendOrderEmails({ orderNumber, items: validatedItems, address, totalEUR });
     }
 
     return NextResponse.json({ success: true, orderNumber });

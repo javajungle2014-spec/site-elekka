@@ -58,14 +58,12 @@ function formatDate(iso: string) {
 
 // ── Écran de connexion ────────────────────────────────────────────────────────
 
-function LoginScreen({ onLogin }: { onLogin: (pwd: string) => void }) {
+function LoginScreen({ onLogin, error }: { onLogin: (pwd: string) => void; error?: boolean }) {
   const [pwd, setPwd] = useState("");
-  const [error, setError] = useState(false);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     onLogin(pwd);
-    setError(true);
     setPwd("");
   }
 
@@ -80,7 +78,7 @@ function LoginScreen({ onLogin }: { onLogin: (pwd: string) => void }) {
           <input
             type="password"
             value={pwd}
-            onChange={(e) => { setPwd(e.target.value); setError(false); }}
+            onChange={(e) => { setPwd(e.target.value); }}
             placeholder="Mot de passe"
             className="w-full border-b border-line bg-transparent py-3 text-sm focus:outline-none focus:border-ink transition-colors"
             autoFocus
@@ -1114,7 +1112,7 @@ export default function AdminPage() {
   }
 
   if (!password || authError) {
-    return <LoginScreen onLogin={handleLogin} />;
+    return <LoginScreen onLogin={handleLogin} error={authError} />;
   }
 
   if (selected) {

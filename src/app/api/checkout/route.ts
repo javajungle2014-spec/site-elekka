@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getServerPrice } from "@/lib/prices";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -11,10 +12,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Panier vide" }, { status: 400 });
     }
 
+    // Validation et remplacement des prix côté serveur
+    const validatedItems = items.map((item: { slug: string; priceEUR: number; quantity: number; name: string; colourLabel: string; size: string; colour: string; colourSwatch: string }) => {
+      const serverPrice = getServerPrice(item.slug);
+      if (!serverPrice) throw new Error(`Produit inconnu : ${item.slug}`);
+      return { ...item, priceEUR: serverPrice };
+    });
+
     const siteUrl = "https://elekka-sellier.fr";
     const secretKey = process.env.STRIPE_SECRET_KEY!;
 
-    const originalTotal = items.reduce(
+    const originalTotal = validatedItems.reduce(
       (sum: number, item: { priceEUR: number; quantity: number }) => sum + item.priceEUR * item.quantity,
       0
     );
@@ -27,7 +35,7 @@ export async function POST(req: Request) {
       `cancel_url=${encodeURIComponent(`${siteUrl}/checkout`)}`,
       `metadata[userId]=${encodeURIComponent(userId ?? "")}`,
       `metadata[customerEmail]=${encodeURIComponent(address.email)}`,
-      `metadata[items]=${encodeURIComponent(JSON.stringify(items))}`,
+      `metadata[items]=${encodeURIComponent(JSON.stringify(validatedItems))}`,
       `metadata[shippingAddress]=${encodeURIComponent(JSON.stringify(address))}`,
       `metadata[promoCode]=${encodeURIComponent(promoCode ?? "")}`,
       `metadata[discountEUR]=${discountEUR}`,
@@ -42,7 +50,7 @@ export async function POST(req: Request) {
       parts.push(`line_items[0][price_data][unit_amount]=${Math.round(discountedTotal * 100)}`);
       parts.push(`line_items[0][quantity]=1`);
     } else {
-      items.forEach((item: {
+      validatedItems.forEach((item: {
         name: string; colourLabel: string; size: string; priceEUR: number; quantity: number;
       }, i: number) => {
         parts.push(`line_items[${i}][price_data][currency]=eur`);

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getServerPrice } from "@/lib/prices";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -27,15 +28,22 @@ async function getAccessToken(): Promise<string> {
 
 export async function POST(req: Request) {
   try {
-    const { items, address, userId, promoCode, discountEUR = 0 } = await req.json();
+    const { items, address, userId, promoCode, discountEUR = 0, referralCode } = await req.json();
 
     if (!items?.length) {
       return NextResponse.json({ error: "Panier vide" }, { status: 400 });
     }
 
+    // Validation et remplacement des prix côté serveur
+    const validatedItems = items.map((item: { slug: string; priceEUR: number; quantity: number; name: string; colourLabel: string; size: string }) => {
+      const serverPrice = getServerPrice(item.slug);
+      if (!serverPrice) throw new Error(`Produit inconnu : ${item.slug}`);
+      return { ...item, priceEUR: serverPrice };
+    });
+
     const accessToken = await getAccessToken();
 
-    const originalTotal = items.reduce(
+    const originalTotal = validatedItems.reduce(
       (sum: number, item: { priceEUR: number; quantity: number }) =>
         sum + item.priceEUR * item.quantity,
       0
@@ -43,7 +51,7 @@ export async function POST(req: Request) {
     const itemTotal = Math.max(0, originalTotal - discountEUR);
     const promoLabel = promoCode ? ` (code ${promoCode})` : "";
 
-    const orderItems = items.map(
+    const orderItems = validatedItems.map(
       (item: {
         name: string;
         colourLabel: string;
@@ -66,7 +74,7 @@ export async function POST(req: Request) {
       intent: "CAPTURE",
       purchase_units: [
         {
-          custom_id: userId ?? "",
+          custom_id: JSON.stringify({ userId: userId ?? "", referralCode: referralCode ?? "" }),
           description: `Elekka - Commande de ${address.firstName} ${address.lastName}${promoLabel}`,
           amount: {
             currency_code: "EUR",

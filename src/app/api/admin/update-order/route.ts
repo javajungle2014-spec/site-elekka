@@ -49,24 +49,30 @@ export async function POST(req: Request) {
     await supabase.from("orders").update(updates).eq("id", orderId);
 
     // Envoyer email si passage en statut "expédiée"
+    let emailSent = false;
     const wasShipped = order.status !== "expediee" && status === "expediee";
     if (wasShipped && order.shipping_address?.email && trackingNumber) {
       const resend = new Resend(process.env.RESEND_API_KEY);
-      await resend.emails.send({
-        from: "Elekka <contact@elekka-sellier.fr>",
-        replyTo: "elekka.sellier@gmail.com",
-        to: order.shipping_address.email,
-        subject: `Votre commande ${order.order_number} est expédiée`,
-        html: shippingEmail({
-          orderNumber: order.order_number,
-          firstName: order.shipping_address.firstName,
-          trackingNumber,
-          address: order.shipping_address,
-        }),
-      });
+      try {
+        await resend.emails.send({
+          from: "Elekka <contact@elekka-sellier.fr>",
+          replyTo: "elekka.sellier@gmail.com",
+          to: order.shipping_address.email,
+          subject: `Votre commande ${order.order_number} est expédiée`,
+          html: shippingEmail({
+            orderNumber: order.order_number,
+            firstName: order.shipping_address.firstName,
+            trackingNumber,
+            address: order.shipping_address,
+          }),
+        });
+        emailSent = true;
+      } catch (emailErr) {
+        console.error("Email expédition non envoyé:", emailErr);
+      }
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, emailSent: wasShipped ? emailSent : null });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Erreur inconnue";
     return NextResponse.json({ error: message }, { status: 500 });

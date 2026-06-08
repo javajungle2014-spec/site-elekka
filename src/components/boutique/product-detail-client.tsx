@@ -462,45 +462,50 @@ export function ProductDetailClient({ product }: { product: Product }) {
   useEffect(() => { setFavoriteState(isFavorite(product.slug)); }, [isFavorite, product.slug]);
   useEffect(() => { setSelectedImageIdx(0); }, [selectedColour]);
 
-  // Vérification du stock dès que couleur ou taille change
+  // Vérification du stock dès que couleur ou taille change (avec debounce 300ms)
   useEffect(() => {
     setAltColour(null);
     if (!selectedSize || !selectedColour) return;
     const colour = product.colours.find(c => c.key === selectedColour)?.label;
     if (!colour) return;
-    fetch(`/api/stock/check?slug=${product.slug}&colour=${encodeURIComponent(colour)}&size=${selectedSize}`)
-      .then(r => r.json())
-      .then(async (d) => {
-        setStockQty(d.quantity ?? null);
-        if (d.quantity === 0) {
-          // Cherche une couleur alternative disponible
-          const others = product.colours.filter(c => c.key !== selectedColour);
-          for (const c of others) {
-            const res = await fetch(`/api/stock/check?slug=${product.slug}&colour=${encodeURIComponent(c.label)}&size=${selectedSize}`);
-            const data = await res.json();
-            if (data.quantity === null || data.quantity > 0) {
-              setAltColour(c.label);
-              break;
+    const timer = setTimeout(() => {
+      fetch(`/api/stock/check?slug=${product.slug}&colour=${encodeURIComponent(colour)}&size=${selectedSize}`)
+        .then(r => r.json())
+        .then(async (d) => {
+          setStockQty(d.quantity ?? null);
+          if (d.quantity === 0) {
+            const others = product.colours.filter(c => c.key !== selectedColour);
+            for (const c of others) {
+              const res = await fetch(`/api/stock/check?slug=${product.slug}&colour=${encodeURIComponent(c.label)}&size=${selectedSize}`);
+              const data = await res.json();
+              if (data.quantity === null || data.quantity > 0) {
+                setAltColour(c.label);
+                break;
+              }
             }
           }
-        }
-      })
-      .catch(() => setStockQty(null));
+        })
+        .catch(() => setStockQty(null));
+    }, 300);
+    return () => clearTimeout(timer);
   }, [selectedColour, selectedSize, product.slug, product.colours]);
   useEffect(() => { setEquipColour(selectedColour); }, [selectedColour]);
   useEffect(() => { if (selectedSize) setEquipSize(selectedSize as import("@/lib/products").Size); }, [selectedSize]);
 
-  // Vérification stock rênes sélectionnées
+  // Vérification stock rênes sélectionnées (avec debounce 300ms)
   useEffect(() => {
     setReinsStockQty(null);
     if (!selectedReins || selectedReins === "aucune") return;
     const slug = selectedReins === "caoutchouc" ? "renes-1" : "renes-2";
     const colour = currentColour.label;
-    fetch(`/api/stock/check?slug=${slug}&colour=${encodeURIComponent(colour)}&size=`)
-      .then(r => r.json())
-      .then(d => setReinsStockQty(d.quantity ?? null))
-      .catch(() => {});
-  }, [selectedReins, selectedColour, selectedSize, currentColour.label, product.defaultSize]);
+    const timer = setTimeout(() => {
+      fetch(`/api/stock/check?slug=${slug}&colour=${encodeURIComponent(colour)}&size=`)
+        .then(r => r.json())
+        .then(d => setReinsStockQty(d.quantity ?? null))
+        .catch(() => {});
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [selectedReins, selectedColour, currentColour.label]);
 
   // Vérification stock enrênement sélectionné
   useEffect(() => {

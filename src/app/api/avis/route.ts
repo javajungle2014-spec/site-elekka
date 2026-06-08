@@ -50,6 +50,12 @@ export async function POST(req: Request) {
     if (!token || !rating || !text?.trim()) {
       return NextResponse.json({ error: "Données manquantes" }, { status: 400 });
     }
+    if (typeof rating !== "number" || rating < 1 || rating > 5 || !Number.isInteger(rating)) {
+      return NextResponse.json({ error: "Note invalide (1 à 5)" }, { status: 400 });
+    }
+    if (text.trim().length > 2000) {
+      return NextResponse.json({ error: "Avis trop long (2000 caractères max)" }, { status: 400 });
+    }
 
     const supabase = supabaseAdmin();
 
@@ -91,11 +97,13 @@ export async function POST(req: Request) {
     await supabase.from("review_tokens").update({ used: true }).eq("token", token);
 
     // Envoyer le code de remerciement -25€
-    await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/review-thanks`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: tokenData.email, firstName: tokenData.first_name }),
-    });
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/review-thanks`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: tokenData.email, firstName: tokenData.first_name }),
+      });
+    } catch { /* non-bloquant */ }
 
     return NextResponse.json({ success: true });
   } catch (err) {
