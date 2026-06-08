@@ -10,7 +10,9 @@ export async function GET() {
 
   const items = visible.map((p) => {
     const colour = p.colours.find((c) => c.key === p.defaultColour) ?? p.colours[0];
-    const image = colour?.images?.find((img) => !img.includes("|"));
+    const cleanImages = colour?.images?.filter((img) => !img.includes("|")) ?? [];
+    const [main, ...rest] = cleanImages;
+    const additionals = rest.slice(0, 2);
 
     return `
     <item>
@@ -18,7 +20,8 @@ export async function GET() {
       <g:title><![CDATA[${p.name}]]></g:title>
       <g:description><![CDATA[${p.description}]]></g:description>
       <g:link>${BASE}/boutique/${p.slug}</g:link>
-      ${image ? `<g:image_link>${BASE}${image}</g:image_link>` : ""}
+      ${main ? `<g:image_link>${BASE}${main}</g:image_link>` : ""}
+      ${additionals.map((img) => `<g:additional_image_link>${BASE}${img}</g:additional_image_link>`).join("\n      ")}
       <g:price>${p.priceEUR} EUR</g:price>
       <g:availability>in stock</g:availability>
       <g:condition>new</g:condition>
