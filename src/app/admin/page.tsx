@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Package, CaretLeft, Truck, Check, SignOut, ChartBar, DownloadSimple, Warehouse, Plus, Minus, Tag } from "@phosphor-icons/react";
+import { Package, CaretLeft, Truck, Check, SignOut, ChartBar, DownloadSimple, Warehouse, Plus, Minus, Tag, Star } from "@phosphor-icons/react";
 import { formatPrice } from "@/lib/products";
 
 type OrderStatus = "en_preparation" | "expediee" | "livree" | "annulee";
@@ -938,9 +938,9 @@ function ExportButton({ password }: { password: string }) {
 }
 
 function OrdersList({
-  orders, password, onSelect, onLogout, onStats, onStock, onPromo,
+  orders, password, onSelect, onLogout, onStats, onStock, onPromo, onReviews,
 }: {
-  orders: Order[]; password: string; onSelect: (o: Order) => void; onLogout: () => void; onStats: () => void; onStock: () => void; onPromo: () => void;
+  orders: Order[]; password: string; onSelect: (o: Order) => void; onLogout: () => void; onStats: () => void; onStock: () => void; onPromo: () => void; onReviews: () => void;
 }) {
   const counts = {
     en_preparation: orders.filter((o) => o.status === "en_preparation").length,
@@ -979,6 +979,13 @@ function OrdersList({
               className="flex items-center gap-2 text-sm text-muted hover:text-ink transition-colors"
             >
               <Tag size={14} /> Promos
+            </button>
+            <button
+              type="button"
+              onClick={onReviews}
+              className="flex items-center gap-2 text-sm text-muted hover:text-ink transition-colors"
+            >
+              <Star size={14} /> Avis
             </button>
             <button
               type="button"
@@ -1051,6 +1058,61 @@ function OrdersList({
   );
 }
 
+// ── Modération avis ──────────────────────────────────────────────────────────
+
+function ReviewsView({ password, onBack }: { password: string; onBack: () => void }) {
+  const [reviews, setReviews] = useState<{ id: number; name: string; rating: number; text: string; active: boolean; created_at: string; order_number: string }[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/admin/reviews", { headers: { Authorization: `Bearer ${password}` } })
+      .then(r => r.json()).then(d => { setReviews(d.reviews ?? []); setLoading(false); });
+  }, [password]);
+
+  async function toggle(id: number, active: boolean) {
+    await fetch("/api/admin/reviews", { method: "PATCH", headers: { "Content-Type": "application/json", Authorization: `Bearer ${password}` }, body: JSON.stringify({ id, active }) });
+    setReviews(prev => prev.map(r => r.id === id ? { ...r, active } : r));
+  }
+
+  async function remove(id: number) {
+    await fetch("/api/admin/reviews", { method: "DELETE", headers: { "Content-Type": "application/json", Authorization: `Bearer ${password}` }, body: JSON.stringify({ id }) });
+    setReviews(prev => prev.filter(r => r.id !== id));
+  }
+
+  return (
+    <div className="min-h-screen bg-paper">
+      <div className="max-w-[900px] mx-auto px-5 md:px-10 py-10">
+        <div className="flex items-center gap-4 mb-10">
+          <button type="button" onClick={onBack} className="flex items-center gap-2 text-sm text-muted hover:text-ink"><CaretLeft size={14} /> Retour</button>
+          <h1 className="text-3xl font-bold">Avis clients</h1>
+        </div>
+        {loading ? <p className="text-sm text-muted">Chargement…</p> : reviews.length === 0 ? <p className="text-sm text-muted">Aucun avis.</p> : (
+          <div className="space-y-4">
+            {reviews.map(r => (
+              <div key={r.id} className={`border p-5 space-y-2 ${r.active ? "border-green-200 bg-green-50/30" : "border-line"}`}>
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="font-semibold text-sm">{r.name} <span className="text-muted font-normal">· {r.order_number} · {new Date(r.created_at).toLocaleDateString("fr-FR")}</span></p>
+                    <p className="text-sm text-amber-500">{"★".repeat(r.rating)}{"☆".repeat(5 - r.rating)}</p>
+                    <p className="text-sm text-muted mt-1">{r.text}</p>
+                  </div>
+                  <div className="flex gap-2 shrink-0">
+                    <button type="button" onClick={() => toggle(r.id, !r.active)}
+                      className={`px-3 py-1.5 text-xs font-medium border transition-colors ${r.active ? "border-red-200 text-red-600 hover:bg-red-50" : "border-green-200 text-green-700 hover:bg-green-50"}`}>
+                      {r.active ? "Masquer" : "Publier"}
+                    </button>
+                    <button type="button" onClick={() => remove(r.id)} className="px-3 py-1.5 text-xs font-medium border border-line text-muted hover:text-red-600 hover:border-red-200 transition-colors">Supprimer</button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── Page principale ───────────────────────────────────────────────────────────
 
 export default function AdminPage() {
@@ -1060,6 +1122,7 @@ export default function AdminPage() {
   const [showStats, setShowStats] = useState(false);
   const [showStock, setShowStock] = useState(false);
   const [showPromo, setShowPromo] = useState(false);
+  const [showReviews, setShowReviews] = useState(false);
   const [authError, setAuthError] = useState(false);
 
   const loadOrders = useCallback(async (pwd: string) => {
@@ -1138,6 +1201,10 @@ export default function AdminPage() {
     return <PromoCodesView password={password} onBack={() => setShowPromo(false)} />;
   }
 
+  if (showReviews) {
+    return <ReviewsView password={password} onBack={() => setShowReviews(false)} />;
+  }
+
   return (
     <OrdersList
       orders={orders}
@@ -1147,6 +1214,7 @@ export default function AdminPage() {
       onStats={() => setShowStats(true)}
       onStock={() => setShowStock(true)}
       onPromo={() => setShowPromo(true)}
+      onReviews={() => setShowReviews(true)}
     />
   );
 }

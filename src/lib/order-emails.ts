@@ -26,13 +26,14 @@ function supabaseAdmin() {
 }
 
 export async function createOrderAndGetNumber({
-  userId, items, address, totalEUR, referralCode,
+  userId, items, address, totalEUR, referralCode, stripeSessionId,
 }: {
   userId: string | null;
   items: OrderItem[];
   address: OrderAddress;
   totalEUR: number;
   referralCode?: string | null;
+  stripeSessionId?: string | null;
 }): Promise<string> {
   const supabase = supabaseAdmin();
 
@@ -43,6 +44,8 @@ export async function createOrderAndGetNumber({
       status: "en_preparation",
       total_eur: totalEUR,
       shipping_address: address,
+      referral_code: referralCode ?? null,
+      stripe_session_id: stripeSessionId ?? null,
       items: items.map((i) => ({
         slug: i.slug, name: i.name, colourLabel: i.colourLabel,
         size: i.size, qty: i.quantity, priceEUR: i.priceEUR,
@@ -51,11 +54,12 @@ export async function createOrderAndGetNumber({
     .select("id")
     .single();
 
-  const orderNumber = data ? `ELK-${data.id + 79}` : `ELK-${80 + Math.floor(Math.random() * 9)}`;
-
-  if (data) {
-    await supabase.from("orders").update({ order_number: orderNumber }).eq("id", data.id);
+  if (!data) {
+    throw new Error("Impossible de créer la commande en base de données");
   }
+
+  const orderNumber = `ELK-${data.id + 79}`;
+  await supabase.from("orders").update({ order_number: orderNumber }).eq("id", data.id);
 
   // Récompenser le parrain si applicable
   if (referralCode && data) {
@@ -121,7 +125,7 @@ export async function sendOrderEmails({
       from: "Elekka Boutique <contact@elekka-sellier.fr>",
       to: "elekka.sellier@gmail.com",
       replyTo: address.email,
-      subject: `Nouvelle commande ${orderNumber} — ${address.firstName} ${address.lastName} — ${totalEUR % 1 !== 0 ? totalEUR.toFixed(2) : totalEUR.toFixed(0)} €`,
+      subject: `Nouvelle commande ${orderNumber} — ${address.firstName} ${address.lastName} — ${totalEUR.toFixed(2)} €`,
       html: notificationEmail({ orderNumber, items, address, totalEUR }),
     }),
   ]);
@@ -139,7 +143,7 @@ function confirmationEmail({ orderNumber, items, address, totalEUR }: {
         <span style="font-size:12px;color:#737373">${i.colourLabel} · Taille ${i.size} · Qté ${i.quantity}</span>
       </td>
       <td style="padding:12px 0;border-bottom:1px solid #e5e5e5;font-size:14px;text-align:right;font-family:monospace">
-        ${(i.priceEUR * i.quantity) % 1 !== 0 ? (i.priceEUR * i.quantity).toFixed(2) : (i.priceEUR * i.quantity).toFixed(0)} €
+        ${(i.priceEUR * i.quantity).toFixed(2)} €
       </td>
     </tr>`).join("");
 
@@ -159,7 +163,7 @@ function confirmationEmail({ orderNumber, items, address, totalEUR }: {
         ${rows}
         <tr>
           <td style="padding:16px 0 0;font-size:14px;font-weight:700">Total</td>
-          <td style="padding:16px 0 0;font-size:14px;font-weight:700;text-align:right;font-family:monospace">${totalEUR % 1 !== 0 ? totalEUR.toFixed(2) : totalEUR.toFixed(0)} €</td>
+          <td style="padding:16px 0 0;font-size:14px;font-weight:700;text-align:right;font-family:monospace">${totalEUR.toFixed(2)} €</td>
         </tr>
       </table>
 
@@ -193,7 +197,7 @@ function notificationEmail({ orderNumber, items, address, totalEUR }: {
         ${i.name} — ${i.colourLabel} · ${i.size} · ×${i.quantity}
       </td>
       <td style="padding:10px 0;border-bottom:1px solid #e5e5e5;font-size:14px;text-align:right;font-family:monospace">
-        ${(i.priceEUR * i.quantity) % 1 !== 0 ? (i.priceEUR * i.quantity).toFixed(2) : (i.priceEUR * i.quantity).toFixed(0)} €
+        ${(i.priceEUR * i.quantity).toFixed(2)} €
       </td>
     </tr>`).join("");
 
@@ -205,7 +209,7 @@ function notificationEmail({ orderNumber, items, address, totalEUR }: {
       <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#737373;margin:0 0 6px">Numéro de commande</p>
       <p style="font-size:20px;font-weight:700;font-family:monospace;margin:0 0 24px">${orderNumber}</p>
 
-      <h2 style="font-size:20px;font-weight:700;margin:0 0 24px">${address.firstName} ${address.lastName} — ${totalEUR % 1 !== 0 ? totalEUR.toFixed(2) : totalEUR.toFixed(0)} €</h2>
+      <h2 style="font-size:20px;font-weight:700;margin:0 0 24px">${address.firstName} ${address.lastName} — ${totalEUR.toFixed(2)} €</h2>
       <table style="width:100%;border-collapse:collapse;margin-bottom:28px">${rows}</table>
 
       <div style="margin-bottom:20px">

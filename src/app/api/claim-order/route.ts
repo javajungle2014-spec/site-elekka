@@ -36,9 +36,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Cette commande est déjà associée à un compte" });
     }
 
-    // Vérifier le code postal
-    const orderPostal = order.shipping_address?.postalCode?.trim();
-    if (orderPostal !== postalCode.trim()) {
+    // Vérifier le code postal (normalisé : majuscules, sans espaces)
+    const normalize = (s: string) => s.trim().toUpperCase().replace(/\s/g, "");
+    const orderPostal = normalize(order.shipping_address?.postalCode ?? "");
+    if (!orderPostal || orderPostal !== normalize(postalCode)) {
       return NextResponse.json({ error: "Code postal incorrect" });
     }
 

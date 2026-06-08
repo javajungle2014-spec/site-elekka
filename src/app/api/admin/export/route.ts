@@ -37,7 +37,8 @@ export async function GET(req: Request) {
     .select("*")
     .gte("created_at", start)
     .lt("created_at", end)
-    .order("created_at", { ascending: true });
+    .order("created_at", { ascending: true })
+    .limit(5000);
 
   const rows = (orders ?? []).map((o) => {
     const addr = o.shipping_address ?? {};

@@ -41,6 +41,16 @@ export async function POST(req: Request) {
       return { ...item, priceEUR: serverPrice };
     });
 
+    // Vérification stock avant création order PayPal
+    const siteUrl = "https://elekka-sellier.fr";
+    for (const item of validatedItems) {
+      const res = await fetch(`${siteUrl}/api/stock/check?slug=${item.slug}&colour=${encodeURIComponent(item.colourLabel)}&size=${encodeURIComponent(item.size)}`);
+      const stock = await res.json();
+      if (stock.quantity === 0) {
+        return NextResponse.json({ error: `${item.name} est en rupture de stock` }, { status: 400 });
+      }
+    }
+
     const accessToken = await getAccessToken();
 
     const originalTotal = validatedItems.reduce(
@@ -117,7 +127,7 @@ export async function POST(req: Request) {
     const data = await res.json();
 
     if (!res.ok || !data.id) {
-      console.error("PayPal create-order error:", data);
+      console.error("PayPal create-order error:", data?.name, data?.message);
       return NextResponse.json(
         { error: data.message ?? "Erreur PayPal" },
         { status: 500 }

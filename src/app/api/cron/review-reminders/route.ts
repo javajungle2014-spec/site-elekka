@@ -86,30 +86,23 @@ export async function GET(req: Request) {
     .not("delivered_at", "is", null);
 
   for (const order of orders5 ?? []) {
-    const email = order.shipping_address?.email;
-    const firstName = order.shipping_address?.firstName;
-    if (!email || !firstName) continue;
+    try {
+      const email = order.shipping_address?.email;
+      const firstName = order.shipping_address?.firstName;
+      if (!email || !firstName) continue;
 
-    const token = generateToken();
-    await supabase.from("review_tokens").insert({
-      token,
-      order_id: order.id,
-      email,
-      first_name: firstName,
-      order_number: order.order_number,
-    });
+      const token = generateToken();
+      await supabase.from("review_tokens").insert({
+        token, order_id: order.id, email, first_name: firstName, order_number: order.order_number,
+      });
 
-    const { subject, html } = reviewEmail({ firstName, orderNumber: order.order_number, token, round: 1 });
-    await resend.emails.send({
-      from: "Elekka <contact@elekka-sellier.fr>",
-      replyTo: "elekka.sellier@gmail.com",
-      to: email,
-      subject,
-      html,
-    });
-
-    await supabase.from("orders").update({ review_email_1_sent: true }).eq("id", order.id);
-    sent++;
+      const { subject, html } = reviewEmail({ firstName, orderNumber: order.order_number, token, round: 1 });
+      await resend.emails.send({ from: "Elekka <contact@elekka-sellier.fr>", replyTo: "elekka.sellier@gmail.com", to: email, subject, html });
+      await supabase.from("orders").update({ review_email_1_sent: true }).eq("id", order.id);
+      sent++;
+    } catch (err) {
+      console.error(`review-reminders J+5 : order ${order.id}`, err);
+    }
   }
 
   // J+60 — deuxième email
@@ -122,30 +115,23 @@ export async function GET(req: Request) {
     .not("delivered_at", "is", null);
 
   for (const order of orders60 ?? []) {
-    const email = order.shipping_address?.email;
-    const firstName = order.shipping_address?.firstName;
-    if (!email || !firstName) continue;
+    try {
+      const email = order.shipping_address?.email;
+      const firstName = order.shipping_address?.firstName;
+      if (!email || !firstName) continue;
 
-    const token = generateToken();
-    await supabase.from("review_tokens").insert({
-      token,
-      order_id: order.id,
-      email,
-      first_name: firstName,
-      order_number: order.order_number,
-    });
+      const token = generateToken();
+      await supabase.from("review_tokens").insert({
+        token, order_id: order.id, email, first_name: firstName, order_number: order.order_number,
+      });
 
-    const { subject, html } = reviewEmail({ firstName, orderNumber: order.order_number, token, round: 2 });
-    await resend.emails.send({
-      from: "Elekka <contact@elekka-sellier.fr>",
-      replyTo: "elekka.sellier@gmail.com",
-      to: email,
-      subject,
-      html,
-    });
-
-    await supabase.from("orders").update({ review_email_2_sent: true }).eq("id", order.id);
-    sent++;
+      const { subject, html } = reviewEmail({ firstName, orderNumber: order.order_number, token, round: 2 });
+      await resend.emails.send({ from: "Elekka <contact@elekka-sellier.fr>", replyTo: "elekka.sellier@gmail.com", to: email, subject, html });
+      await supabase.from("orders").update({ review_email_2_sent: true }).eq("id", order.id);
+      sent++;
+    } catch (err) {
+      console.error(`review-reminders J+60 : order ${order.id}`, err);
+    }
   }
 
   return NextResponse.json({ success: true, sent });

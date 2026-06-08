@@ -67,7 +67,7 @@ export async function POST(req: Request) {
     const data = await res.json();
 
     if (!res.ok || data.status !== "COMPLETED") {
-      console.error("PayPal capture error:", data);
+      console.error("PayPal capture error:", data?.name, data?.message);
       return NextResponse.json(
         { error: data.message ?? "Erreur de capture PayPal" },
         { status: 500 }

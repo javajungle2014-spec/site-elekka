@@ -63,7 +63,9 @@ export default function CheckoutPage() {
   const [referral, setReferral] = useState<{ code: string; discountPercent: number; label: string } | null>(null);
 
   const referralDiscount = referral ? Math.round(totalPrice * referral.discountPercent / 100 * 100) / 100 : 0;
-  const discountedTotal = Math.max(0, totalPrice - promo.discountEUR - referralDiscount);
+  // Limiter la réduction combinée à 100% du total (jamais de commande gratuite involontaire)
+  const totalDiscount = Math.min(promo.discountEUR + referralDiscount, totalPrice);
+  const discountedTotal = Math.max(0, totalPrice - totalDiscount);
 
   useEffect(() => {
     if (items.length === 0) router.replace("/boutique");
@@ -71,8 +73,20 @@ export default function CheckoutPage() {
 
   // Détecter code de parrainage
   useEffect(() => {
-    const code = localStorage.getItem("referral_code");
-    if (!code) return;
+    const stored = localStorage.getItem("referral_code");
+    if (!stored) return;
+    // Expiry 7 jours
+    let code: string;
+    try {
+      const parsed = JSON.parse(stored) as { code: string; expires: number };
+      if (parsed.expires && Date.now() > parsed.expires) {
+        localStorage.removeItem("referral_code");
+        return;
+      }
+      code = parsed.code ?? stored;
+    } catch {
+      code = stored; // rétrocompatibilité anciens codes non-JSON
+    }
     const supabase = createClient();
     supabase.auth.getUser().then(async ({ data }) => {
       const res = await fetch("/api/referral/validate", {

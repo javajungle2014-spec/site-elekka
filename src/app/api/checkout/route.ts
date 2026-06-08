@@ -19,7 +19,16 @@ export async function POST(req: Request) {
       return { ...item, priceEUR: serverPrice };
     });
 
+    // Vérification stock avant création session
     const siteUrl = "https://elekka-sellier.fr";
+    for (const item of validatedItems) {
+      const res = await fetch(`${siteUrl}/api/stock/check?slug=${item.slug}&colour=${encodeURIComponent(item.colourLabel)}&size=${encodeURIComponent(item.size)}`);
+      const stock = await res.json();
+      if (stock.quantity === 0) {
+        return NextResponse.json({ error: `${item.name} est en rupture de stock` }, { status: 400 });
+      }
+    }
+
     const secretKey = process.env.STRIPE_SECRET_KEY!;
 
     const originalTotal = validatedItems.reduce(
@@ -71,7 +80,7 @@ export async function POST(req: Request) {
     });
 
     const data = await res.json();
-    console.log("Stripe response:", res.status, JSON.stringify(data.error ?? "ok"));
+    if (!res.ok) console.error("Stripe error:", res.status, data.error?.code);
 
     if (!res.ok || !data.url) {
       return NextResponse.json({ error: data.error?.message ?? "Erreur Stripe" }, { status: 500 });

@@ -102,7 +102,7 @@ function Tracker() {
     const ref = searchParams.get("ref");
     if (ref) {
       const code = ref.toUpperCase();
-      localStorage.setItem("referral_code", code);
+      localStorage.setItem("referral_code", JSON.stringify({ code, expires: Date.now() + 7 * 24 * 60 * 60 * 1000 }));
       setReferralCode(code);
       setShowModal(true);
     }

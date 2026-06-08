@@ -34,12 +34,12 @@ export async function POST(req: Request) {
     const email = authUser?.user?.email;
     if (!email) return NextResponse.json({ success: false });
 
-    // Enregistrer le parrainage
-    await supabase.from("referrals").insert({
+    // Enregistrer le parrainage (reward_sent: false jusqu'à confirmation email)
+    const { data: referralRow } = await supabase.from("referrals").insert({
       referrer_code: referralCode,
       referee_order_id: orderId ?? null,
-      reward_sent: true,
-    });
+      reward_sent: false,
+    }).select("id").single();
 
     const code = await insertUniquePromoCode(supabase, "PARRAIN", "fixed", 30, { product_restriction: "filets" });
 
@@ -61,6 +61,11 @@ export async function POST(req: Request) {
       subject: "Votre filleul vient de commander — votre récompense Elekka",
       html: rewardEmail({ firstName: profile.first_name ?? "vous", code }),
     });
+
+    // Marquer reward_sent: true après envoi email confirmé
+    if (referralRow) {
+      await supabase.from("referrals").update({ reward_sent: true }).eq("id", referralRow.id);
+    }
 
     return NextResponse.json({ success: true });
   } catch (err) {
