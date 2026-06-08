@@ -15,10 +15,11 @@ export default function FrontalPage() {
       description: "En cuir pleine fleur, compatible avec tous les bridons de la gamme. Choisissez le modèle adapté à votre cheval.",
       priceEUR: 19.99,
       models: [
-        { key: "classique", label: "Classique", desc: "Frontal rectiligne, sobre et élégant — Essentiel", priceEUR: 19.99, stockSlug: "frontal-essentiel", images: {
+        { key: "classique", label: "Essentiel", desc: "Frontal rectiligne, sobre et élégant — Essentiel", priceEUR: 19.99, stockSlug: "frontal-essentiel", images: {
           "havana-brown": ["/products/pieces/frontal/frontal-classique-havana-brown-01.png", "/products/pieces/frontal/frontal-classique-havana-brown-02.png", "/products/pieces/frontal/frontal-classique-havana-brown-03.png"],
-          "noir":         ["/products/pieces/frontal/frontal-classique-noir-01.png",         "/products/pieces/frontal/frontal-classique-noir-02.png",         "/products/pieces/frontal/frontal-classique-noir-03.png"],
-        }},
+        }, colours: [
+          { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
+        ]},
         { key: "anatomique", label: "Anatomique", desc: "Légèrement incurvé pour suivre la morphologie du front — Signature", priceEUR: 38.75, stockSlug: "frontal-fusion", images: {
           "havana-brown": ["/products/pieces/frontal/frontal-anatomique-havana-brown-01.png", "/products/pieces/frontal/frontal-anatomique-havana-brown-02.png", "/products/pieces/frontal/frontal-anatomique-havana-brown-03.png"],
           "noir":         ["/products/pieces/frontal/frontal-anatomique-noir-01.png",         "/products/pieces/frontal/frontal-anatomique-noir-02.png",         "/products/pieces/frontal/frontal-anatomique-noir-03.png"],
