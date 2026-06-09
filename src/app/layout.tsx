@@ -13,6 +13,7 @@ import { FavoritesProvider } from "@/lib/favorites-store";
 import { CartDrawer } from "@/components/cart-drawer";
 import { FavoritesDrawer } from "@/components/favorites-drawer";
 import { CookieBanner } from "@/components/cookie-banner";
+import { HelpButton } from "@/components/help-button";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -81,6 +82,7 @@ export default function RootLayout({
             <SiteFooter />
             <CartDrawer />
             <FavoritesDrawer />
+            <HelpButton />
             <CookieBanner />
           </FavoritesProvider>
         </CartProvider>

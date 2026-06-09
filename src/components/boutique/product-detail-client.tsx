@@ -637,8 +637,8 @@ export function ProductDetailClient({ product }: { product: Product }) {
 
       <div className="min-h-screen pb-24">
 
-        {/* Fil d'Ariane */}
-        <div className="px-6 md:px-12 pt-8">
+        {/* Fil d'Ariane — sticky sur mobile */}
+        <div className="sticky md:static top-[64px] z-30 bg-paper md:bg-transparent border-b md:border-0 border-line/60 md:border-0 px-6 md:px-12 py-3 md:py-0 md:pt-8">
           <a href="/boutique" className="inline-flex items-center gap-2 text-[12px] text-muted hover:text-ink transition-colors press">
             <IcoArrowLeft size={12} />
             <span>Boutique</span>

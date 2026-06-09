@@ -136,7 +136,7 @@ export function HomeHero() {
 
             {/* Description */}
             <p
-              className="text-white/52 text-sm md:text-base max-w-[46ch] mb-8 leading-relaxed"
+              className="text-white/52 text-sm md:text-base max-w-[46ch] mb-5 leading-relaxed"
               style={{
                 opacity: visible ? 1 : 0,
                 transform: visible ? "translateY(0)" : "translateY(12px)",
@@ -146,6 +146,30 @@ export function HomeHero() {
               Même exigence, même technologie, même qualité que les grandes
               maisons — sans leur marge.
             </p>
+
+            {/* Micro-copy valeur proposition */}
+            <div
+              className="flex flex-wrap items-center gap-2 mb-8"
+              style={{
+                opacity: visible ? 1 : 0,
+                transform: visible ? "translateY(0)" : "translateY(10px)",
+                transition: `opacity 0.8s ${SPRING} 1.25s, transform 0.8s ${SPRING} 1.25s`,
+              }}
+            >
+              {[
+                "À partir de 99 €",
+                "Rênes offertes",
+                "Livraison France offerte",
+              ].map((item) => (
+                <span
+                  key={item}
+                  className="inline-flex items-center gap-1.5 border border-white/20 text-white/60 text-[11px] tracking-wide px-3 py-1"
+                >
+                  <span className="w-1 h-1 rounded-full bg-white/40 shrink-0" />
+                  {item}
+                </span>
+              ))}
+            </div>
 
             {/* CTAs */}
             <div

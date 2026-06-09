@@ -107,6 +107,13 @@ export function PayPalButton({ items, address, promoCode, discountEUR, referralC
             errorRef.current(json.error ?? "Erreur lors de la capture PayPal");
             return;
           }
+          const total = Math.max(0, itemsRef.current.reduce((s, i) => s + i.priceEUR * i.quantity, 0) - discountRef.current);
+          sessionStorage.setItem("order_confirmation", JSON.stringify({
+            email: addressRef.current.email,
+            firstName: addressRef.current.firstName,
+            total,
+            orderNumber: json.orderNumber ?? null,
+          }));
           window.location.href = "/checkout/success";
         },
 

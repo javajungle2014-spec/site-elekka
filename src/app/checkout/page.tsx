@@ -222,6 +222,11 @@ export default function CheckoutPage() {
         setLoading(false);
         return;
       }
+      sessionStorage.setItem("order_confirmation", JSON.stringify({
+        email: address.email,
+        firstName: address.firstName,
+        total: discountedTotal,
+      }));
       window.location.href = json.url;
     } catch (err) {
       setCheckoutError(err instanceof Error ? err.message : "Erreur inattendue.");
