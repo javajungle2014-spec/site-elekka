@@ -1328,7 +1328,34 @@ export function ProductDetailClient({ product }: { product: Product }) {
 
       </div>
 
-      {/* ── Sticky cart ── */}
+      {/* ── Sticky cart mobile ── */}
+      {stickyVisible && (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-paper border-t border-line shadow-[0_-4px_24px_rgba(0,0,0,0.08)] flex items-center gap-3 px-4 py-3">
+          <div className="flex-1 min-w-0">
+            <p className="text-xs text-muted truncate">
+              {product.name.replace("Bridon Anatomique Elekka ", "").replace("Bridon Elekka ", "").replace("Filet Anatomique Elekka ", "")}
+            </p>
+            <p className="font-mono text-sm font-semibold">{formatPrice(total)}</p>
+          </div>
+          <button
+            type="button"
+            onClick={complete ? handleAdd : () => {
+              document.getElementById("configurateur")?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+            disabled={outOfStock}
+            className={`press shrink-0 inline-flex items-center gap-2 px-5 py-3 text-xs font-medium tracking-wide transition-colors ${
+              outOfStock
+                ? "bg-red-50 text-red-400 border border-red-200 cursor-not-allowed"
+                : complete
+                ? "bg-ink text-on-ink hover:bg-ink-soft"
+                : "bg-ink/80 text-on-ink"
+            }`}
+          >
+            <IcoBag size={14} />
+            {added ? "Ajouté !" : outOfStock ? "Rupture" : complete ? "Ajouter au panier" : "Composer"}
+          </button>
+        </div>
+      )}
     </>
   );
 }

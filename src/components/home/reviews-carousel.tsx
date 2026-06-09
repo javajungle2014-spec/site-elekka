@@ -66,6 +66,26 @@ function ReviewCard({ review }: { review: Review }) {
   );
 }
 
+function StarBadge({ avg, count }: { avg: number; count: number }) {
+  return (
+    <div className="flex items-center gap-2">
+      <div className="flex items-center gap-0.5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Star
+            key={i}
+            size={14}
+            weight={i < Math.round(avg) ? "fill" : "regular"}
+            className={i < Math.round(avg) ? "text-ink" : "text-muted-soft"}
+          />
+        ))}
+      </div>
+      <span className="font-mono text-xs text-muted tabular-nums">
+        {avg.toFixed(1)}/5 · {count} avis
+      </span>
+    </div>
+  );
+}
+
 export function ReviewsCarousel() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -124,6 +144,14 @@ export function ReviewsCarousel() {
             Ils ont fait confiance<br />
             <span className="text-muted">à Elekka.</span>
           </h2>
+          {reviews.length > 0 && (
+            <div className="mt-4">
+              <StarBadge
+                avg={reviews.reduce((s, r) => s + r.rating, 0) / reviews.length}
+                count={reviews.length}
+              />
+            </div>
+          )}
         </div>
 
         {/* Flèches */}

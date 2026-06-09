@@ -702,6 +702,20 @@ export default function PersonnaliserPage() {
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 6 : 12, flexShrink: 0 }}>
+          {!isMobile && (
+            <a
+              href="/boutique"
+              style={{
+                fontSize: 11, color: "#5a5a63", textDecoration: "none",
+                borderBottom: "1px solid #d8d3c7", paddingBottom: 1,
+                whiteSpace: "nowrap", transition: "color .15s",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#14141a")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "#5a5a63")}
+            >
+              Voir les modèles standards →
+            </a>
+          )}
           <span style={{ fontFamily: "var(--font-geist-mono)", fontSize: 11, color: "#5a5a63" }}>
             {completedCount}/{STEP_KEYS.length}
           </span>

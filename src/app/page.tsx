@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { HomeHero } from "@/components/home/hero";
+import { BridlesGrid } from "@/components/home/bridles-grid";
 import { Manifesto } from "@/components/home/manifesto";
 import { ProductFeature } from "@/components/home/product-feature";
 import { AboutTeaser } from "@/components/home/about-teaser";
@@ -27,6 +28,7 @@ export default function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema()) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema()) }} />
       <HomeHero />
+      <BridlesGrid />
       <ProductFeature />
       <Manifesto />
       <ReviewsCarousel />

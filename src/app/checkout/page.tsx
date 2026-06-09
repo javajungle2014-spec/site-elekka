@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, Lock, Tag } from "@phosphor-icons/react";
 import { PayPalButton } from "@/components/paypal-button";
 import { useCart } from "@/lib/cart-store";
-import { formatPrice } from "@/lib/products";
+import { formatPrice, products } from "@/lib/products";
 import { createClient } from "@/lib/supabase";
 import { fetchProfile, upsertProfile } from "@/lib/account-store";
 
@@ -288,6 +288,47 @@ export default function CheckoutPage() {
                   <Field label="Pays" value={address.country} onChange={set("country")} autoComplete="country-name" />
                 </div>
               </div>
+
+              {/* Cross-sell */}
+              {(() => {
+                const inCartSlugs = new Set(items.map((i) => i.slug));
+                const CROSS_SELL = [
+                  { slug: "renes-1", reason: "Rênes assorties" },
+                  { slug: "licol-1", reason: "Licol assorti" },
+                  { slug: "essentiel", reason: "Filet complémentaire" },
+                ];
+                const suggestions = CROSS_SELL
+                  .filter((c) => !inCartSlugs.has(c.slug))
+                  .slice(0, 2)
+                  .map((c) => ({ ...c, product: products.find((p) => p.slug === c.slug) }))
+                  .filter((c) => c.product && !c.product.hidden);
+                if (suggestions.length === 0) return null;
+                return (
+                  <div className="border-t border-line pt-6">
+                    <p className="kicker text-muted mb-4">À ne pas oublier</p>
+                    <div className="flex flex-col gap-3">
+                      {suggestions.map(({ slug, reason, product: p }) => {
+                        if (!p) return null;
+                        return (
+                          <div key={slug} className="flex items-center justify-between gap-4 border border-line p-3">
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs text-muted">{reason}</p>
+                              <p className="text-sm font-medium leading-snug truncate">{p.name.replace("Bridon Anatomique Elekka ", "").replace("Bridon Elekka ", "").replace("Filet Anatomique Elekka ", "")}</p>
+                            </div>
+                            <span className="font-mono text-xs shrink-0 text-muted">{formatPrice(p.priceEUR)}</span>
+                            <Link
+                              href={`/boutique/${slug}`}
+                              className="shrink-0 text-xs border border-line px-3 py-1.5 hover:border-ink hover:text-ink transition-colors"
+                            >
+                              Voir →
+                            </Link>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })()}
 
               {/* CTA */}
               <div className="space-y-4 pt-2">
