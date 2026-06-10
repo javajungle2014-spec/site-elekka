@@ -2,11 +2,9 @@
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import Image from "next/image";
-import Link from "next/link";
 
 export function IntroOverlay() {
   const [show, setShow] = useState(true);
-  const [contentVisible, setContentVisible] = useState(false);
   const [exiting, setExiting] = useState(false);
 
   useEffect(() => {
@@ -16,18 +14,10 @@ export function IntroOverlay() {
     }
     sessionStorage.setItem("intro_shown", "1");
 
-    // Logo visible immédiatement, contenu après 0.8s
-    const tContent = setTimeout(() => setContentVisible(true), 800);
-    // Auto-dismiss après 4s
-    const tExit = setTimeout(() => setExiting(true), 4000);
-    const tRemove = setTimeout(() => setShow(false), 4000 + 1400);
-    return () => { clearTimeout(tContent); clearTimeout(tExit); clearTimeout(tRemove); };
+    const tExit = setTimeout(() => setExiting(true), 2000);
+    const tRemove = setTimeout(() => setShow(false), 2000 + 1400);
+    return () => { clearTimeout(tExit); clearTimeout(tRemove); };
   }, []);
-
-  function dismiss() {
-    setExiting(true);
-    setTimeout(() => setShow(false), 1400);
-  }
 
   if (!show) return null;
 
@@ -73,44 +63,13 @@ export function IntroOverlay() {
       </motion.div>
 
       <motion.p
-        className="kicker text-on-ink-muted tracking-[0.22em] text-sm mb-8"
+        className="kicker text-on-ink-muted tracking-[0.22em] text-sm"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
       >
         Maison française · Bridons en cuir
       </motion.p>
-
-      {contentVisible && (
-        <motion.div
-          className="flex flex-col items-center gap-5 px-5 text-center"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <p className="text-on-ink-muted text-sm max-w-[34ch] leading-relaxed">
-            Bridons en cuir pleine fleur · À partir de 99 €<br />
-            Livraison offerte + rênes offertes pour tout filet.
-          </p>
-          <Link
-            href="/boutique"
-            onClick={dismiss}
-            className="press inline-flex items-center gap-2 border border-on-ink-muted/40 text-on-ink text-xs tracking-[0.2em] uppercase px-6 py-3 hover:bg-on-ink/10 transition-colors"
-          >
-            Explorer la boutique
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M1.5 6h9M6 1.5l4.5 4.5L6 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </Link>
-          <button
-            type="button"
-            onClick={dismiss}
-            className="text-on-ink-muted text-[11px] tracking-widest hover:text-on-ink transition-colors press"
-          >
-            Continuer sans entrer
-          </button>
-        </motion.div>
-      )}
     </motion.div>
   );
 }
