@@ -83,8 +83,9 @@ export default function CGVPage() {
           <h2 className="font-semibold text-base">Article 5 — Livraison</h2>
           <p>
             Les commandes sont expédiées vers la France métropolitaine et les pays de l'Union
-            européenne. Les délais indicatifs sont de 2 à 5 jours ouvrés pour la France
-            métropolitaine.
+            européenne. Les commandes sont préparées et expédiées sous 48 h ouvrées. Les délais
+            indicatifs de livraison sont de 5 à 7 jours ouvrés pour la France métropolitaine
+            (préparation + transport inclus).
           </p>
           <p>
             Les délais sont communiqués à titre indicatif. Elekka ne saurait être tenu

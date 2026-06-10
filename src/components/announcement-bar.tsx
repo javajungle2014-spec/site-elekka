@@ -1,5 +1,5 @@
 const messages = [
-  "Livraison offerte sur toutes les commandes",
+  "Livraison offerte — expédition sous 5 à 7 jours en France",
   "Pour tout filet acheté — une paire de rênes offerte",
 ];
 

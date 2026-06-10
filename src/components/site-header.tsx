@@ -271,6 +271,18 @@ export function SiteHeader() {
                 <span aria-hidden className="text-muted">→</span>
               </Link>
             ))}
+            {/* Mon compte dans la nav principale mobile */}
+            <Link
+              href="/compte"
+              onClick={() => setOpen(false)}
+              className="flex items-center justify-between px-5 py-5 text-lg tracking-tight press"
+            >
+              <span className="flex items-center gap-3">
+                <User size={20} className="text-muted" />
+                Mon compte
+              </span>
+              <span aria-hidden className="text-muted">→</span>
+            </Link>
             <div className="px-5 py-4">
               <p className="text-xs tracking-widest uppercase text-muted mb-3">Ressources</p>
               <div className="flex flex-col gap-3">
@@ -287,14 +299,6 @@ export function SiteHeader() {
               </div>
             </div>
           </nav>
-          <div className="flex items-center gap-8 px-5 py-6 border-t border-line">
-            <button type="button" aria-label="Mes favoris" className="flex items-center gap-2 text-sm text-muted press">
-              <Heart size={18} /> Favoris
-            </button>
-            <Link href="/compte" onClick={() => setOpen(false)} className="flex items-center gap-2 text-sm text-muted press">
-              <User size={18} /> Mon compte
-            </Link>
-          </div>
         </div>
       )}
     </>
