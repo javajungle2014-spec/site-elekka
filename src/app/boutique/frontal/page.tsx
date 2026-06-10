@@ -37,7 +37,7 @@ export default function FrontalPage() {
           stockSlug: "frontal-signature",
           images: {
             "havana-brown": ["/products/pieces/frontal/frontal-signature-havana-brown-01.png"],
-            "noir":         ["/products/pieces/frontal/frontal-signature-noir-02.png"],
+            "noir":         ["/products/pieces/frontal/frontal-signature-noir-01.png"],
           },
           colours: [
             { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
