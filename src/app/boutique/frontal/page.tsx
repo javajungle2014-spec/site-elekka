@@ -36,11 +36,9 @@ export default function FrontalPage() {
           stockSlug: "frontal-signature",
           images: {
             "havana-brown": ["/products/pieces/frontal/frontal-signature-havana-brown-01.png"],
-            "noir":         ["/products/pieces/frontal/frontal-signature-noir-01.png", "/products/pieces/frontal/frontal-signature-noir-02.png"],
           },
           colours: [
             { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
-            { key: "noir",         label: "Noir",          swatch: "#0a0a0a" },
           ],
         },
         {
@@ -51,10 +49,12 @@ export default function FrontalPage() {
           stockSlug: "frontal-fusion",
           images: {
             "havana-brown": ["/products/pieces/frontal/frontal-fusion-havana-brown-01.png"],
+            "noir":         ["/products/pieces/frontal/frontal-fusion-noir-01.png"],
             "dark-brown":   ["/products/pieces/frontal/frontal-fusion-havana-brown-01.png"],
           },
           colours: [
             { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
+            { key: "noir",         label: "Noir",          swatch: "#0a0a0a" },
             { key: "dark-brown",   label: "Dark Brown",   swatch: "#2b1710" },
           ],
         },
