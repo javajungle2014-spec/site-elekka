@@ -3,7 +3,7 @@ import { PieceDetail } from "@/components/boutique/piece-detail";
 
 export const metadata: Metadata = {
   title: "Frontal — Pièces détachées · Elekka",
-  description: "Frontal en cuir pleine fleur, classique ou signature. Compatible avec tous les bridons Elekka.",
+  description: "Frontal en cuir pleine fleur, classique ou anatomique. Compatible avec tous les bridons Elekka.",
 };
 
 export default function FrontalPage() {
@@ -12,25 +12,52 @@ export default function FrontalPage() {
       slug: "frontal",
       name: "Frontal",
       subtitle: "La pièce qui traverse le front.",
-      description: "En cuir pleine fleur, compatible avec tous les bridons de la gamme. Choisissez le modèle adapté à votre cheval.",
+      description: "En cuir pleine fleur, compatible avec tous les bridons de la gamme. Choisissez le modèle adapté à votre bridon.",
       priceEUR: 19.99,
       models: [
-        { key: "classique", label: "Essentiel", desc: "Frontal rectiligne, sobre et élégant — Essentiel", priceEUR: 19.99, stockSlug: "frontal-essentiel", images: {
-          "havana-brown": ["/products/pieces/frontal/frontal-classique-havana-brown-01.png", "/products/pieces/frontal/frontal-classique-havana-brown-02.png", "/products/pieces/frontal/frontal-classique-havana-brown-03.png"],
-        }, colours: [
-          { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
-        ]},
-        { key: "anatomique", label: "Anatomique", desc: "Légèrement incurvé pour suivre la morphologie du front — Signature", priceEUR: 38.75, stockSlug: "frontal-fusion", images: {
-          "havana-brown": ["/products/pieces/frontal/frontal-anatomique-havana-brown-01.png", "/products/pieces/frontal/frontal-anatomique-havana-brown-02.png", "/products/pieces/frontal/frontal-anatomique-havana-brown-03.png"],
-          "noir":         ["/products/pieces/frontal/frontal-anatomique-noir-01.png",         "/products/pieces/frontal/frontal-anatomique-noir-02.png",         "/products/pieces/frontal/frontal-anatomique-noir-03.png"],
-        }},
-        { key: "signature", label: "Signature", desc: "Large 5,5 cm — répartit la pression, finitions soignées — Fusion", priceEUR: 38.75, stockSlug: "frontal-signature", images: {
-          "havana-brown": ["/products/pieces/frontal/frontal-signature-havana-brown-01.png"],
-          "dark-brown":   ["/products/pieces/frontal/frontal-signature-dark-brown-01.png"],
-        }, colours: [
-          { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
-          { key: "dark-brown",   label: "Dark Brown",   swatch: "#2b1710" },
-        ]},
+        {
+          key: "classique",
+          label: "Essentiel",
+          desc: "Frontal rectiligne, sobre et élégant — Essentiel",
+          priceEUR: 19.99,
+          stockSlug: "frontal-essentiel",
+          images: {
+            "havana-brown": ["/products/pieces/frontal/frontal-essentiel-havana-brown-01.png"],
+          },
+          colours: [
+            { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
+          ],
+        },
+        {
+          key: "signature",
+          label: "Signature",
+          desc: "Légèrement incurvé, suit la morphologie du front — Signature",
+          priceEUR: 38.75,
+          stockSlug: "frontal-signature",
+          images: {
+            "havana-brown": ["/products/pieces/frontal/frontal-signature-havana-brown-01.png"],
+            "noir":         ["/products/pieces/frontal/frontal-signature-noir-01.png", "/products/pieces/frontal/frontal-signature-noir-02.png"],
+          },
+          colours: [
+            { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
+            { key: "noir",         label: "Noir",          swatch: "#0a0a0a" },
+          ],
+        },
+        {
+          key: "fusion",
+          label: "Fusion",
+          desc: "Large 5,5 cm — répartit la pression sur tout le front — Fusion",
+          priceEUR: 38.75,
+          stockSlug: "frontal-fusion",
+          images: {
+            "havana-brown": ["/products/pieces/frontal/frontal-fusion-havana-brown-01.png"],
+            "dark-brown":   ["/products/pieces/frontal/frontal-fusion-havana-brown-01.png"],
+          },
+          colours: [
+            { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
+            { key: "dark-brown",   label: "Dark Brown",   swatch: "#2b1710" },
+          ],
+        },
       ],
       colours: [
         { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
