@@ -13,7 +13,7 @@ export type ColourVariant = {
 export type Product = {
   slug: string;
   name: string;
-  category: "Bridons" | "Licoles" | "Rênes" | "Enrênements";
+  category: "Bridons" | "Licols" | "Rênes" | "Enrênements";
   family: "Classique" | "Anatomique";
   tagline: string;
   priceEUR: number;
@@ -179,7 +179,7 @@ export const products: Product[] = [
   {
     slug: "licol-1",
     name: "Licol Elekka Horizon",
-    category: "Licoles",
+    category: "Licols",
     family: "Classique",
     tagline: "Le quotidien, en cuir pleine fleur.",
     priceEUR: 49.99,
@@ -212,7 +212,7 @@ export const products: Product[] = [
     slug: "licol-2",
     name: "Licol Elekka N°2",
     hidden: true,
-    category: "Licoles",
+    category: "Licols",
     family: "Classique",
     tagline: "Cuir et rembourrage, pour le confort.",
     priceEUR: 50,

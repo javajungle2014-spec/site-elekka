@@ -25,7 +25,7 @@ const MPN_SIZE: Record<string, string> = {
 // Product type path per category
 const PRODUCT_TYPE: Record<string, string> = {
   "Bridons": "Animaux et articles pour animaux > Articles pour chevaux > Équipement équestre > Bridons et filets",
-  "Licoles": "Animaux et articles pour animaux > Articles pour chevaux > Équipement équestre > Licols",
+  "Licols": "Animaux et articles pour animaux > Articles pour chevaux > Équipement équestre > Licols",
   "Rênes": "Animaux et articles pour animaux > Articles pour chevaux > Équipement équestre > Rênes",
 };
 

@@ -70,7 +70,7 @@ export default async function ProductPage({
   );
 
   if (product.category === "Rênes")        return <>{schema}<RenesProductDetail product={product} initialColour={validColour as import("@/lib/products").ColourKey | undefined} /></>;
-  if (product.category === "Licoles")      return <>{schema}<LicolProductDetail product={product} /></>;
+  if (product.category === "Licols")      return <>{schema}<LicolProductDetail product={product} /></>;
   if (product.category === "Enrênements") return <>{schema}<EnrenementProductDetail product={product} /></>;
 
   return <>{schema}<ProductDetailClient product={product} /></>;

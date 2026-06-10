@@ -8,7 +8,7 @@ import { CategoryNav } from "@/components/boutique/category-nav";
 export const metadata: Metadata = {
   title: "Boutique",
   description:
-    "Boutique Elekka — Bridons cuir classiques et anatomiques (99 € à 175 €), licoles, rênes. Rênes offertes pour tout bridon acheté. Livraison gratuite, retours 14 jours.",
+    "Boutique Elekka — Bridons cuir classiques et anatomiques (99 € à 175 €), licols, rênes. Rênes offertes pour tout bridon acheté. Livraison gratuite, retours 14 jours.",
 };
 
 const categories = [
@@ -21,9 +21,9 @@ const categories = [
       "Moins de contraintes. Plus de sensations. Pensé pour laisser place à l'essentiel, affiner le contact et renforcer la connexion avec votre cheval.",
   },
   {
-    key: "Licoles",
-    label: "Licoles",
-    title: "Nos licoles.",
+    key: "Licols",
+    label: "Licols",
+    title: "Nos licols.",
     subtitle: "L'exigence, au quotidien.",
     description:
       "Fiables, jour après jour. Pensés pour durer, sans compromis, avec une conception simple et solide, faite pour accompagner le quotidien avec élégance.",
