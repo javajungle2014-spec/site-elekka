@@ -5,7 +5,8 @@ import { ProductDetailClient } from "@/components/boutique/product-detail-client
 import { RenesProductDetail } from "@/components/boutique/renes-product-detail";
 import { LicolProductDetail } from "@/components/boutique/licol-product-detail";
 import { EnrenementProductDetail } from "@/components/boutique/enrenement-product-detail";
-import { productSchema, breadcrumbSchema } from "@/lib/structured-data";
+import { productSchema, breadcrumbSchema, faqSchema } from "@/lib/structured-data";
+import { productFaq } from "@/lib/product-faq";
 
 export async function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
@@ -49,11 +50,16 @@ export default async function ProductPage({
 
   const validColour = product.colours.find(c => c.key === couleur)?.key;
 
-  const jsonLd = [productSchema(product), breadcrumbSchema([
-    { name: "Accueil", url: "https://elekka-sellier.fr" },
-    { name: "Boutique", url: "https://elekka-sellier.fr/boutique" },
-    { name: product.name, url: `https://elekka-sellier.fr/boutique/${product.slug}` },
-  ])];
+  const faqItems = productFaq[product.slug] ?? [];
+  const jsonLd = [
+    productSchema(product),
+    breadcrumbSchema([
+      { name: "Accueil", url: "https://elekka-sellier.fr" },
+      { name: "Boutique", url: "https://elekka-sellier.fr/boutique" },
+      { name: product.name, url: `https://elekka-sellier.fr/boutique/${product.slug}` },
+    ]),
+    ...(faqItems.length > 0 ? [faqSchema(faqItems)] : []),
+  ];
 
   const schema = (
     <>
