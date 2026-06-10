@@ -16,6 +16,7 @@ export type PieceModel = {
   images?: Partial<Record<ColourKey, string[]>>;
   stockSlug?: string;
   colours?: { key: ColourKey; label: string; swatch: string }[];
+  sizes?: Size[];
 };
 
 export type Piece = {
@@ -78,6 +79,7 @@ export function PieceDetail({ piece }: { piece: Piece; }) {
   const activeModel  = piece.models.find(m => m.key === model) ?? piece.models[0];
   const displayColours = activeModel.colours ?? piece.colours;
   const activeColour = displayColours.find(c => c.key === colour) ?? displayColours[0];
+  const displaySizes = activeModel.sizes ?? piece.sizes;
   const price        = activeModel?.priceEUR ?? piece.priceEUR;
   const fallbackImages = piece.colours.find(c => c.key === colour)?.images;
   const images = activeModel.images?.[colour] ?? fallbackImages ?? [];
@@ -85,11 +87,15 @@ export function PieceDetail({ piece }: { piece: Piece; }) {
   // Reset image sélectionnée au changement de couleur OU de modèle
   useEffect(() => { setSelectedImg(0); }, [colour, model]);
 
-  // Reset couleur si elle n'est pas disponible dans le nouveau modèle
+  // Reset couleur et taille si non disponibles dans le nouveau modèle
   useEffect(() => {
-    const available = activeModel.colours ?? piece.colours;
-    if (!available.find(c => c.key === colour)) {
-      setColour(available[0].key);
+    const availableColours = activeModel.colours ?? piece.colours;
+    if (!availableColours.find(c => c.key === colour)) {
+      setColour(availableColours[0].key);
+    }
+    const availableSizes = activeModel.sizes ?? piece.sizes;
+    if (!availableSizes.includes(size)) {
+      setSize(availableSizes[0]);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [model]);
@@ -261,7 +267,7 @@ export function PieceDetail({ piece }: { piece: Piece; }) {
             <div>
               <p className="kicker-tight text-muted mb-3">Taille</p>
               <div className="flex gap-2">
-                {piece.sizes.map(s => (
+                {displaySizes.map(s => (
                   <button key={s} type="button"
                     onClick={() => setSize(s)}
                     className={`press h-11 px-6 border text-sm font-bold transition-colors ${
