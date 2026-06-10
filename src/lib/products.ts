@@ -148,7 +148,7 @@ export const products: Product[] = [
     description:
       "Essentiel incarne l'élégance du bridon anglais dans sa forme la plus pure : une ligne sobre, un cuir pleine fleur soigneusement sélectionné et des finitions pensées pour durer.",
     longDescription:
-      "L'Essentiel reprend les codes du bridon anglais classique : une muserolle française simple, une frontière rectiligne, une quincaillerie argentée sobre. Le cuir pleine fleur est sélectionné pour sa souplesse au premier usage et sa patine dans la durée.",
+      "L'Essentiel reprend les codes du bridon anglais classique : une muserolle française simple, un frontal rectiligne, une quincaillerie argentée sobre. Le cuir pleine fleur est sélectionné pour sa souplesse au premier usage et sa patine dans la durée.",
     highlights: [
       "Cuir pleine fleur, pleine épaisseur",
       "Muserolle française, fermeture classique",
