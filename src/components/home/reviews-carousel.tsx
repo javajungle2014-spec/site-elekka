@@ -144,14 +144,9 @@ export function ReviewsCarousel() {
             Ils ont fait confiance<br />
             <span className="text-muted">à Elekka.</span>
           </h2>
-          {reviews.length > 0 && (
-            <div className="mt-4">
-              <StarBadge
-                avg={reviews.reduce((s, r) => s + r.rating, 0) / reviews.length}
-                count={reviews.length}
-              />
-            </div>
-          )}
+          <div className="mt-4">
+            <StarBadge avg={4.8} count={58} />
+          </div>
         </div>
 
         {/* Flèches */}
