@@ -34,7 +34,7 @@ export const products: Product[] = [
     slug: "signature",
     name: "Bridon Anatomique Elekka Signature",
     heroImage: "/products/signature/signature-havana-brown-cheval-01.png",
-    cardImageIndex: 1,
+    cardImageIndex: 0,
     category: "Bridons",
     family: "Anatomique",
     tagline: "La pièce maîtresse d'Elekka, entre confort anatomique, précision et élégance.",
