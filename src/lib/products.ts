@@ -88,6 +88,7 @@ export const products: Product[] = [
   {
     slug: "fusion",
     name: "Bridon Anatomique Elekka Fusion",
+    hidden: true,
     cardImageIndex: 1,
     category: "Bridons",
     family: "Anatomique",

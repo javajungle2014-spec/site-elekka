@@ -45,22 +45,7 @@ export default function FrontalPage() {
           ],
           sizes: ["Full", "Cob"],
         },
-        {
-          key: "fusion",
-          label: "Fusion",
-          desc: "Large 5,5 cm — répartit la pression sur tout le front — Fusion",
-          priceEUR: 38.75,
-          stockSlug: "frontal-fusion",
-          images: {
-            "havana-brown": ["/products/pieces/frontal/frontal-fusion-havana-brown-01.png"],
-            "dark-brown":   ["/products/pieces/frontal/frontal-fusion-dark-brown-01.png"],
-          },
-          colours: [
-            { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
-            { key: "dark-brown",   label: "Dark Brown",   swatch: "#2b1710" },
-          ],
-          sizes: ["Full", "Cob"],
-        },
+
       ],
       colours: [
         { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },

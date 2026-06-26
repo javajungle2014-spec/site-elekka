@@ -24,13 +24,7 @@ export default function MuserollePage() {
           "havana-brown": ["/products/pieces/muserolle/muserolle-rembourree-havana-brown-01.png"],
           "noir":         ["/products/pieces/muserolle/muserolle-rembourree-noir-01.png"],
         }},
-        { key: "triple", label: "Muserolle Fusion", desc: "Interchangeable : épaisse, ovale, rectangulaire — Fusion", priceEUR: 54.25, stockSlug: "muserolle-fusion", images: {
-          "havana-brown": ["/products/pieces/muserolle/muserolle-triple-havana-brown-01.png"],
-          "dark-brown":   ["/products/pieces/muserolle/muserolle-triple-dark-brown-01.png"],
-        }, colours: [
-          { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
-          { key: "dark-brown",   label: "Dark Brown",   swatch: "#2b1710" },
-        ]},
+
       ],
       colours: [
         { key: "havana-brown", label: "Havana Brown", swatch: "#4a2a1a" },
