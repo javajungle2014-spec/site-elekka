@@ -2,12 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { products, formatPrice } from "@/lib/products";
 
-const BRIDLES = ["essentiel", "signature", "fusion"];
+const BRIDLES = ["essentiel", "signature"];
 
 const SUBTITLES: Record<string, string> = {
   essentiel: "Le classique, épuré et juste.",
   signature: "Anatomique, conçu pour le confort.",
-  fusion: "Modulable, pour la personnalisation.",
 };
 
 export function BridlesGrid() {
@@ -19,7 +18,7 @@ export function BridlesGrid() {
         <div className="flex items-end justify-between mb-8 md:mb-10">
           <div>
             <span className="kicker text-muted block mb-3">La gamme</span>
-            <h2 className="display text-2xl md:text-3xl">Les 3 modèles Elekka</h2>
+            <h2 className="display text-2xl md:text-3xl">Les modèles Elekka</h2>
           </div>
           <Link
             href="/boutique"

@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { AnnouncementBar } from "./announcement-bar";
 
-const FILET_SLUGS = ["essentiel", "signature", "fusion"];
+const FILET_SLUGS = ["essentiel", "signature"];
 
 export function ConditionalAnnouncementBar() {
   const pathname = usePathname();

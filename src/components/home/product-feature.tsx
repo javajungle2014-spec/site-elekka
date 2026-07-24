@@ -67,7 +67,7 @@ const featureData: Record<string, { Icon: React.ElementType; title: string; text
 };
 
 const VISIBLE = 4;
-const carouselProducts = products.filter(p => p.slug !== "licol-2");
+const carouselProducts = products.filter(p => p.slug !== "licol-2" && !p.hidden);
 
 export function ProductFeature() {
   const [activeSlug, setActiveSlug] = useState(carouselProducts[0].slug);

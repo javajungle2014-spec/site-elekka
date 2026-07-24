@@ -122,15 +122,7 @@ export const BRIDLE_CATALOG = {
       rating: 4.8,
       reviews: 8,
     },
-    {
-      id: "te3",
-      name: "Anatomique Fusion",
-      desc: "Double rembourrage — confort maximal sur la nuque.",
-      price: 62,
-      stock: "in" as StockStatus,
-      rating: 4.9,
-      reviews: 5,
-    },
+
   ] as BridlePart[],
 
   rene: [
