@@ -9,7 +9,7 @@ import { productSchema, breadcrumbSchema, faqSchema } from "@/lib/structured-dat
 import { productFaq } from "@/lib/product-faq";
 
 export async function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }));
+  return products.filter((p) => !p.hidden).map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({
@@ -46,7 +46,7 @@ export default async function ProductPage({
   const { slug } = await params;
   const { couleur } = await searchParams;
   const product = getProduct(slug);
-  if (!product) notFound();
+  if (!product || product.hidden) notFound();
 
   const validColour = product.colours.find(c => c.key === couleur)?.key;
 
