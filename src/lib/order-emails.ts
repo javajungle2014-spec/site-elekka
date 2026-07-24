@@ -37,7 +37,7 @@ export async function createOrderAndGetNumber({
 }): Promise<string> {
   const supabase = supabaseAdmin();
 
-  const { data } = await supabase
+  const { data, error: insertError } = await supabase
     .from("orders")
     .insert({
       user_id: userId ?? null,
@@ -55,7 +55,7 @@ export async function createOrderAndGetNumber({
     .single();
 
   if (!data) {
-    throw new Error("Impossible de créer la commande en base de données");
+    throw new Error(`Supabase insert failed: ${insertError?.message} | code: ${insertError?.code} | details: ${insertError?.details}`);
   }
 
   const orderNumber = `ELK-${data.id + 79}`;
