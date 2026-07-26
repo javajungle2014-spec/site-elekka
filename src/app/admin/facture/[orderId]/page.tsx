@@ -61,7 +61,14 @@ export default async function FacturePage({
 
   const o = order as Order;
   const addr = o.shipping_address;
-  const invoiceNumber = `FACT-${o.order_number}`;
+
+  // Numéro de facture : FACT-ELK-XXX basé sur la position séquentielle
+  const { count } = await supabase
+    .from("orders")
+    .select("*", { count: "exact", head: true })
+    .lte("created_at", o.created_at);
+  const seq = (count ?? 1).toString().padStart(3, "0");
+  const invoiceNumber = `FACT-ELK-${seq}`;
   const invoiceDate = formatDate(o.created_at);
 
   const rows = (o.items ?? []).map((item: OrderItem) => `

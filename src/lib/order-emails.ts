@@ -60,7 +60,9 @@ export async function createOrderAndGetNumber({
     throw new Error("Impossible de créer la commande en base de données");
   }
 
-  const orderNumber = `ELK-${data.id + 79}`;
+  const { count } = await supabase.from("orders").select("*", { count: "exact", head: true });
+  const seq = (count ?? 1).toString().padStart(3, "0");
+  const orderNumber = `ELK-${seq}`;
   await supabase.from("orders").update({ order_number: orderNumber }).eq("id", data.id);
 
   // Récompenser le parrain si applicable
