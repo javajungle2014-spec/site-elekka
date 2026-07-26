@@ -67,7 +67,7 @@ export default async function FacturePage({
     .from("orders")
     .select("*", { count: "exact", head: true })
     .lte("created_at", o.created_at);
-  const seq = (count ?? 1).toString().padStart(3, "0");
+  const seq = ((count ?? 1) + 11).toString().padStart(3, "0");
   const invoiceNumber = `FACT-ELK-${seq}`;
   const invoiceDate = formatDate(o.created_at);
 

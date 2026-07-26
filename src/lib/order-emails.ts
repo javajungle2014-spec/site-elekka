@@ -61,7 +61,7 @@ export async function createOrderAndGetNumber({
   }
 
   const { count } = await supabase.from("orders").select("*", { count: "exact", head: true });
-  const seq = (count ?? 1).toString().padStart(3, "0");
+  const seq = ((count ?? 1) + 11).toString().padStart(3, "0");
   const orderNumber = `ELK-${seq}`;
   await supabase.from("orders").update({ order_number: orderNumber }).eq("id", data.id);
 
