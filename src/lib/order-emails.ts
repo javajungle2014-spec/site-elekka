@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import { createClient } from "@supabase/supabase-js";
 import { BRIDLE_COMPONENTS, isBridle } from "@/lib/bridle-components";
+import { alertAdmin } from "@/lib/alert";
 
 // Slugs dont la taille n'est pas stockée (size = "" en base)
 const NO_SIZE_SLUGS = new Set(["enrenement-1", "enrenement-2", "renes-1", "renes-2"]);
@@ -55,6 +56,7 @@ export async function createOrderAndGetNumber({
     .single();
 
   if (!data) {
+    await alertAdmin("Base de données — échec création commande", { userId: userId ?? "anonyme", montant: `${totalEUR} €`, stripe_session_id: stripeSessionId ?? "—" });
     throw new Error("Impossible de créer la commande en base de données");
   }
 
@@ -113,7 +115,7 @@ export async function sendOrderEmails({
 }) {
   const resend = new Resend(process.env.RESEND_API_KEY);
 
-  await Promise.all([
+  const results = await Promise.allSettled([
     resend.emails.send({
       from: "Elekka <contact@elekka-sellier.fr>",
       replyTo: "elekka.sellier@gmail.com",
@@ -129,6 +131,20 @@ export async function sendOrderEmails({
       html: notificationEmail({ orderNumber, items, address, totalEUR }),
     }),
   ]);
+
+  const clientFailed = results[0].status === "rejected";
+  const adminFailed  = results[1].status === "rejected";
+  if (clientFailed || adminFailed) {
+    await alertAdmin("Emails commande — échec envoi", {
+      commande: orderNumber,
+      client: address.email,
+      "email client": clientFailed ? "❌ échec" : "✅ envoyé",
+      "email admin":  adminFailed  ? "❌ échec" : "✅ envoyé",
+      erreur: clientFailed
+        ? (results[0] as PromiseRejectedResult).reason
+        : (results[1] as PromiseRejectedResult).reason,
+    });
+  }
 }
 
 // ── Templates ─────────────────────────────────────────────────────────────────

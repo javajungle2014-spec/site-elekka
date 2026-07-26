@@ -2,6 +2,7 @@ import Stripe from "stripe";
 import { NextResponse } from "next/server";
 import { createOrderAndGetNumber, sendOrderEmails, incrementPromoUsage } from "@/lib/order-emails";
 import type { OrderItem, OrderAddress } from "@/lib/order-emails";
+import { alertAdmin } from "@/lib/alert";
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +49,7 @@ export async function POST(req: Request) {
     // Validation adresse minimale
     if (!address.email || !address.firstName || !address.lastName) {
       console.error("Webhook Stripe : adresse incomplète", session.id);
+      await alertAdmin("Webhook Stripe — adresse incomplète", { session_id: session.id, email: address.email, prénom: address.firstName, nom: address.lastName });
       return NextResponse.json({ received: true });
     }
 
@@ -64,7 +66,9 @@ export async function POST(req: Request) {
         stripeSessionId: session.id,
       });
     } catch (err) {
-      console.error("Webhook Stripe : createOrder failed", err);
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error("Webhook Stripe : createOrder failed", msg);
+      await alertAdmin("Webhook Stripe — échec création commande", { session_id: session.id, email: address.email, montant: `${totalEUR} €`, erreur: msg });
       return NextResponse.json({ error: "Order creation failed" }, { status: 500 });
     }
 

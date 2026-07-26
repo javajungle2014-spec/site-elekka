@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import { insertUniquePromoCode, generatePromoCode } from "@/lib/prices";
+import { alertAdmin } from "@/lib/alert";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -78,6 +79,7 @@ export async function POST(req: Request) {
   } catch (err) {
     const message = err instanceof Error ? err.message : "Erreur inconnue";
     console.error("Welcome route:", message);
+    await alertAdmin("Création de compte — erreur bienvenue", { erreur: message });
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

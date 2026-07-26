@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createOrderAndGetNumber, sendOrderEmails, incrementPromoUsage } from "@/lib/order-emails";
 import { getServerPrice } from "@/lib/prices";
 import type { OrderItem, OrderAddress } from "@/lib/order-emails";
+import { alertAdmin } from "@/lib/alert";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -68,6 +69,7 @@ export async function POST(req: Request) {
 
     if (!res.ok || data.status !== "COMPLETED") {
       console.error("PayPal capture error:", data?.name, data?.message);
+      await alertAdmin("PayPal — échec capture paiement", { paypal_order_id: orderId, erreur: data?.message ?? data?.name ?? "Statut non COMPLETED", statut: data?.status ?? "inconnu" });
       return NextResponse.json(
         { error: data.message ?? "Erreur de capture PayPal" },
         { status: 500 }
@@ -91,6 +93,7 @@ export async function POST(req: Request) {
   } catch (err) {
     const message = err instanceof Error ? err.message : "Erreur inconnue";
     console.error("PayPal capture:", message);
+    await alertAdmin("PayPal — erreur inattendue capture", { erreur: message });
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
