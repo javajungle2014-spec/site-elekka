@@ -5,7 +5,7 @@ import { alertAdmin } from "@/lib/alert";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const STALE_DAYS = 7;
+const STALE_DAYS = 4;
 
 function supabaseAdmin() {
   return createClient(
