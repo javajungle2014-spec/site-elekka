@@ -185,7 +185,15 @@ function RegisterForm({ onSwitch, onSuccess }: { onSwitch: () => void; onSuccess
         firstName, lastName, phone,
         addressLine1: "", addressLine2: "", city: "", postalCode: "", country: "France", referralCode: null,
       });
-      const referralCode = typeof window !== "undefined" ? localStorage.getItem("referral_code") : null;
+      let referralCode: string | null = null;
+      try {
+        const stored = typeof window !== "undefined" ? localStorage.getItem("referral_code") : null;
+        if (stored) {
+          const parsed = JSON.parse(stored) as { code: string; expires: number };
+          if (!parsed.expires || Date.now() <= parsed.expires) referralCode = parsed.code;
+          else localStorage.removeItem("referral_code");
+        }
+      } catch { /* ignore */ }
       await fetch("/api/welcome", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
