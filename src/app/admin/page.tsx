@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Package, CaretLeft, Truck, Check, SignOut, ChartBar, DownloadSimple, Warehouse, Plus, Minus, Tag, Star } from "@phosphor-icons/react";
+import { Package, CaretLeft, Truck, Check, SignOut, ChartBar, DownloadSimple, Warehouse, Plus, Minus, Tag, Star, FilePdf } from "@phosphor-icons/react";
 import { formatPrice } from "@/lib/products";
 
 type OrderStatus = "en_preparation" | "expediee" | "livree" | "annulee";
@@ -134,13 +134,23 @@ function OrderDetail({
     <div className="min-h-screen bg-paper">
       <div className="max-w-[780px] mx-auto px-5 md:px-10 py-10">
 
-        <button
-          type="button"
-          onClick={onBack}
-          className="flex items-center gap-2 text-sm text-muted hover:text-ink transition-colors mb-10"
-        >
-          <CaretLeft size={14} /> Toutes les commandes
-        </button>
+        <div className="flex items-center justify-between mb-10">
+          <button
+            type="button"
+            onClick={onBack}
+            className="flex items-center gap-2 text-sm text-muted hover:text-ink transition-colors"
+          >
+            <CaretLeft size={14} /> Toutes les commandes
+          </button>
+          <a
+            href={`/admin/facture/${order.id}?pwd=${encodeURIComponent(password)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-sm border border-line px-4 py-2 hover:border-ink hover:text-ink transition-colors"
+          >
+            <FilePdf size={15} /> Voir la facture
+          </a>
+        </div>
 
         <div className="flex items-start justify-between gap-4 mb-10">
           <div>
