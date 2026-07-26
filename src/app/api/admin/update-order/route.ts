@@ -80,13 +80,48 @@ export async function POST(req: Request) {
   }
 }
 
+function easterSunday(year: number): Date {
+  const a = year % 19, b = Math.floor(year / 100), c = year % 100;
+  const d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4), k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const month = Math.floor((h + l - 7 * m + 114) / 31) - 1;
+  const day = ((h + l - 7 * m + 114) % 31) + 1;
+  return new Date(year, month, day);
+}
+
+function frenchHolidays(year: number): Set<string> {
+  const easter = easterSunday(year);
+  const addDays = (d: Date, n: number) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+  const key = (d: Date) => `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+
+  return new Set([
+    key(new Date(year, 0, 1)),   // Jour de l'An
+    key(addDays(easter, 1)),      // Lundi de Pâques
+    key(new Date(year, 4, 1)),   // Fête du Travail
+    key(new Date(year, 4, 8)),   // Victoire 1945
+    key(addDays(easter, 39)),    // Ascension
+    key(addDays(easter, 50)),    // Lundi de Pentecôte
+    key(new Date(year, 6, 14)),  // Fête Nationale
+    key(new Date(year, 7, 15)),  // Assomption
+    key(new Date(year, 10, 1)),  // Toussaint
+    key(new Date(year, 10, 11)), // Armistice
+    key(new Date(year, 11, 25)), // Noël
+  ]);
+}
+
 function addBusinessDays(date: Date, days: number): Date {
   const result = new Date(date);
   let added = 0;
   while (added < days) {
     result.setDate(result.getDate() + 1);
-    const day = result.getDay();
-    if (day !== 0 && day !== 6) added++;
+    const dow = result.getDay();
+    if (dow === 0 || dow === 6) continue;
+    const holidays = frenchHolidays(result.getFullYear());
+    const key = `${result.getFullYear()}-${result.getMonth()}-${result.getDate()}`;
+    if (!holidays.has(key)) added++;
   }
   return result;
 }
