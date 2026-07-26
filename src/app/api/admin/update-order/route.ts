@@ -80,6 +80,30 @@ export async function POST(req: Request) {
   }
 }
 
+function addBusinessDays(date: Date, days: number): Date {
+  const result = new Date(date);
+  let added = 0;
+  while (added < days) {
+    result.setDate(result.getDate() + 1);
+    const day = result.getDay();
+    if (day !== 0 && day !== 6) added++;
+  }
+  return result;
+}
+
+function formatDateFR(d: Date) {
+  return d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+}
+
+const CARRIER_DELAYS: Record<string, [number, number]> = {
+  colissimo: [2, 3],
+  chronopost: [1, 2],
+  dpd: [2, 3],
+  "mondial-relay": [3, 5],
+  ups: [2, 3],
+  fedex: [1, 2],
+};
+
 const CARRIER_LABELS: Record<string, string> = {
   colissimo: "La Poste — Colissimo",
   chronopost: "Chronopost",
@@ -106,6 +130,10 @@ function shippingEmail({ orderNumber, firstName, trackingNumber, carrier, addres
   const trackingUrl = carrier && CARRIER_URLS[carrier]
     ? `${CARRIER_URLS[carrier]}${encodeURIComponent(trackingNumber)}`
     : null;
+  const delays = carrier ? CARRIER_DELAYS[carrier] : null;
+  const deliveryRange = delays
+    ? `${formatDateFR(addBusinessDays(new Date(), delays[0]))} — ${formatDateFR(addBusinessDays(new Date(), delays[1]))}`
+    : null;
 
   return `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#0a0a0a">
     <div style="background:#0a0a0a;padding:32px 40px">
@@ -118,7 +146,8 @@ function shippingEmail({ orderNumber, firstName, trackingNumber, carrier, addres
       <div style="background:#f2f1ef;padding:24px;margin-bottom:32px">
         <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#737373;margin:0 0 10px">Numéro de suivi</p>
         <p style="font-size:20px;font-weight:700;font-family:monospace;margin:0 0 8px">${trackingNumber}</p>
-        ${carrierLabel ? `<p style="font-size:13px;color:#737373;margin:0 0 12px">Transporteur : ${carrierLabel}</p>` : ""}
+        ${carrierLabel ? `<p style="font-size:13px;color:#737373;margin:0 0 4px">Transporteur : ${carrierLabel}</p>` : ""}
+        ${deliveryRange ? `<p style="font-size:13px;color:#737373;margin:0 0 16px">Livraison estimée : ${deliveryRange}</p>` : ""}
         ${trackingUrl ? `<a href="${trackingUrl}" style="display:inline-block;background:#0a0a0a;color:#fafaf9;text-decoration:none;padding:12px 24px;font-size:13px;font-weight:600;letter-spacing:.04em">Suivre mon colis →</a>` : ""}
       </div>
 
