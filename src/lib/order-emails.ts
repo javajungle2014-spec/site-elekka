@@ -62,7 +62,7 @@ export async function createOrderAndGetNumber({
 
   const { count } = await supabase.from("orders").select("*", { count: "exact", head: true });
   const seq = ((count ?? 1) + 11).toString().padStart(3, "0");
-  const orderNumber = `ELK-${seq}`;
+  const orderNumber = `FACT-ELK-${seq}`;
   await supabase.from("orders").update({ order_number: orderNumber }).eq("id", data.id);
 
   // Récompenser le parrain si applicable
