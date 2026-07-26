@@ -63,6 +63,7 @@ export async function POST(req: Request) {
             orderNumber: order.order_number,
             firstName: order.shipping_address.firstName,
             trackingNumber,
+            carrier: carrier ?? null,
             address: order.shipping_address,
           }),
         });
@@ -79,10 +80,33 @@ export async function POST(req: Request) {
   }
 }
 
-function shippingEmail({ orderNumber, firstName, trackingNumber, address }: {
-  orderNumber: string; firstName: string; trackingNumber: string;
+const CARRIER_LABELS: Record<string, string> = {
+  colissimo: "La Poste — Colissimo",
+  chronopost: "Chronopost",
+  dpd: "DPD",
+  "mondial-relay": "Mondial Relay",
+  ups: "UPS",
+  fedex: "FedEx",
+};
+
+const CARRIER_URLS: Record<string, string> = {
+  colissimo: `https://www.laposte.fr/outils/suivre-vos-envois?code=`,
+  chronopost: `https://www.chronopost.fr/tracking-no-cms/suivi-numero?listeNumerosLT=`,
+  dpd: `https://www.dpd.fr/trace/`,
+  "mondial-relay": `https://www.mondialrelay.fr/suivi-de-colis/?numero=`,
+  ups: `https://www.ups.com/track?tracknum=`,
+  fedex: `https://www.fedex.com/fedextrack/?trknbr=`,
+};
+
+function shippingEmail({ orderNumber, firstName, trackingNumber, carrier, address }: {
+  orderNumber: string; firstName: string; trackingNumber: string; carrier: string | null;
   address: { line1: string; line2?: string; postalCode: string; city: string; country: string };
 }) {
+  const carrierLabel = carrier ? (CARRIER_LABELS[carrier] ?? carrier) : null;
+  const trackingUrl = carrier && CARRIER_URLS[carrier]
+    ? `${CARRIER_URLS[carrier]}${encodeURIComponent(trackingNumber)}`
+    : null;
+
   return `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#0a0a0a">
     <div style="background:#0a0a0a;padding:32px 40px">
       <p style="color:#fafaf9;font-size:11px;letter-spacing:.18em;text-transform:uppercase;margin:0">Elekka — Votre commande est en route</p>
@@ -93,7 +117,17 @@ function shippingEmail({ orderNumber, firstName, trackingNumber, address }: {
 
       <div style="background:#f2f1ef;padding:24px;margin-bottom:32px">
         <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#737373;margin:0 0 10px">Numéro de suivi</p>
-        <p style="font-size:20px;font-weight:700;font-family:monospace;margin:0">${trackingNumber}</p>
+        <p style="font-size:20px;font-weight:700;font-family:monospace;margin:0 0 8px">${trackingNumber}</p>
+        ${carrierLabel ? `<p style="font-size:13px;color:#737373;margin:0 0 12px">Transporteur : ${carrierLabel}</p>` : ""}
+        ${trackingUrl ? `<a href="${trackingUrl}" style="display:inline-block;background:#0a0a0a;color:#fafaf9;text-decoration:none;padding:12px 24px;font-size:13px;font-weight:600;letter-spacing:.04em">Suivre mon colis →</a>` : ""}
+      </div>
+
+      <div style="border:1px solid #e5e5e5;padding:24px;margin-bottom:32px">
+        <p style="font-size:13px;font-weight:700;margin:0 0 8px">Suivre votre commande sur elekka-sellier.fr</p>
+        <p style="font-size:13px;color:#737373;line-height:1.7;margin:0 0 16px">
+          Créez un compte Elekka et renseignez votre numéro de commande <strong>${orderNumber}</strong> pour retrouver l'état et le suivi de votre colis directement sur notre site.
+        </p>
+        <a href="https://elekka-sellier.fr/compte" style="display:inline-block;border:1px solid #0a0a0a;color:#0a0a0a;text-decoration:none;padding:10px 20px;font-size:13px;font-weight:600;letter-spacing:.04em">Créer mon compte →</a>
       </div>
 
       <div style="margin-bottom:32px">
