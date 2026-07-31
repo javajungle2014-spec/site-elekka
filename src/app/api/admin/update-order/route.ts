@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
+import { alertAdmin } from "@/lib/alert";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -69,7 +70,12 @@ export async function POST(req: Request) {
         });
         emailSent = true;
       } catch (emailErr) {
-        console.error("Email expédition non envoyé:", emailErr);
+        const msg = emailErr instanceof Error ? emailErr.message : "Erreur inconnue";
+        await alertAdmin("Email expédition — échec envoi", {
+          commande: order.order_number,
+          client: order.shipping_address.email,
+          erreur: msg,
+        });
       }
     }
 
