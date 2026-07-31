@@ -25,6 +25,9 @@ export async function insertUniquePromoCode(
     code = generatePromoCode(prefix);
   }
 
+  const validUntil = new Date();
+  validUntil.setDate(validUntil.getDate() + 90);
+
   const { error } = await supabase.from("promo_codes").insert({
     code,
     discount_type: discountType,
@@ -32,6 +35,7 @@ export async function insertUniquePromoCode(
     max_uses: 1,
     used_count: 0,
     active: true,
+    valid_until: validUntil.toISOString(),
     ...extraFields,
   });
   if (error) throw new Error(`Erreur création code promo : ${error.message}`);

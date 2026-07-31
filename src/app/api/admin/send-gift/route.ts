@@ -38,7 +38,9 @@ export async function POST(req: Request) {
     }
 
     const supabase = supabaseAdmin();
-    const code = await insertUniquePromoCode(supabase, "CADEAU", "fixed", amountEUR);
+    const code = await insertUniquePromoCode(supabase, "CADEAU", "fixed", amountEUR, {
+      product_restriction: "filets",
+    });
 
     const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({

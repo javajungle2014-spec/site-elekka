@@ -36,6 +36,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ valid: false, error: "Ce code a déjà été utilisé" });
     }
 
+    // Vérifier la date d'expiration
+    if (data.valid_until && new Date(data.valid_until) < new Date()) {
+      return NextResponse.json({ valid: false, error: "Ce code a expiré" });
+    }
+
     // Vérifier la restriction produit
     if (data.product_restriction === "filets") {
       const hasFilet = (items ?? []).some((item: { slug: string }) =>
