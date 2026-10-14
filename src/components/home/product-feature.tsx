@@ -106,7 +106,7 @@ export function ProductFeature() {
               type="button" aria-label="Modèle précédent"
               onClick={() => {
                 const i = carouselProducts.findIndex((p) => p.slug === activeSlug);
-                const prev = products[(i - 1 + carouselProducts.length) % carouselProducts.length];
+                const prev = carouselProducts[(i - 1 + carouselProducts.length) % carouselProducts.length];
                 select(prev.slug, (i - 1 + carouselProducts.length) % carouselProducts.length);
               }}
               className="shrink-0 w-9 h-9 rounded-full border border-line flex items-center justify-center text-muted hover:text-ink hover:border-ink hover:bg-paper-2 transition-all duration-200 press"
@@ -129,7 +129,7 @@ export function ProductFeature() {
               type="button" aria-label="Modèle suivant"
               onClick={() => {
                 const i = carouselProducts.findIndex((p) => p.slug === activeSlug);
-                const next = products[(i + 1) % carouselProducts.length];
+                const next = carouselProducts[(i + 1) % carouselProducts.length];
                 select(next.slug, (i + 1) % carouselProducts.length);
               }}
               className="shrink-0 w-9 h-9 rounded-full border border-line flex items-center justify-center text-muted hover:text-ink hover:border-ink hover:bg-paper-2 transition-all duration-200 press"
