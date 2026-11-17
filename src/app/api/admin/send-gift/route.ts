@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import { insertUniquePromoCode } from "@/lib/prices";
 import { giftEmail } from "@/app/admin/preview-email/cadeau/page";
+import { CONTACT_EMAIL } from "@/lib/site";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -44,7 +45,7 @@ export async function POST(req: Request) {
 
     const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({
-      from: "Elekka <contact@elekka-sellier.fr>",
+      from: `Elekka <${CONTACT_EMAIL}>`,
       replyTo: "elekka.sellier@gmail.com",
       to: email,
       cc: ADMIN_EMAIL,

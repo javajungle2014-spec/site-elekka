@@ -2,7 +2,7 @@ import { Resend } from "resend";
 import { createClient } from "@supabase/supabase-js";
 import { BRIDLE_COMPONENTS, isBridle } from "@/lib/bridle-components";
 import { alertAdmin } from "@/lib/alert";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, CONTACT_EMAIL } from "@/lib/site";
 
 // Slugs dont la taille n'est pas stockée (size = "" en base)
 const NO_SIZE_SLUGS = new Set(["enrenement-1", "enrenement-2", "renes-1", "renes-2"]);
@@ -120,14 +120,14 @@ export async function sendOrderEmails({
 
   const results = await Promise.allSettled([
     resend.emails.send({
-      from: "Elekka <contact@elekka-sellier.fr>",
+      from: `Elekka <${CONTACT_EMAIL}>`,
       replyTo: "elekka.sellier@gmail.com",
       to: address.email,
       subject: `Commande ${orderNumber} confirmée — Elekka`,
       html: confirmationEmail({ orderNumber, items, address, totalEUR }),
     }),
     resend.emails.send({
-      from: "Elekka Boutique <contact@elekka-sellier.fr>",
+      from: `Elekka Boutique <${CONTACT_EMAIL}>`,
       to: "elekka.sellier@gmail.com",
       replyTo: address.email,
       subject: `Nouvelle commande ${orderNumber} — ${address.firstName} ${address.lastName} — ${totalEUR.toFixed(2)} €`,

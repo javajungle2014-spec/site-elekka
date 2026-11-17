@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { CONTACT_EMAIL } from "@/lib/site";
 
 const ADMIN_EMAIL = "java.jungle2014@gmail.com";
 
@@ -10,7 +11,7 @@ export async function alertAdmin(subject: string, context: Record<string, unknow
       .join("");
 
     await resend.emails.send({
-      from: "Elekka Alerts <contact@elekka-sellier.fr>",
+      from: `Elekka Alerts <${CONTACT_EMAIL}>`,
       to: ADMIN_EMAIL,
       subject: `⚠️ Elekka — ${subject}`,
       html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#0a0a0a">

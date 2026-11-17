@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import { randomBytes } from "crypto";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, CONTACT_EMAIL } from "@/lib/site";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -98,7 +98,7 @@ export async function GET(req: Request) {
       });
 
       const { subject, html } = reviewEmail({ firstName, orderNumber: order.order_number, token, round: 1 });
-      await resend.emails.send({ from: "Elekka <contact@elekka-sellier.fr>", replyTo: "elekka.sellier@gmail.com", to: email, subject, html });
+      await resend.emails.send({ from: `Elekka <${CONTACT_EMAIL}>`, replyTo: "elekka.sellier@gmail.com", to: email, subject, html });
       await supabase.from("orders").update({ review_email_1_sent: true }).eq("id", order.id);
       sent++;
     } catch (err) {
@@ -127,7 +127,7 @@ export async function GET(req: Request) {
       });
 
       const { subject, html } = reviewEmail({ firstName, orderNumber: order.order_number, token, round: 2 });
-      await resend.emails.send({ from: "Elekka <contact@elekka-sellier.fr>", replyTo: "elekka.sellier@gmail.com", to: email, subject, html });
+      await resend.emails.send({ from: `Elekka <${CONTACT_EMAIL}>`, replyTo: "elekka.sellier@gmail.com", to: email, subject, html });
       await supabase.from("orders").update({ review_email_2_sent: true }).eq("id", order.id);
       sent++;
     } catch (err) {

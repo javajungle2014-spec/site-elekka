@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import { alertAdmin } from "@/lib/alert";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, CONTACT_EMAIL } from "@/lib/site";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
       const resend = new Resend(process.env.RESEND_API_KEY);
       try {
         await resend.emails.send({
-          from: "Elekka <contact@elekka-sellier.fr>",
+          from: `Elekka <${CONTACT_EMAIL}>`,
           replyTo: "elekka.sellier@gmail.com",
           to: order.shipping_address.email,
           subject: `Votre commande ${order.order_number} est expédiée`,

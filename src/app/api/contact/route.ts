@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import { NextResponse } from "next/server";
 import { escapeHtml } from "@/lib/prices";
+import { CONTACT_EMAIL } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
   };
 
   const { error } = await resend.emails.send({
-    from: "Elekka Contact <contact@elekka-sellier.fr>",
+    from: `Elekka Contact <${CONTACT_EMAIL}>`,
     to: "elekka.sellier@gmail.com",
     replyTo: safe.email,
     subject: `Nouveau message de ${safe.firstName} ${safe.lastName}`,
