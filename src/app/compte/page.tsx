@@ -7,6 +7,7 @@ import { Eye, EyeSlash, EnvelopeSimple, Lock, User, ArrowRight, Phone } from "@p
 import { upsertProfile } from "@/lib/account-store";
 import { createClient } from "@/lib/supabase";
 import { Dashboard } from "./dashboard";
+import { SITE_URL } from "@/lib/site";
 
 // ── Input field ────────────────────────────────────────────────────────────────
 
@@ -76,7 +77,7 @@ function LoginForm({ onSwitch, onSuccess }: { onSwitch: () => void; onSuccess: (
     if (!email.trim()) { setError("Entrez votre email."); return; }
     setResetLoading(true); setError("");
     const supabase = createClient();
-    const siteUrl = "https://elekka-sellier.fr";
+    const siteUrl = SITE_URL;
     await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${siteUrl}/auth/callback?type=recovery`,
     });

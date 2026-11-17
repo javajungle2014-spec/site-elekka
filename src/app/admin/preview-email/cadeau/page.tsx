@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -61,7 +62,7 @@ export function giftEmail({
 
     <!-- CTA -->
     <div style="text-align:center;margin-bottom:36px">
-      <a href="https://elekka-sellier.fr/boutique"
+      <a href="${SITE_URL}/boutique"
          style="display:inline-block;background:#0a0a0a;color:#fafaf9;text-decoration:none;padding:16px 36px;font-size:13px;font-weight:600;letter-spacing:.06em">
         Découvrir la boutique →
       </a>

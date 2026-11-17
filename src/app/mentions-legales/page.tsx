@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Mentions légales — Elekka",
-  description: "Mentions légales du site elekka-sellier.fr : éditeur, hébergement, propriété intellectuelle, cookies.",
+  description: "Mentions légales du site elekka-equestrian.fr : éditeur, hébergement, propriété intellectuelle, cookies.",
   robots: { index: false },
 };
 
@@ -17,7 +17,7 @@ export default function MentionsLegalesPage() {
         <section className="space-y-3">
           <h2 className="font-semibold text-base">Éditeur du site</h2>
           <p>
-            Le site <strong>elekka-sellier.fr</strong> est édité par :<br />
+            Le site <strong>elekka-equestrian.fr</strong> est édité par :<br />
             <strong>Elekka</strong> — marque de sellerie équestre<br />
             Contact : <a href="mailto:elekka.sellier@gmail.com" className="underline underline-offset-4">elekka.sellier@gmail.com</a>
           </p>
@@ -53,7 +53,7 @@ export default function MentionsLegalesPage() {
         <section className="space-y-3">
           <h2 className="font-semibold text-base">Cookies</h2>
           <p>
-            Le site elekka-sellier.fr utilise uniquement des cookies strictement nécessaires au
+            Le site elekka-equestrian.fr utilise uniquement des cookies strictement nécessaires au
             fonctionnement du site (authentification, panier, préférences). Aucun cookie
             publicitaire ou de tracking n'est utilisé.
           </p>

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import { alertAdmin } from "@/lib/alert";
+import { SITE_URL } from "@/lib/site";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -193,11 +194,11 @@ function shippingEmail({ orderNumber, firstName, trackingNumber, carrier, addres
       </div>
 
       <div style="border:1px solid #e5e5e5;padding:24px;margin-bottom:32px">
-        <p style="font-size:13px;font-weight:700;margin:0 0 8px">Suivre votre commande sur elekka-sellier.fr</p>
+        <p style="font-size:13px;font-weight:700;margin:0 0 8px">Suivre votre commande sur elekka-equestrian.fr</p>
         <p style="font-size:13px;color:#737373;line-height:1.7;margin:0 0 16px">
           Créez un compte Elekka et renseignez votre numéro de commande <strong>${orderNumber}</strong> pour retrouver l'état et le suivi de votre colis directement sur notre site.
         </p>
-        <a href="https://elekka-sellier.fr/compte" style="display:inline-block;border:1px solid #0a0a0a;color:#0a0a0a;text-decoration:none;padding:10px 20px;font-size:13px;font-weight:600;letter-spacing:.04em">Créer mon compte →</a>
+        <a href="${SITE_URL}/compte" style="display:inline-block;border:1px solid #0a0a0a;color:#0a0a0a;text-decoration:none;padding:10px 20px;font-size:13px;font-weight:600;letter-spacing:.04em">Créer mon compte →</a>
       </div>
 
       <div style="margin-bottom:32px">

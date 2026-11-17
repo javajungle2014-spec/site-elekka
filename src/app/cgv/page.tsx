@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Conditions générales de vente — Elekka",
-  description: "Conditions générales de vente d'Elekka : commandes, paiement, livraison, droit de rétractation, garanties légales. Site elekka-sellier.fr.",
+  description: "Conditions générales de vente d'Elekka : commandes, paiement, livraison, droit de rétractation, garanties légales. Site elekka-equestrian.fr.",
   robots: { index: false },
 };
 
@@ -18,12 +18,12 @@ export default function CGVPage() {
         <section className="space-y-3">
           <h2 className="font-semibold text-base">Article 1 — Identification du vendeur</h2>
           <p>
-            Le site elekka-sellier.fr est édité par Elekka, marque de sellerie équestre en cuir.
+            Le site elekka-equestrian.fr est édité par Elekka, marque de sellerie équestre en cuir.
             Contact : <a href="mailto:elekka.sellier@gmail.com" className="underline underline-offset-4">elekka.sellier@gmail.com</a>.
           </p>
           <p>
             Les présentes conditions générales de vente (CGV) régissent l'ensemble des ventes de
-            produits effectuées sur le site elekka-sellier.fr entre Elekka (le vendeur) et tout
+            produits effectuées sur le site elekka-equestrian.fr entre Elekka (le vendeur) et tout
             acheteur non professionnel (le client). Toute commande implique l'acceptation sans
             réserve des présentes CGV.
           </p>

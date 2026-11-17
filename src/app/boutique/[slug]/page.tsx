@@ -7,6 +7,7 @@ import { LicolProductDetail } from "@/components/boutique/licol-product-detail";
 import { EnrenementProductDetail } from "@/components/boutique/enrenement-product-detail";
 import { productSchema, breadcrumbSchema, faqSchema } from "@/lib/structured-data";
 import { productFaq } from "@/lib/product-faq";
+import { SITE_URL } from "@/lib/site";
 
 export async function generateStaticParams() {
   return products.filter((p) => !p.hidden).map((p) => ({ slug: p.slug }));
@@ -28,9 +29,9 @@ export async function generateMetadata({
       title: `${product.name} — Elekka`,
       description: product.description,
       type: "website",
-      url: `https://elekka-sellier.fr/boutique/${slug}`,
+      url: `${SITE_URL}/boutique/${slug}`,
       ...(product.colours[0]?.images?.[0] && {
-        images: [{ url: `https://elekka-sellier.fr${product.colours[0].images[0]}`, width: 1200, height: 630 }],
+        images: [{ url: `${SITE_URL}${product.colours[0].images[0]}`, width: 1200, height: 630 }],
       }),
     },
   };
@@ -54,9 +55,9 @@ export default async function ProductPage({
   const jsonLd = [
     productSchema(product),
     breadcrumbSchema([
-      { name: "Accueil", url: "https://elekka-sellier.fr" },
-      { name: "Boutique", url: "https://elekka-sellier.fr/boutique" },
-      { name: product.name, url: `https://elekka-sellier.fr/boutique/${product.slug}` },
+      { name: "Accueil", url: SITE_URL },
+      { name: "Boutique", url: `${SITE_URL}/boutique` },
+      { name: product.name, url: `${SITE_URL}/boutique/${product.slug}` },
     ]),
     ...(faqItems.length > 0 ? [faqSchema(faqItems)] : []),
   ];

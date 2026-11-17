@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { faqCategories } from "@/lib/faq";
 import { faqSchema } from "@/lib/structured-data";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "FAQ — Questions fréquentes",
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "FAQ — Questions fréquentes sur les filets Elekka",
     description: "Toutes les réponses à vos questions sur les bridons Elekka : tailles, entretien, commandes, livraison, retours.",
-    url: "https://elekka-sellier.fr/faq",
+    url: `${SITE_URL}/faq`,
   },
 };
 

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, Copy, Check, UsersThree } from "@phosphor-icons/react";
 import { createClient } from "@/lib/supabase";
 import { fetchProfile } from "@/lib/account-store";
+import { SITE_URL } from "@/lib/site";
 
 export function ReferralSection() {
   const [referralLink, setReferralLink] = useState<string | null>(null);
@@ -18,7 +19,7 @@ export function ReferralSection() {
       setLoggedIn(true);
       const profile = await fetchProfile(data.user.id);
       if (profile.referralCode) {
-        setReferralLink(`https://elekka-sellier.fr/?ref=${profile.referralCode}`);
+        setReferralLink(`${SITE_URL}/?ref=${profile.referralCode}`);
       }
     });
   }, []);

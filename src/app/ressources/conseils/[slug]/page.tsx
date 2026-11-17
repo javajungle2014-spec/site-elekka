@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "@phosphor-icons/react/dist/ssr";
 import { conseils } from "@/lib/ressources";
 import { articleSchema } from "@/lib/structured-data";
+import { SITE_URL } from "@/lib/site";
 
 export async function generateStaticParams() {
   return conseils.map((a) => ({ slug: a.slug }));
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: `${article.title} — Elekka`,
       description: article.description,
       type: "article",
-      url: `https://elekka-sellier.fr/ressources/conseils/${article.slug}`,
+      url: `${SITE_URL}/ressources/conseils/${article.slug}`,
       publishedTime: article.date,
       authors: ["Lucas Mourier — Elekka"],
     },

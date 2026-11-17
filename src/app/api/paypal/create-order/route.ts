@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerPrice } from "@/lib/prices";
+import { SITE_URL } from "@/lib/site";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -42,7 +43,7 @@ export async function POST(req: Request) {
     });
 
     // Vérification stock avant création order PayPal
-    const siteUrl = "https://elekka-sellier.fr";
+    const siteUrl = SITE_URL;
     for (const item of validatedItems) {
       const res = await fetch(`${siteUrl}/api/stock/check?slug=${item.slug}&colour=${encodeURIComponent(item.colourLabel)}&size=${encodeURIComponent(item.size)}`);
       const stock = await res.json();

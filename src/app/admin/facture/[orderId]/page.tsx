@@ -314,7 +314,7 @@ export default async function FacturePage({
         <div class="party-label">Vendeur</div>
         <div class="party-name">Elekka</div>
         <div class="party-line">
-          elekka-sellier.fr<br>
+          elekka-equestrian.fr<br>
           contact@elekka-sellier.fr<br>
           France
         </div>

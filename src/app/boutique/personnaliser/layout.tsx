@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Configurer mon filet sur mesure",
@@ -6,7 +7,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Configurer mon filet sur mesure — Elekka",
     description: "Composez votre filet Elekka pièce par pièce. À partir de 95 €.",
-    url: "https://elekka-sellier.fr/boutique/personnaliser",
+    url: `${SITE_URL}/boutique/personnaliser`,
   },
 };
 

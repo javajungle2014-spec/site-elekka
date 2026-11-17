@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import { randomBytes } from "crypto";
+import { SITE_URL } from "@/lib/site";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -26,7 +27,7 @@ function daysAgo(n: number): string {
 function reviewEmail({ firstName, orderNumber, token, round }: {
   firstName: string; orderNumber: string; token: string; round: 1 | 2;
 }) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace("http://localhost:3000", "https://elekka-sellier.fr") ?? "https://elekka-sellier.fr";
+  const siteUrl = SITE_URL;
   const link = `${siteUrl}/avis?token=${token}`;
   const subject = round === 1
     ? "Comment s'est passée votre commande Elekka ?"
@@ -72,7 +73,7 @@ export async function GET(req: Request) {
 
   const supabase = supabaseAdmin();
   const resend = new Resend(process.env.RESEND_API_KEY);
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace("http://localhost:3000", "https://elekka-sellier.fr") ?? "https://elekka-sellier.fr";
+  const siteUrl = SITE_URL;
 
   let sent = 0;
 

@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { products } from "@/lib/products";
+import { SITE_URL } from "@/lib/site";
 
-const BASE = "https://elekka-sellier.fr";
+const BASE = SITE_URL;
 
 export const dynamic = "force-dynamic";
 

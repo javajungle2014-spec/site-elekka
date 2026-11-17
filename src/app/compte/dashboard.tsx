@@ -16,6 +16,7 @@ import {
   fetchOrders, fetchProfile, upsertProfile, fetchPromotions,
   type Order, type Profile, type UserPromotion, type OrderStatus,
 } from "@/lib/account-store";
+import { SITE_URL } from "@/lib/site";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -125,7 +126,7 @@ function ReferralBlock({ userId }: { userId: string }) {
 
   if (!referralCode) return null;
 
-  const link = `https://elekka-sellier.fr/?ref=${referralCode}`;
+  const link = `${SITE_URL}/?ref=${referralCode}`;
 
   async function handleCopy() {
     await navigator.clipboard.writeText(link);
@@ -658,7 +659,7 @@ function ParrainageTab({ userId }: { userId: string }) {
     });
   }, [userId]);
 
-  const link = referralCode ? `https://elekka-sellier.fr/?ref=${referralCode}` : null;
+  const link = referralCode ? `${SITE_URL}/?ref=${referralCode}` : null;
 
   async function handleCopy() {
     if (!link) return;

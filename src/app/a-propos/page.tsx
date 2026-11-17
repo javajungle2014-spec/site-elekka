@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "À propos — Notre histoire",
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "À propos — Elekka",
     description: "Elekka est née d'un constat simple : un bon filet ne devrait pas forcément coûter aussi cher.",
-    url: "https://elekka-sellier.fr/a-propos",
+    url: `${SITE_URL}/a-propos`,
   },
 };
 

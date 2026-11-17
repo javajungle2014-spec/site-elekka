@@ -2,6 +2,7 @@ import { Resend } from "resend";
 import { createClient } from "@supabase/supabase-js";
 import { BRIDLE_COMPONENTS, isBridle } from "@/lib/bridle-components";
 import { alertAdmin } from "@/lib/alert";
+import { SITE_URL } from "@/lib/site";
 
 // Slugs dont la taille n'est pas stockée (size = "" en base)
 const NO_SIZE_SLUGS = new Set(["enrenement-1", "enrenement-2", "renes-1", "renes-2"]);
@@ -67,7 +68,7 @@ export async function createOrderAndGetNumber({
 
   // Récompenser le parrain si applicable
   if (referralCode && data) {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace("http://localhost:3000", "https://elekka-sellier.fr") ?? "https://elekka-sellier.fr";
+    const siteUrl = SITE_URL;
     try {
       await fetch(`${siteUrl}/api/referral/reward`, {
         method: "POST",
