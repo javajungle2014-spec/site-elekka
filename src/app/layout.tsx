@@ -15,6 +15,7 @@ import { FavoritesDrawer } from "@/components/favorites-drawer";
 import { CookieBanner } from "@/components/cookie-banner";
 import { HelpButton } from "@/components/help-button";
 import { SITE_URL } from "@/lib/site";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -87,6 +88,7 @@ export default function RootLayout({
             <CookieBanner />
           </FavoritesProvider>
         </CartProvider>
+        <Analytics />
       </body>
     </html>
   );

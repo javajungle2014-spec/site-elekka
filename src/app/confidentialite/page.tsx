@@ -82,6 +82,16 @@ export default function ConfidentialitePage() {
           </p>
         </section>
 
+        <section className="space-y-3">
+          <h2 className="font-semibold text-base">Mesure d&apos;audience</h2>
+          <p>
+            Nous mesurons la fréquentation du site de manière anonyme et agrégée (pages vues,
+            pays, type d&apos;appareil, provenance des visites) à l&apos;aide de Vercel Web Analytics.
+            Cet outil ne dépose aucun cookie, ne permet pas de vous identifier et ne suit pas
+            votre navigation sur d&apos;autres sites.
+          </p>
+        </section>
+
       </div>
     </article>
   );
