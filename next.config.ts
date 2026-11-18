@@ -21,6 +21,17 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "*.gravatar.com" },
     ],
   },
+  async redirects() {
+    return [
+      // Adresse imprimée dans le QR code. Redirection temporaire (307) pour pouvoir
+      // changer la destination plus tard sans réimprimer les supports.
+      {
+        source: "/qr",
+        destination: "/?utm_source=qrcode&utm_medium=print&utm_campaign=imprimeur",
+        permanent: false,
+      },
+    ];
+  },
   async headers() {
     return [
       {
