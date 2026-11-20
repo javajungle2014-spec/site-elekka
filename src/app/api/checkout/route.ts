@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getServerPrice } from "@/lib/prices";
+import { priceCart } from "@/lib/checkout-pricing";
 import { SITE_URL } from "@/lib/site";
 
 export const runtime = "nodejs";
@@ -7,18 +7,16 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
   try {
-    const { items, address, userId, promoCode, discountEUR = 0, referralCode } = await req.json();
+    const { items, address, userId, promoCode, referralCode } = await req.json();
 
     if (!items?.length) {
       return NextResponse.json({ error: "Panier vide" }, { status: 400 });
     }
 
-    // Validation et remplacement des prix côté serveur
-    const validatedItems = items.map((item: { slug: string; priceEUR: number; quantity: number; name: string; colourLabel: string; size: string; colour: string; colourSwatch: string }) => {
-      const serverPrice = getServerPrice(item.slug);
-      if (!serverPrice) throw new Error(`Produit inconnu : ${item.slug}`);
-      return { ...item, priceEUR: serverPrice };
-    });
+    // Prix et réductions recalculés côté serveur (le montant envoyé par le navigateur est ignoré)
+    const cart = await priceCart({ items, promoCode, referralCode, userId });
+    const validatedItems = cart.items;
+    const discountEUR = cart.discountEUR;
 
     // Vérification stock avant création session
     const siteUrl = SITE_URL;
@@ -32,11 +30,7 @@ export async function POST(req: Request) {
 
     const secretKey = process.env.STRIPE_SECRET_KEY!;
 
-    const originalTotal = validatedItems.reduce(
-      (sum: number, item: { priceEUR: number; quantity: number }) => sum + item.priceEUR * item.quantity,
-      0
-    );
-    const discountedTotal = Math.max(0, originalTotal - discountEUR);
+    const discountedTotal = cart.totalEUR;
 
     const parts: string[] = [
       "mode=payment",
@@ -47,14 +41,14 @@ export async function POST(req: Request) {
       `metadata[customerEmail]=${encodeURIComponent(address.email)}`,
       `metadata[items]=${encodeURIComponent(JSON.stringify(validatedItems))}`,
       `metadata[shippingAddress]=${encodeURIComponent(JSON.stringify(address))}`,
-      `metadata[promoCode]=${encodeURIComponent(promoCode ?? "")}`,
+      `metadata[promoCode]=${encodeURIComponent(cart.promoCode ?? "")}`,
       `metadata[discountEUR]=${discountEUR}`,
-      `metadata[referralCode]=${encodeURIComponent(referralCode ?? "")}`,
+      `metadata[referralCode]=${encodeURIComponent(cart.referralCode ?? "")}`,
     ];
 
     if (discountEUR > 0) {
       // Commande avec réduction : un seul article au total remisé
-      const promoLabel = promoCode ? ` (code ${promoCode})` : "";
+      const promoLabel = cart.promoCode ? ` (code ${cart.promoCode})` : "";
       parts.push(`line_items[0][price_data][currency]=eur`);
       parts.push(`line_items[0][price_data][product_data][name]=${encodeURIComponent(`Commande Elekka${promoLabel}`)}`);
       parts.push(`line_items[0][price_data][unit_amount]=${Math.round(discountedTotal * 100)}`);

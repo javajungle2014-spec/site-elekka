@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createOrderAndGetNumber, sendOrderEmails, incrementPromoUsage } from "@/lib/order-emails";
-import { getServerPrice } from "@/lib/prices";
+import { priceCart } from "@/lib/checkout-pricing";
 import type { OrderItem, OrderAddress } from "@/lib/order-emails";
 import { alertAdmin } from "@/lib/alert";
 
@@ -31,28 +31,40 @@ async function getAccessToken(): Promise<string> {
 
 export async function POST(req: Request) {
   try {
-    const { orderId, items, address, userId, discountEUR = 0, promoCode, referralCode } = await req.json() as {
+    const { orderId, items, address, userId, promoCode, referralCode } = await req.json() as {
       orderId: string;
       items: OrderItem[];
       address: OrderAddress;
       userId: string | null;
-      discountEUR?: number;
       promoCode?: string;
       referralCode?: string;
     };
-
-    // Validation et remplacement des prix côté serveur
-    const validatedItems: OrderItem[] = items.map((item) => {
-      const serverPrice = getServerPrice(item.slug);
-      if (!serverPrice) throw new Error(`Produit inconnu : ${item.slug}`);
-      return { ...item, priceEUR: serverPrice };
-    });
 
     if (!orderId) {
       return NextResponse.json({ error: "Order ID manquant" }, { status: 400 });
     }
 
+    // Prix et réductions recalculés côté serveur
+    const cart = await priceCart({ items, promoCode, referralCode, userId });
+    const validatedItems: OrderItem[] = cart.items;
+    const totalEUR = cart.totalEUR;
+
     const accessToken = await getAccessToken();
+
+    // Avant de capturer : le montant de la commande PayPal doit correspondre au panier recalculé
+    const orderRes = await fetch(`${PAYPAL_BASE}/v2/checkout/orders/${orderId}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    const order = await orderRes.json();
+    const unit = order?.purchase_units?.[0]?.amount;
+    if (!orderRes.ok || unit?.currency_code !== "EUR" || Math.abs(Number(unit?.value) - totalEUR) > 0.01) {
+      await alertAdmin("PayPal — montant incohérent, capture refusée", {
+        paypal_order_id: orderId,
+        montant_paypal: unit ? `${unit.value} ${unit.currency_code}` : "inconnu",
+        montant_attendu: `${totalEUR.toFixed(2)} EUR`,
+      });
+      return NextResponse.json({ error: "Le montant de la commande ne correspond pas au panier. Aucun paiement n'a été prélevé." }, { status: 400 });
+    }
 
     const res = await fetch(
       `${PAYPAL_BASE}/v2/checkout/orders/${orderId}/capture`,
@@ -76,14 +88,9 @@ export async function POST(req: Request) {
       );
     }
 
-    const totalEUR = Math.max(
-      0,
-      validatedItems.reduce((sum, item) => sum + item.priceEUR * item.quantity, 0) - discountEUR
-    );
+    if (cart.promoCode) await incrementPromoUsage(cart.promoCode);
 
-    if (promoCode) await incrementPromoUsage(promoCode);
-
-    const orderNumber = await createOrderAndGetNumber({ userId, items: validatedItems, address, totalEUR, referralCode: referralCode ?? null });
+    const orderNumber = await createOrderAndGetNumber({ userId, items: validatedItems, address, totalEUR, referralCode: cart.referralCode });
 
     if (address?.email) {
       await sendOrderEmails({ orderNumber, items: validatedItems, address, totalEUR });

@@ -90,12 +90,20 @@ export async function createOrderAndGetNumber({
       const { data: model } = await supabase
         .from("stock_models").select("id").eq("slug", slug).single();
       if (!model) continue;
-      await supabase.rpc("deduct_stock", {
+      const { data: remaining, error: stockError } = await supabase.rpc("deduct_stock", {
         p_model_id: model.id,
         p_colour: item.colourLabel,
         p_size: deductSize(slug, item.size),
         p_qty: item.quantity,
       });
+      if (stockError || remaining === null) {
+        await alertAdmin("Stock — déduction impossible, à corriger à la main", {
+          commande: orderNumber,
+          article: `${slug} / ${item.colourLabel} / ${deductSize(slug, item.size) || "—"}`,
+          quantité: String(item.quantity),
+          erreur: stockError?.message ?? "variante introuvable en stock",
+        });
+      }
     }
   }
 

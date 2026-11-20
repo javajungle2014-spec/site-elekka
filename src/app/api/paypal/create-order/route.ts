@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getServerPrice } from "@/lib/prices";
+import { priceCart } from "@/lib/checkout-pricing";
 import { SITE_URL } from "@/lib/site";
 
 export const runtime = "nodejs";
@@ -29,18 +29,15 @@ async function getAccessToken(): Promise<string> {
 
 export async function POST(req: Request) {
   try {
-    const { items, address, userId, promoCode, discountEUR = 0, referralCode } = await req.json();
+    const { items, address, userId, promoCode, referralCode } = await req.json();
 
     if (!items?.length) {
       return NextResponse.json({ error: "Panier vide" }, { status: 400 });
     }
 
-    // Validation et remplacement des prix côté serveur
-    const validatedItems = items.map((item: { slug: string; priceEUR: number; quantity: number; name: string; colourLabel: string; size: string }) => {
-      const serverPrice = getServerPrice(item.slug);
-      if (!serverPrice) throw new Error(`Produit inconnu : ${item.slug}`);
-      return { ...item, priceEUR: serverPrice };
-    });
+    // Prix et réductions recalculés côté serveur (le montant envoyé par le navigateur est ignoré)
+    const cart = await priceCart({ items, promoCode, referralCode, userId });
+    const validatedItems = cart.items;
 
     // Vérification stock avant création order PayPal
     const siteUrl = SITE_URL;
@@ -54,13 +51,8 @@ export async function POST(req: Request) {
 
     const accessToken = await getAccessToken();
 
-    const originalTotal = validatedItems.reduce(
-      (sum: number, item: { priceEUR: number; quantity: number }) =>
-        sum + item.priceEUR * item.quantity,
-      0
-    );
-    const itemTotal = Math.max(0, originalTotal - discountEUR);
-    const promoLabel = promoCode ? ` (code ${promoCode})` : "";
+    const itemTotal = cart.totalEUR;
+    const promoLabel = cart.promoCode ? ` (code ${cart.promoCode})` : "";
 
     const orderItems = validatedItems.map(
       (item: {
@@ -85,7 +77,7 @@ export async function POST(req: Request) {
       intent: "CAPTURE",
       purchase_units: [
         {
-          custom_id: JSON.stringify({ userId: userId ?? "", referralCode: referralCode ?? "" }),
+          custom_id: JSON.stringify({ userId: userId ?? "", referralCode: cart.referralCode ?? "" }),
           description: `Elekka - Commande de ${address.firstName} ${address.lastName}${promoLabel}`,
           amount: {
             currency_code: "EUR",
