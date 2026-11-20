@@ -4,6 +4,7 @@ import { ArrowRight, Question, BookOpen, Newspaper, User } from "@phosphor-icons
 import { conseils, blog } from "@/lib/ressources";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/ressources" },
   title: "Ressources Elekka — FAQ, Conseils, Blog",
   description: "Tout savoir sur Elekka : FAQ, guides pratiques sur le soin du cheval et l'entretien du cuir, actualités de la marque.",
 };

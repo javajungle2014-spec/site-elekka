@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/a-propos" },
   title: "À propos — Notre histoire",
   description: "Elekka est née d'un constat simple : un bon filet ne devrait pas forcément coûter aussi cher. Issue d'une famille de cavaliers, la marque met le produit au centre.",
   openGraph: {

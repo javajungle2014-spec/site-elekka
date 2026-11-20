@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { PieceDetail } from "@/components/boutique/piece-detail";
 
 export const metadata: Metadata = {
-  title: "Muserolle — Pièces détachées · Elekka",
+  alternates: { canonical: "/boutique/muserolle" },
+  title: "Muserolle en cuir pour filet — Pièce détachée",
   description: "Muserolle en cuir pleine fleur, simple ou rembourrée. Compatible avec tous les bridons Elekka.",
 };
 

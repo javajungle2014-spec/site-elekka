@@ -15,8 +15,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const article = conseils.find((a) => a.slug === slug);
   if (!article) return {};
   return {
-    title: `${article.title} — Elekka`,
+    title: article.title.length > 55 ? article.title : `${article.title} — Elekka`,
     description: article.description,
+    alternates: { canonical: `/ressources/conseils/${article.slug}` },
     keywords: article.keywords,
     openGraph: {
       title: `${article.title} — Elekka`,

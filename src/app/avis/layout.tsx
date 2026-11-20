@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
+  robots: { index: false, follow: true },
   title: "Avis clients",
   description: "Les avis de nos clients sur les bridons, licols et rênes Elekka. Retours d'expérience de cavaliers sur la qualité et le confort de nos produits.",
 };

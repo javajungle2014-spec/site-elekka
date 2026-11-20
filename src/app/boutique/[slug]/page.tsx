@@ -24,6 +24,7 @@ export async function generateMetadata({
   return {
     title: product.name,
     description: product.description,
+    alternates: { canonical: `/boutique/${slug}` },
     ...(product.hidden && { robots: { index: false, follow: false } }),
     openGraph: {
       title: `${product.name} — Elekka`,

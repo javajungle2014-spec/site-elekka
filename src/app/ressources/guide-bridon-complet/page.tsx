@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/ressources/guide-bridon-complet" },
   title: "Guide complet du bridon pour cheval — Choisir, ajuster, entretenir",
   description: "Tout ce qu'il faut savoir sur le bridon : choisir entre classique et anatomique, taille Full ou Cob, entretenir son cuir, ajuster sa muserolle. Le guide complet Elekka.",
   keywords: [

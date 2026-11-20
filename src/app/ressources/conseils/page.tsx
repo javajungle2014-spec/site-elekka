@@ -4,6 +4,7 @@ import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { conseils } from "@/lib/ressources";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/ressources/conseils" },
   title: "Conseils équestres — Elekka",
   description: "Guides pratiques pour cavaliers : choisir son filet, entretenir le cuir, comprendre les bienfaits du filet anatomique pour votre cheval.",
   keywords: ["filet bridon conseils", "entretien cuir équestre", "filet anatomique cheval", "guide taille filet"],

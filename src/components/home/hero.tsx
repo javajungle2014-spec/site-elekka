@@ -126,7 +126,7 @@ export function HomeHero() {
                             .join(" ")}
                         >
                           {word}
-                        </span>
+                        </span>{" "}
                       </span>
                     ))}
                   </div>

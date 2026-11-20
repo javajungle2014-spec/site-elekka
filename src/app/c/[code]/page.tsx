@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Configuration partagée — Elekka",
+  title: "Configuration partagée",
   description: "Ouvrir une configuration de filet Elekka partagée.",
   robots: { index: false },
 };

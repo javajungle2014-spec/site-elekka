@@ -145,13 +145,14 @@ export function articleSchema(article: {
   slug: string;
   date: string;
   category: string;
+  section?: "conseils" | "blog";
 }) {
   return {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: article.title,
     description: article.description,
-    url: `${BASE}/ressources/conseils/${article.slug}`,
+    url: `${BASE}/ressources/${article.section ?? "conseils"}/${article.slug}`,
     datePublished: article.date,
     author: {
       "@type": "Person",

@@ -4,6 +4,7 @@ import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { blog } from "@/lib/ressources";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/ressources/blog" },
   title: "Blog Elekka — Actualités et coulisses",
   description: "Actualités de la marque Elekka, présentation des modèles, coulisses et histoire de la création de nos filets équestres en cuir.",
   keywords: ["blog équestre", "marque équestre française", "filet cuir cheval", "Elekka actualités"],

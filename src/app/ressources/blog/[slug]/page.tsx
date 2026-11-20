@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "@phosphor-icons/react/dist/ssr";
 import { blog } from "@/lib/ressources";
+import { articleSchema } from "@/lib/structured-data";
 
 export async function generateStaticParams() {
   return blog.map((a) => ({ slug: a.slug }));
@@ -13,8 +14,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const article = blog.find((a) => a.slug === slug);
   if (!article) return {};
   return {
-    title: `${article.title} — Elekka`,
+    title: article.title.length > 55 ? article.title : `${article.title} — Elekka`,
     description: article.description,
+    alternates: { canonical: `/ressources/blog/${article.slug}` },
     keywords: article.keywords,
   };
 }
@@ -28,8 +30,18 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
   const article = blog.find((a) => a.slug === slug);
   if (!article) notFound();
 
+  const jsonLd = articleSchema({
+    title: article.title,
+    description: article.description,
+    slug: article.slug,
+    date: article.date,
+    category: article.category,
+    section: "blog",
+  });
+
   return (
     <article className="max-w-[680px] space-y-10">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Link href="/ressources/blog" className="inline-flex items-center gap-2 text-sm text-muted hover:text-ink transition-colors press">
         <ArrowLeft size={14} /> Tous les articles
       </Link>

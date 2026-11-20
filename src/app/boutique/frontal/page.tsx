@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { PieceDetail } from "@/components/boutique/piece-detail";
 
 export const metadata: Metadata = {
-  title: "Frontal — Pièces détachées · Elekka",
+  alternates: { canonical: "/boutique/frontal" },
+  title: "Frontal en cuir pour filet — Pièce détachée",
   description: "Frontal en cuir pleine fleur, classique ou anatomique. Compatible avec tous les bridons Elekka.",
 };
 

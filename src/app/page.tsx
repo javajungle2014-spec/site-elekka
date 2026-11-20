@@ -13,6 +13,7 @@ import { ScrollTop } from "@/components/scroll-top";
 import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/" },
   title: "Elekka — Bridons en cuir pour chevaux",
   description: "Elekka — Bridons en cuir pleine fleur, classiques et anatomiques. Qualité des grandes marques équestres à prix juste. À partir de 99 €. Livraison offerte, retours 14 jours.",
   openGraph: {

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Check, X } from "@phosphor-icons/react/dist/ssr";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/ressources/elekka-vs-grandes-marques" },
   title: "Elekka vs Antares, CWD et grandes marques — comparatif bridons",
   description: "Comparatif honnête entre Elekka et les grandes marques équestres (Antares, CWD). Qualité du cuir, technicité, confort du cheval, prix. Qu'est-ce qu'on offre vraiment ?",
   keywords: [

@@ -6,7 +6,8 @@ import { ProductCard } from "@/components/boutique/product-card";
 import { CategoryNav } from "@/components/boutique/category-nav";
 
 export const metadata: Metadata = {
-  title: "Boutique",
+  alternates: { canonical: "/boutique" },
+  title: "Boutique — Filets et bridons en cuir",
   description:
     "Boutique Elekka — Bridons cuir classiques et anatomiques (99 € à 175 €), licols, rênes. Rênes offertes pour tout bridon acheté. Livraison gratuite, retours 14 jours.",
 };
@@ -41,6 +42,7 @@ const categories = [
 export default function BoutiquePage() {
   return (
     <>
+      <h1 className="sr-only">Boutique Elekka — filets et bridons en cuir, licols et rênes</h1>
       {/* Bandeau personnalisation */}
       <Link href="/boutique/personnaliser"
         className="press group block bg-ink text-on-ink hover:bg-ink-soft transition-all duration-300">

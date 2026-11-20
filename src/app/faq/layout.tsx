@@ -4,6 +4,7 @@ import { faqSchema } from "@/lib/structured-data";
 import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/faq" },
   title: "FAQ — Questions fréquentes",
   description: "Toutes les réponses à vos questions sur les bridons Elekka : tailles, entretien, commandes, livraison, retours.",
   openGraph: {

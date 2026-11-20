@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { RessourcesNav } from "./nav";
+import { RessourcesHeading } from "./heading";
 
 export const metadata: Metadata = {
   title: "Ressources — Elekka",
@@ -13,10 +14,7 @@ export default function RessourcesLayout({ children }: { children: React.ReactNo
 
         <div className="mb-12">
           <p className="kicker text-muted mb-3">Ressources</p>
-          <h1 className="display text-4xl md:text-5xl">
-            Tout savoir<br />
-            <span className="text-muted">sur Elekka.</span>
-          </h1>
+          <RessourcesHeading />
         </div>
 
         <RessourcesNav />

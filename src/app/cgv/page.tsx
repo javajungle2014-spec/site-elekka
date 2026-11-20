@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Conditions générales de vente — Elekka",
+  title: "Conditions générales de vente",
   description: "Conditions générales de vente d'Elekka : commandes, paiement, livraison, droit de rétractation, garanties légales. Site elekka-equestrian.fr.",
   robots: { index: false },
 };
